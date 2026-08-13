@@ -205,6 +205,10 @@ h1 { font-size: clamp(2.05rem, 1.35rem + 2.9vw, 3.6rem); letter-spacing: -0.03em
 h2 { font-size: clamp(1.6rem, 1.2rem + 1.7vw, 2.5rem); }
 h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.28rem); letter-spacing: -0.012em; line-height: 1.25; }
 
+/* `balance` equilibre les titres ; `pretty` empeche qu'un paragraphe finisse
+   sur un mot seul. Quatre veuves relevees, dont « moi. » sous la ligne de
+   l'auteur. */
+p, li, dd { text-wrap: pretty; }
 p { margin: 0 0 1em; }
 p:last-child { margin-bottom: 0; }
 
@@ -247,9 +251,10 @@ a { color: rgb(var(--accent)); }
    oubli, pas comme une intention. `.colonne` est la forme centree ; ce qu'elle
    contient reste ferre a gauche, c'est le BLOC qui se centre, pas le texte. */
 .colonne { max-width: 46rem; margin-inline: auto; }
-.colonne > .tete-section,
-.colonne > .dire-suite,
-.colonne > .legende-demo { max-width: none; }
+/* Seule la TETE s'elargit a la colonne : `.dire-suite` et `.legende-demo`
+   gardent leur mesure. La liste precedente les annulait par specificite
+   (0,2,0 contre 0,1,0) et les lignes montaient a 96 signes. */
+.colonne > .tete-section { max-width: none; }
 @media (min-width: 60rem) { .page { width: min(100% - 5rem, 1180px); } }
 
 .section { padding-block: clamp(3.25rem, 1.6rem + 5.4vw, 6.5rem); }
@@ -291,7 +296,9 @@ a { color: rgb(var(--accent)); }
 }
 .entete-nav a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
 /* le seul lien qui survit sur téléphone : le chemin vers le formulaire */
-.entete-cta { color: rgb(var(--accent)); font-weight: 600; }
+/* `.entete-nav a` pese (0,1,1) et `.entete-cta` (0,1,0) : la premiere gagnait,
+   et le SEUL appel a l'action permanent de la page s'affichait en gris. */
+.entete-nav a.entete-cta { color: rgb(var(--accent)); font-weight: 600; }
 .entete-cta:hover { border-bottom-color: rgb(var(--accent)); }
 @media (max-width: 47rem) {
   .marque-note, .entete-nav a:not(.entete-cta) { display: none; }
@@ -314,7 +321,6 @@ a { color: rgb(var(--accent)); }
      entre 1024 et 1280 px où le titre grandit plus vite que sa colonne.
      Diviseur 21 = 10,5 par colonne : la marge couvre la barre de défilement
      que 100vw compte et que la colonne n'a pas. */
-  .hero h1 { font-size: min(3.35rem, (min(100vw - 5rem, 1180px) - 4.5rem) / 21); }
 
   /* La démonstration est un objet HAUT : elle descend 600 px plus bas que le
      texte, et retirer la fiche produit a laissé ce vide à nu. Plutôt que de
@@ -325,7 +331,22 @@ a { color: rgb(var(--accent)); }
   .hero-dire { position: sticky; top: 5.5rem; }
 }
 
-.hero h1 { margin-bottom: 1.15rem; }
+/* « Rien ne sort du cabinet. » DOIT tenir sur une ligne : c'est la composition
+   du titre. Elle reclame 10,035 fois le corps en Archivo, et jusqu'a 10,6 fois
+   dans la police de secours AVANT qu'Archivo n'arrive : le diviseur 11 couvre
+   les deux, donc le titre ne se recasse pas au chargement. Et la regle vaut a
+   TOUTES les largeurs : reservee au deux-colonnes, elle laissait le titre se
+   briser en dessous de 1024 px, ou aucune capture ne pouvait le montrer. */
+/* Les trois paliers DOIVENT etre declares ici, dans l'ordre croissant : places
+   plus haut dans le fichier, celui des deux colonnes se faisait ecraser par
+   celui du plein cadre, et le titre repartait a 3,6 rem donc sur deux lignes. */
+.hero-dire { --colonne-titre: min(100vw - 2.5rem, 1180px); }
+@media (min-width: 60rem) { .hero-dire { --colonne-titre: min(100vw - 5rem, 1180px); } }
+@media (min-width: 64rem) { .hero-dire { --colonne-titre: calc((min(100vw - 5rem, 1180px) - 4.5rem) / 2); } }
+.hero h1 {
+  margin-bottom: 1.15rem;
+  font-size: min(clamp(2.05rem, 1.35rem + 2.9vw, 3.6rem), var(--colonne-titre) / 11);
+}
 .h1-bleu { color: rgb(var(--accent)); }
 .chapeau {
   font-size: clamp(1.06rem, 1rem + 0.35vw, 1.22rem);
@@ -405,15 +426,24 @@ a { color: rgb(var(--accent)); }
 .parole p {
   margin: 0;
   font-family: var(--machine);
-  font-size: clamp(0.78rem, 0.72rem + 0.22vw, 0.875rem);
-  line-height: 1.95;
+  /* 12,5 px sur telephone pour l'objet qui porte la these, devant un lectorat
+     de cinquante ans et plus : c'etait le plus petit texte de la page. */
+  font-size: clamp(0.875rem, 0.8rem + 0.22vw, 0.9rem);
+  line-height: 1.85;
   color: rgb(var(--texte));
   overflow-wrap: break-word;
 }
+/* Une commande prononcee est une unite : elle ne se coupe pas. Et son trait
+   passe en soulignement plutot qu'en ombre interne, qui debordait du panneau
+   et courait dans la marge des que le mot se brisait en fin de ligne. */
 .cmd {
   font-weight: 700;
   color: rgb(var(--accent));
-  box-shadow: inset 0 -1px 0 0 rgb(var(--accent) / .38);
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: rgb(var(--accent) / .38);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
 }
 
 /* la bascule : le filet qui dit « et ça devient ceci » */
@@ -466,6 +496,7 @@ a { color: rgb(var(--accent)); }
   margin: 0 0 0.75em;
   text-indent: 1.7em;
   text-align: justify;
+  -webkit-hyphens: auto;   /* Safari ne connait `hyphens` sans prefixe qu'en 17 */
   hyphens: auto;
 }
 .acte-alinea:last-child { margin-bottom: 0; }
@@ -581,7 +612,7 @@ a { color: rgb(var(--accent)); }
    d'étiquettes. */
 .dire-suite {
   display: grid; gap: 1.15rem;
-  max-width: 62ch;
+  max-width: 54ch;
 }
 .dire-suite p { margin: 0; }
 
@@ -710,10 +741,6 @@ a { color: rgb(var(--accent)); }
   margin: 0.5rem 0 0; font-size: 0.86rem; line-height: 1.5;
   color: rgb(var(--sourdine)); max-width: 58ch;
 }
-.comparatif-note {
-  margin-top: 1.3rem; font-size: 0.86rem; line-height: 1.55;
-  color: rgb(var(--sourdine)); max-width: 60ch;
-}
 
 /* le boîtier : un plan, pas un produit. Le filet discontinu suffit à le
    dire. L'aplat bleu qui était ici en faisait le seul encart coloré de la
@@ -731,6 +758,7 @@ a { color: rgb(var(--accent)); }
 @media (min-width: 48rem) {
   .boitier-corps {
     display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    grid-template-rows: repeat(3, auto);
     gap: 1rem 3rem; align-items: start;
   }
   /* Le prix tient toute la hauteur de sa colonne, le reste s'empile dans
@@ -887,9 +915,12 @@ input:user-invalid, textarea:user-invalid {
    défilement la pose assez bas pour que le champ d'adresse, le seul champ
    obligatoire, reste visible au-dessus. Mesuré : 330 px séparent les deux,
    26 rem laissent l'adresse et la question de formule dans la vue. */
-#demo { scroll-margin-top: 26rem; }
+/* Valeur fixe : sur une fenetre courte, la case atterrissait sous la ligne de
+   flottaison. Plafonnee a une fraction de la fenetre, elle reste visible. */
+#demo { scroll-margin-top: min(26rem, 55vh); }
 .case {
   display: flex; align-items: flex-start; gap: 0.65rem;
+  padding: 0.5rem 0;   /* la cible faisait 26 px ; elle en fait 44 avec */
   font-weight: 400 !important; color: rgb(var(--texte)) !important;
   cursor: pointer; margin-bottom: 0 !important;
 }
@@ -928,6 +959,7 @@ input:user-invalid, textarea:user-invalid {
 .formule-prix { color: rgb(var(--sourdine)); }
 
 .mention-rgpd {
+  max-width: 52ch;   /* 101 signes par ligne sans elle, dans le plus petit corps */
   margin-top: 1.5rem; padding-top: 1.25rem;
   border-top: 1px solid rgb(var(--filet));
   font-size: 0.9rem; color: rgb(var(--sourdine));
@@ -953,10 +985,13 @@ input:user-invalid, textarea:user-invalid {
 @media (min-width: 64rem) { .pied-liens { align-items: flex-end; text-align: right; } }
 .pied-liens a { color: rgb(var(--texte)); text-decoration: none; border-bottom: 1px solid rgb(var(--filet-net)); }
 .pied-liens a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
+/* Le trait est porte par le bloc, la mesure par le texte : sinon le filet
+   s'arretait a 552 px sous une grille qui en fait 1 180. */
 .pied-note {
   padding-top: 1.25rem; border-top: 1px solid rgb(var(--filet));
-  font-size: 0.86rem; max-width: 70ch;
+  font-size: 0.86rem; max-width: none;
 }
+.pied-note > span { display: block; max-width: 57ch; }
 
 /* ───────────────────────────────── 15. pages annexes (merci, légales) ─── */
 
@@ -999,3 +1034,19 @@ input:user-invalid, textarea:user-invalid {
   background: rgb(var(--panneau)); padding: 0.1em 0.3em; border-radius: var(--rayon);
 }
 .legal .maj { margin-top: 2.5rem; font-size: 0.9rem; color: rgb(var(--sourdine)); }
+
+/* Ce que le visiteur obtient, dit sous le bouton qui le lui donne. */
+.apres-envoi { margin: 0.85rem 0 0; font-size: 0.9rem; color: rgb(var(--sourdine)); }
+@media (max-width: 48rem) { .formulaire .bouton--large { width: 100%; } }
+
+/* Sommaire des pages annexes : 4 700 px au bureau et 6 000 sur telephone sans
+   un seul point de repere, c'est une page qu'on subit au lieu de la consulter. */
+.sommaire { margin: 0 0 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgb(var(--filet)); }
+.sommaire ul {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; gap: 0.45rem 2rem; font-size: 0.95rem;
+}
+@media (min-width: 40rem) { .sommaire ul { grid-template-columns: 1fr 1fr; } }
+.sommaire a { color: rgb(var(--texte)); text-decoration: none; border-bottom: 1px solid rgb(var(--filet-net)); }
+.sommaire a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
+.feuillet h2 { scroll-margin-top: 5.5rem; }

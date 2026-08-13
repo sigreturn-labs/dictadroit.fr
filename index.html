@@ -50,7 +50,7 @@
      Trois formulations d’une même promesse = une page assemblée. Le <title>
      est front-chargé pour survivre à la coupure de Google (58 signes). -->
 <title>Dictée vocale locale pour avocats et notaires · Dictadroit</title>
-<meta name="description" content="Vous dictez, l’acte s’écrit : rien ne sort du cabinet. Dictadroit transcrit votre parole et met en forme vos conclusions et vos actes, entièrement sur votre ordinateur. Conçu en France pour les professions du droit.">
+<meta name="description" content="Vous dictez, l’acte s’écrit : rien ne sort du cabinet. Dictée et mise en forme d’actes sur votre poste, pour avocats, notaires et commissaires de justice.">
 <link rel="canonical" href="https://dictadroit.fr/">
 <meta property="og:type" content="website">
 <meta property="og:locale" content="fr_FR">
@@ -72,30 +72,9 @@
 <link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="dictadroit.css?v=6fe36a74">
+<link rel="stylesheet" href="dictadroit.css?v=7f46e24a">
 </head>
 <body>
-
-<!--
-  THESIS: la page fait devant vous ce que le logiciel fait au cabinet : la parole
-  brute, en chasse fixe, devient un acte composé en Garamond avec la typographie
-  judiciaire française. Elle refuse la colonne unique de prose grise à densité
-  constante de la version rejetée, et la carte SaaS à dégradé.
-  OWN-WORLD: papier administratif froid (#F7F7F5), feuille blanche posée dessus,
-  filets fins, un seul bleu, celui de la signature à l’encre, qui distingue
-  l’original de la photocopie. Archivo pour l’autorité, EB Garamond pour l’acte,
-  Courier Prime pour la parole. Un seul bloc inversé dans toute la page.
-  STORY: un avocat comprend en un écran que sa dictée devient un acte propre, que
-  rien ne sort de son poste, puis qu’il paie moins que son logiciel figé, et il
-  laisse son adresse.
-  FIRST VIEWPORT: à gauche le titre, deux lignes de chapeau, deux boutons dont le
-  premier en bleu ; à droite l’objet de transformation (panneau de parole → feuille
-  d’acte signée). Sur mobile : titre et premier bouton avant tout défilement.
-  FORM: objet de démonstration typographique en tête de page, forme n°1 de la
-  liste ; direction arrêtée par le propriétaire dans le brief (pas de tirage).
-  FINISH: unreviewed and undocumented is unfinished; this build ends with the
-  finish review, the verdict, and DESIGN.md
--->
 
 <a class="saut" href="#contenu">Aller au contenu</a>
 
@@ -116,7 +95,7 @@
   </div>
 </header>
 
-<main id="contenu">
+<main id="contenu" tabindex="-1">
 
   <!-- ══════════════════════════════════════════════════════════ hero ═══
        EMPLACEMENT DE LA VIDÉO DE DÉMONSTRATION (Tâche 6 du sprint) :
@@ -213,12 +192,15 @@
       </div>
 
       <div class="local-grille">
-        <p class="grille-intro">La grille du Conseil national des barreaux, parue début 2026,
-          demande un hébergement européen, un fournisseur hors d’atteinte des lois américaines,
-          aucun entraînement sur vos données, et la protection du secret professionnel.</p>
+        <p class="grille-intro">Le guide du Conseil national des barreaux, «&#8239;La
+          déontologie et l’intelligence artificielle&#8239;», adopté le 17&#160;mars 2026,
+          demande de regarder d’abord où sont hébergées les données du client, puis la
+          nationalité de l’entreprise qui détient les serveurs, en excluant celles qu’une loi
+          extraterritoriale peut contraindre. Il pose un prérequis&#8239;: que l’outil ne
+          réutilise aucune donnée pour entraîner un modèle.</p>
         <p class="grille-reponse" lang="fr">Un logiciel qui ne sort pas du poste y répond sans
-          que j’aie rien à promettre. Il n’y a pas d’hébergement. Il n’y a rien à entraîner. Le
-          secret reste au cabinet, au sens propre.</p>
+          que j’aie rien à promettre. Il n’y a pas d’hébergement. Il n’y a pas d’entreprise
+          tierce. Il n’y a rien à entraîner. Le secret reste au cabinet, au sens propre.</p>
         <p class="grille-note">Aucun label ni aucune certification n’existe pour autant.
           Personne ne peut vous en vendre un, moi non plus.</p>
       </div>
@@ -262,9 +244,9 @@
     <div class="page">
       <div class="tete-section">
         <h2>Par poste, hors taxes, sans astérisque.</h2>
-        <p class="tete-note">Ces deux formules sont celles qui seront proposées à la sortie.
-          Dites-moi laquelle vous conviendrait&#8239;: c’est exactement ce que je cherche à
-          savoir.</p>
+        <p class="tete-note">Ces deux formules sont celles que j’envisage pour la sortie, et
+          elles ne sont pas arrêtées. Dites-moi laquelle vous conviendrait&#8239;: c’est
+          exactement ce que je cherche à savoir.</p>
       </div>
 
       <div class="offres">
@@ -313,8 +295,9 @@
            pas la même place, les pistes n'ont plus la même longueur et les
            barres ne sont plus comparables entre elles. -->
       <figure class="comparatif">
-        <figcaption>Ce que coûte la première année, par poste, aux prix publics constatés
-          en août&#160;2026.</figcaption>
+        <figcaption>Ce que coûte la première année, par poste. Prix publics relevés le
+          11&#160;août 2026 sur les sites des éditeurs et de leurs revendeurs&#8239;; ils
+          peuvent avoir changé depuis.</figcaption>
         <ul>
           <li class="comparatif-ligne">
             <p class="comparatif-nom">Le logiciel de dictée installé dans les cabinets</p>
@@ -323,7 +306,8 @@
               <p class="comparatif-prix">990&#8239;€</p>
             </div>
             <p class="comparatif-glose">Achat unique, dictionnaire juridique en supplément.
-              Il n’évolue plus&#8239;: son éditeur a réorienté son activité vers la santé.</p>
+              Son éditeur a réorienté son activité vers la santé, et les revendeurs proposent
+              désormais l’offre en ligne ci-dessous à la place.</p>
           </li>
           <li class="comparatif-ligne">
             <p class="comparatif-nom">L’offre en ligne proposée à la place par les revendeurs</p>
@@ -396,7 +380,7 @@
         <li class="aveu">
           <p class="aveu-fait">Il ne fonctionne pas sur Mac.</p>
           <p class="aveu-suite">Windows d’abord&#8239;; si vous êtes sur Mac, dites-le-moi
-            dans le champ ci-dessous, c’est ce qui décidera.</p>
+            dans le formulaire en bas de page, c’est ce qui décidera.</p>
         </li>
         <li class="aveu">
           <p class="aveu-fait">Il n’existe pas encore en version stable.</p>
@@ -473,6 +457,8 @@
               j’utilise pour vous répondre.</p>
             <input type="email" id="email" name="email" required autocomplete="email"
                    spellcheck="false" aria-describedby="aide-email"
+                   pattern="[^@\s]+@[^@\s]+\.[^@\s]{2,}"
+                   title="Il manque le domaine complet, par exemple cabinet.fr"
                    placeholder="prenom.nom@cabinet.fr">
           </div>
 
@@ -513,10 +499,11 @@
           <div class="champ champ--long">
             <label for="frustration">Qu’est-ce qui vous exaspère le plus, aujourd’hui, quand
               vous dictez ou quand vous tapez&#8239;?</label>
-            <p class="aide">Facultatif. Écrivez autant que vous voulez&#8239;: c’est ce qui
-              m’est le plus utile, et ce que vous écrivez là fixe l’ordre de ce que je
-              construis.</p>
-            <textarea id="frustration" name="frustration" rows="4"
+            <p class="aide" id="aide-frustration">Facultatif. Écrivez autant que vous
+              voulez&#8239;: c’est ce qui m’est le plus utile, et ce que vous écrivez là fixe
+              l’ordre de ce que je construis. Et si vous êtes sur Mac, dites-le ici&#8239;:
+              c’est ce qui décidera.</p>
+            <textarea id="frustration" name="frustration" rows="4" aria-describedby="aide-frustration"
                       placeholder="Par exemple&#8239;: le temps passé à reprendre la mise en forme après la dictée, les noms propres jamais reconnus, la secrétaire qui n’est plus là le vendredi…"></textarea>
           </div>
 
@@ -531,7 +518,8 @@
           <input type="checkbox" name="botcheck" style="display:none" tabindex="-1"
                  autocomplete="off" aria-hidden="true">
 
-          <button type="submit" class="bouton bouton--bleu bouton--large">Envoyer</button>
+          <button type="submit" class="bouton bouton--bleu bouton--large">Laisser mon adresse</button>
+          <p class="apres-envoi">Je réponds moi-même, sous deux jours ouvrés.</p>
         </form>
 
         <p class="mention-rgpd">Votre adresse me sert à vous répondre et à vous prévenir, rien
@@ -560,9 +548,9 @@
       <a href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>
       <a href="mentions-legales.html">Mentions légales</a>
     </nav>
-    <p class="pied-note">Ce site ne dépose aucun cookie et ne charge aucune ressource
+    <p class="pied-note"><span>Ce site ne dépose aucun cookie et ne charge aucune ressource
       extérieure, pas même ses polices de caractères. La seule chose qui en sort est le
-      formulaire.</p>
+      formulaire.</span></p>
   </div>
 </footer>
 
