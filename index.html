@@ -233,7 +233,6 @@
           clignote.</h2>
       </div>
 
-      <div class="dire-rang">
       <div class="dire-suite">
         <p>Vous appuyez sur une touche, vous dictez, et le texte s’insère au curseur, dans
           Word, dans Outlook, dans votre logiciel de cabinet. Rien à installer, aucun bouton à
@@ -253,7 +252,6 @@
 
       <p class="legende-demo">Vos conclusions, vos actes, vos courriers. Et vos notes
         d’audience, dictées à chaud en sortant de la salle.</p>
-      </div>
     </div>
   </section>
 
@@ -308,12 +306,47 @@
 
       </div>
 
-      <p class="ancrage">Aux prix publics constatés en août&#160;2026, le logiciel de dictée
-        installé dans les cabinets coûte <b>990&#8239;€ HT</b> à l’achat, dictionnaire juridique
-        en supplément, et il est figé depuis que son éditeur a réorienté son activité vers la
-        santé. L’offre en ligne que les revendeurs proposent à la place coûte
-        <b>473&#8239;€ HT par an et par utilisateur</b>, avec la dictée traitée sur un serveur,
-        hors de votre poste.</p>
+      <!-- Barres proportionnelles au coût réel sur trois ans. La colonne du prix
+           a une largeur FIXE : sans elle, « 1 419 € » et « 988 € » ne prennent
+           pas la même place, les pistes n'ont plus la même longueur et les
+           barres ne sont plus comparables entre elles. -->
+      <figure class="comparatif">
+        <figcaption>Ce que coûte la dictée sur trois ans, par poste, aux prix publics
+          constatés en août&#160;2026.</figcaption>
+        <ul>
+          <li class="comparatif-ligne">
+            <p class="comparatif-nom">L’offre en ligne proposée par les revendeurs</p>
+            <div class="comparatif-mesure">
+              <div class="comparatif-piste" aria-hidden="true"><span style="--part: 100%"></span></div>
+              <p class="comparatif-prix">1&#8239;419&#8239;€</p>
+            </div>
+            <p class="comparatif-glose">473&#8239;€ HT par an et par utilisateur. La dictée est
+              traitée sur un serveur, hors de votre poste.</p>
+          </li>
+          <li class="comparatif-ligne comparatif-ligne--nous">
+            <p class="comparatif-nom">Dictadroit, abonnement</p>
+            <div class="comparatif-mesure">
+              <div class="comparatif-piste" aria-hidden="true"><span style="--part: 82.5%"></span></div>
+              <p class="comparatif-prix">1&#8239;170&#8239;€</p>
+            </div>
+            <p class="comparatif-glose">390&#8239;€ HT par an et par poste. Tout se passe sur
+              votre machine.</p>
+          </li>
+          <li class="comparatif-ligne comparatif-ligne--nous">
+            <p class="comparatif-nom">Dictadroit, licence perpétuelle</p>
+            <div class="comparatif-mesure">
+              <div class="comparatif-piste" aria-hidden="true"><span style="--part: 69.6%"></span></div>
+              <p class="comparatif-prix">988&#8239;€</p>
+            </div>
+            <p class="comparatif-glose">690&#8239;€ HT une fois, puis 149&#8239;€ HT de
+              maintenance par an. Le logiciel continue de fonctionner sans elle.</p>
+          </li>
+        </ul>
+        <p class="comparatif-note">Le logiciel installé aujourd’hui dans les cabinets n’est pas
+          dans ces barres&#8239;: il coûte <b>990&#8239;€ HT</b> à l’achat, dictionnaire juridique
+          en supplément, et n’a pas de coût annuel parce qu’il n’évolue plus. Son éditeur a
+          réorienté son activité vers la santé.</p>
+      </figure>
 
       <!-- ─── porte du boîtier : test de demande, aucun paiement ─── -->
       <div class="boitier">
