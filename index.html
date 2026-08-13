@@ -129,35 +129,17 @@
       <div class="hero-dire">
         <h1>Vous dictez.<br>L’acte s’écrit.<br><span class="h1-bleu">Rien ne sort du cabinet.</span></h1>
         <p class="chapeau">Dictadroit transcrit votre parole et met en forme vos conclusions
-          et vos actes, entièrement sur votre ordinateur.</p>
+          et vos actes, entièrement sur votre ordinateur. Pour les avocats, les notaires et
+          les commissaires de justice.</p>
         <div class="actions">
           <a class="bouton bouton--bleu" href="#contact">Laisser mon adresse</a>
           <!-- vise la case elle-même, et non la section : le navigateur y amène
                le focus avec ou sans JavaScript. mesure.js, lui, la coche. -->
           <a class="bouton bouton--fil" href="#demo" id="js-demo">Demander une démonstration</a>
         </div>
-        <p class="hero-etat">Le logiciel est en cours d’écriture. La démonstration dure un
-          quart d’heure, en visio, sur le prototype. Elle sert autant à vous montrer qu’à
-          vous écouter.</p>
-
-        <dl class="hero-fiche">
-          <div>
-            <dt>Pour</dt>
-            <dd>Avocats, notaires, commissaires de justice</dd>
-          </div>
-          <div>
-            <dt>Poste</dt>
-            <dd>Windows, sans carte graphique</dd>
-          </div>
-          <div>
-            <dt>Prix</dt>
-            <dd>39&#8239;€ HT par mois, ou 690&#8239;€ HT une fois</dd>
-          </div>
-          <div>
-            <dt>Éditeur</dt>
-            <dd>Sigreturn Labs, société française</dd>
-          </div>
-        </dl>
+        <p class="hero-etat">Le logiciel est en cours d’écriture, pour Windows, sans carte
+          graphique. La démonstration dure un quart d’heure, en visio, sur le prototype. Elle
+          sert autant à vous montrer qu’à vous écouter.</p>
       </div>
 
       <!-- ─── l’objet de transformation : la parole devient un acte ─── -->
@@ -232,30 +214,13 @@
 
       <div class="local-grille">
         <p class="grille-intro">La grille du Conseil national des barreaux, parue début 2026,
-          est une recommandation. Voici ce qu’elle demande, et ce qu’un logiciel qui ne
-          sort pas du poste y répond.</p>
-        <dl class="cnb">
-          <div class="cnb-ligne">
-            <dt>Hébergement dans l’Union européenne</dt>
-            <dd lang="fr">Il n’y a pas d’hébergement.</dd>
-          </div>
-          <div class="cnb-ligne">
-            <dt>Fournisseur non soumis aux lois extraterritoriales américaines</dt>
-            <dd lang="fr">Un éditeur français, avec un SIRET et un nom sur la facture.</dd>
-          </div>
-          <div class="cnb-ligne">
-            <dt>Aucun entraînement sur vos données</dt>
-            <dd lang="fr">Vos textes ne quittent pas le poste&#8239;: il n’y a rien à entraîner.</dd>
-          </div>
-          <div class="cnb-ligne">
-            <dt>Protection du secret professionnel</dt>
-            <dd lang="fr">Le secret reste au cabinet, au sens propre.</dd>
-          </div>
-        </dl>
-        <p class="grille-note">Ces quatre lignes ne reposent sur aucun engagement de ma
-          part&#8239;: il n’y a pas de serveur pour le trahir. Aucun label ni aucune
-          certification n’existe pour ce type de logiciel. Personne ne peut vous en vendre
-          une, moi non plus.</p>
+          demande un hébergement européen, un fournisseur hors d’atteinte des lois américaines,
+          aucun entraînement sur vos données, et la protection du secret professionnel.</p>
+        <p class="grille-reponse" lang="fr">Un logiciel qui ne sort pas du poste y répond sans
+          que j’aie rien à promettre. Il n’y a pas d’hébergement. Il n’y a rien à entraîner. Le
+          secret reste au cabinet, au sens propre.</p>
+        <p class="grille-note">Aucun label ni aucune certification n’existe pour autant.
+          Personne ne peut vous en vendre un, moi non plus.</p>
       </div>
     </div>
   </section>
@@ -268,45 +233,27 @@
           clignote.</h2>
       </div>
 
-      <div class="preuves-grille">
+      <div class="dire-rang">
+      <div class="dire-suite">
+        <p>Vous appuyez sur une touche, vous dictez, et le texte s’insère au curseur, dans
+          Word, dans Outlook, dans votre logiciel de cabinet. Rien à installer, aucun bouton à
+          trouver dans un ruban.</p>
 
-        <article class="preuve">
-          <h3>Un raccourci, partout où vous écrivez</h3>
-          <p>Vous appuyez sur une touche, vous dictez, et le texte s’insère au curseur,
-            dans Word, dans Outlook, dans votre logiciel de cabinet.</p>
-          <p class="preuve-note">Rien à installer dans Word, aucun bouton à trouver dans un
-            ruban&#8239;: ce qui marche dans un traitement de texte marche partout ailleurs.</p>
-        </article>
+        <p class="correspondance">Le vocabulaire du droit est écrit juste, par une table de
+          correspondance qui ne devine rien&#8239;: vous dites <span class="dit">cassation
+          civile première chambre</span>, il écrit <span class="ecrit" lang="fr">Cass. civ.
+          1<sup>re</sup></span>&#8239;; vous dites <span class="dit">article sept cent</span>,
+          il écrit <span class="ecrit" lang="fr">article 700</span>. Cette liste s’allonge à
+          chaque cabinet.</p>
 
-        <article class="preuve">
-          <h3>Le vocabulaire du droit, écrit juste</h3>
-          <p>Une table de correspondance entre ce que la machine entend de travers et le terme
-            exact&#8239;: juridictions, formules latines, abréviations d’actes. Elle ne devine
-            rien. Elle applique une liste, et cette liste s’allonge à chaque cabinet.</p>
-          <ul class="paires">
-            <li><span class="dit">cassation civile première chambre</span><span class="ecrit" lang="fr">Cass. civ. 1<sup>re</sup></span></li>
-            <li><span class="dit">tribunal judiciaire de nanterre</span><span class="ecrit" lang="fr">tribunal judiciaire de Nanterre</span></li>
-            <li><span class="dit">article sept cent</span><span class="ecrit" lang="fr">article 700</span></li>
-          </ul>
-        </article>
-
-        <article class="preuve">
-          <h3>La ponctuation se dicte dans la phrase</h3>
-          <p>Sans toucher au clavier. Ce sont des règles, pas une intelligence artificielle qui
-            interprète&#8239;: le résultat est le même à chaque fois.</p>
-          <ul class="jetons">
-            <li>point</li>
-            <li>virgule</li>
-            <li>à la ligne</li>
-            <li>point-virgule</li>
-            <li>ouvrez les guillemets</li>
-          </ul>
-        </article>
-
+        <p>La ponctuation se dicte dans la phrase, sans toucher au clavier. Ce sont des règles,
+          pas une intelligence artificielle qui interprète&#8239;: le résultat est le même à
+          chaque fois.</p>
       </div>
 
       <p class="legende-demo">Vos conclusions, vos actes, vos courriers. Et vos notes
         d’audience, dictées à chaud en sortant de la salle.</p>
+      </div>
     </div>
   </section>
 
@@ -315,9 +262,9 @@
     <div class="page">
       <div class="tete-section">
         <h2>Par poste, hors taxes, sans astérisque.</h2>
-        <p class="tete-note">Il n’y a rien à télécharger aujourd’hui, puisque le logiciel n’est
-          pas terminé. Ces deux formules sont celles qui seront proposées à la sortie&#8239;:
-          dites-moi laquelle vous conviendrait, c’est exactement ce que je cherche à savoir.</p>
+        <p class="tete-note">Ces deux formules sont celles qui seront proposées à la sortie.
+          Dites-moi laquelle vous conviendrait&#8239;: c’est exactement ce que je cherche à
+          savoir.</p>
       </div>
 
       <div class="offres">
@@ -361,32 +308,12 @@
 
       </div>
 
-      <div class="ancrage">
-        <table class="tableau-ancrage">
-          <caption>Ce que coûte la dictée aujourd’hui, aux prix publics constatés en
-            août&#160;2026.</caption>
-          <tbody>
-            <tr>
-              <th scope="row">Le logiciel de dictée installé dans les cabinets</th>
-              <td class="chiffre">990&#8239;€ HT</td>
-              <td class="glose">prix public constaté à l’achat, dictionnaire juridique en
-                supplément&#8239;; figé depuis que son éditeur a réorienté son activité
-                vers la santé</td>
-            </tr>
-            <tr>
-              <th scope="row">L’offre en ligne proposée à la place par les revendeurs</th>
-              <td class="chiffre">473&#8239;€ HT<span class="periode">/ an / utilisateur</span></td>
-              <td class="glose">prix public constaté&#8239;; la dictée est traitée sur un
-                serveur, hors de votre poste</td>
-            </tr>
-            <tr class="ligne-nous">
-              <th scope="row">Dictadroit</th>
-              <td class="chiffre">390&#8239;€ HT<span class="periode">/ an / poste</span></td>
-              <td class="glose">tout se passe sur votre machine</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <p class="ancrage">Aux prix publics constatés en août&#160;2026, le logiciel de dictée
+        installé dans les cabinets coûte <b>990&#8239;€ HT</b> à l’achat, dictionnaire juridique
+        en supplément, et il est figé depuis que son éditeur a réorienté son activité vers la
+        santé. L’offre en ligne que les revendeurs proposent à la place coûte
+        <b>473&#8239;€ HT par an et par utilisateur</b>, avec la dictée traitée sur un serveur,
+        hors de votre poste.</p>
 
       <!-- ─── porte du boîtier : test de demande, aucun paiement ─── -->
       <div class="boitier">
@@ -441,11 +368,6 @@
             dans le champ ci-dessous, c’est ce qui décidera.</p>
         </li>
         <li class="aveu">
-          <p class="aveu-fait">Il ne synchronise rien entre vos postes.</p>
-          <p class="aveu-suite">Une licence, un poste, et les fichiers restent là où vous les
-            rangez.</p>
-        </li>
-        <li class="aveu">
           <p class="aveu-fait">Il n’existe pas encore en version stable.</p>
           <p class="aveu-suite">Ce qui se voit aujourd’hui, c’est le prototype, en visio, avec
             moi.</p>
@@ -481,21 +403,8 @@
         <p>Dictadroit est développé en France, par moi seul, en parallèle de mon activité.
           C’est un choix assumé&#8239;: pas d’investisseur à rembourser, donc aucune raison de
           faire remonter vos textes vers un serveur pour les monétiser un jour. Quand vous
-          écrirez, vous aurez la personne qui écrit le code.</p>
-        <dl class="coordonnees">
-          <div>
-            <dt>Courriel</dt>
-            <dd><a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a></dd>
-          </div>
-          <div>
-            <dt>Éditeur</dt>
-            <dd>Sigreturn Labs, SASU au capital de 1&#160;000&#8239;€</dd>
-          </div>
-          <div>
-            <dt>Immatriculation</dt>
-            <dd>SIREN 104&#160;567&#160;854, RCS Paris</dd>
-          </div>
-        </dl>
+          écrirez, vous aurez la personne qui écrit le code&#8239;:
+          <a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>.</p>
       </div>
     </div>
   </section>
@@ -618,10 +527,9 @@
       <a href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>
       <a href="mentions-legales.html">Mentions légales</a>
     </nav>
-    <p class="pied-note">Ce site ne dépose aucun cookie, ne charge aucune ressource
-      extérieure et n’emploie aucun outil de mesure publicitaire. Les polices de caractères
-      elles-mêmes sont servies depuis ce domaine. La seule chose qui en sort est le
-      formulaire, vers le prestataire qui l’achemine jusqu’à ma boîte.</p>
+    <p class="pied-note">Ce site ne dépose aucun cookie et ne charge aucune ressource
+      extérieure, pas même ses polices de caractères. La seule chose qui en sort est le
+      formulaire.</p>
   </div>
 </footer>
 

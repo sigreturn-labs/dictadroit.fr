@@ -301,6 +301,14 @@ a { color: rgb(var(--accent)); }
      Diviseur 21 = 10,5 par colonne : la marge couvre la barre de défilement
      que 100vw compte et que la colonne n'a pas. */
   .hero h1 { font-size: min(3.35rem, (min(100vw - 5rem, 1180px) - 4.5rem) / 21); }
+
+  /* La démonstration est un objet HAUT : elle descend 600 px plus bas que le
+     texte, et retirer la fiche produit a laissé ce vide à nu. Plutôt que de
+     rallonger la colonne de gauche pour la remplir, on la fixe : le titre et
+     les deux actions restent à l'écran pendant que l'acte se compose à côté.
+     Le vide devient la course, et l'appel à l'action ne quitte jamais l'œil
+     au moment le plus persuasif de la page. */
+  .hero-dire { position: sticky; top: 5.5rem; }
 }
 
 .hero h1 { margin-bottom: 1.15rem; }
@@ -318,23 +326,6 @@ a { color: rgb(var(--accent)); }
   font-size: 0.92rem; color: rgb(var(--sourdine)); max-width: 34rem;
 }
 
-.hero-fiche {
-  margin: 1.5rem 0 0; display: grid;
-}
-.hero-fiche > div {
-  display: grid; gap: 0.15rem 1.25rem;
-  padding: 0.6rem 0;
-  border-top: 1px solid rgb(var(--filet));
-}
-@media (min-width: 26rem) {
-  .hero-fiche > div { grid-template-columns: 6rem minmax(0, 1fr); align-items: baseline; }
-}
-.hero-fiche > div:last-child { border-bottom: 1px solid rgb(var(--filet)); }
-/* L'intitulé se retire, le fait porte. Sa colonne dit déjà que c'est un
-   intitulé ; le mettre en petites capitales espacées à chasse fixe n'y
-   ajoutait qu'un déguisement. */
-.hero-fiche dt { font-size: 0.92rem; color: rgb(var(--sourdine)); }
-.hero-fiche dd { margin: 0; font-size: 0.95rem; color: rgb(var(--encre)); }
 
 /* ─────────────────────────────────────────────────────── 6. boutons ─── */
 
@@ -545,26 +536,18 @@ a { color: rgb(var(--accent)); }
   color: rgb(var(--inv-sourdine)); font-size: 0.95rem; margin-bottom: 1.4rem;
   max-width: 44ch;
 }
-.cnb { margin: 0; border-top: 1px solid rgb(var(--inv-filet)); }
-.cnb-ligne {
-  display: grid; gap: 0.3rem 2rem;
-  padding: 0.95rem 0;
-  border-bottom: 1px solid rgb(var(--inv-filet));
-}
-@media (min-width: 40rem) {
-  .cnb-ligne { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: baseline; }
-}
-/* Ce que demande la grille d'un côté, ce qu'on y répond de l'autre : le
-   contraste des deux familles suffit à les séparer, sans qu'aucun intitulé
-   ait à se déguiser. */
-.cnb dt {
-  font-size: 0.9rem; line-height: 1.5;
-  color: rgb(var(--inv-sourdine));
-}
-.cnb dd {
-  margin: 0;
-  font-family: var(--acte); font-size: 1.12rem; line-height: 1.35;
+/* Ce que demande la grille, puis ce qu'on y répond. C'était un tableau de
+   quatre lignes, intitulé à gauche en Archivo, réponse à droite en Garamond :
+   la page en comptait six de ce modèle, et cette monotonie était sa seule
+   idée de structure. Les deux voix restent, mais l'une SUIT l'autre au lieu
+   de lui faire face, et la réponse se lit comme une phrase. */
+.grille-reponse {
+  margin: 0 0 1.3rem;
+  font-family: var(--acte);
+  font-size: clamp(1.12rem, 1.02rem + 0.4vw, 1.32rem);
+  line-height: 1.45;
   color: rgb(var(--inv-texte));
+  max-width: 42ch;
 }
 .grille-note {
   margin-top: 1.3rem; font-size: 0.86rem; color: rgb(var(--inv-sourdine));
@@ -574,37 +557,35 @@ a { color: rgb(var(--accent)); }
 
 /* ──────────────────────────────────────────── 9. ce que fait la v1 ─── */
 
-.preuves-grille {
-  display: grid; gap: 1px;
-  background: rgb(var(--filet));
-  border: 1px solid rgb(var(--filet));
-  border-radius: var(--rayon);
-  overflow: hidden;
+/* Trois cartes de même taille, titre puis texte, alignées en grille : c'est
+   le gabarit que produit une page générée, et c'était la structure de cette
+   section. Remplacé par du texte suivi. Ce qui restait utile des cartes,
+   la correspondance de vocabulaire, a rejoint la phrase. */
+/* La prose à gauche, la phrase en Garamond à droite : la section employait la
+   moitié gauche de la page et laissait l'autre vide. Deux voix côte à côte,
+   comme dans le bloc inversé, sans qu'aucune ne devienne une colonne
+   d'étiquettes. */
+.dire-rang { display: grid; gap: 2rem; }
+@media (min-width: 62rem) {
+  .dire-rang {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+    gap: 4rem; align-items: start;
+  }
+  .legende-demo { margin-top: 0; }
 }
-@media (min-width: 52rem) { .preuves-grille { grid-template-columns: repeat(3, 1fr); } }
-.preuve {
-  background: rgb(var(--papier));
-  padding: clamp(1.35rem, 0.9rem + 1.4vw, 2rem);
-  display: flex; flex-direction: column;
+.dire-suite {
+  display: grid; gap: 1.15rem;
+  max-width: 62ch;
 }
-/* deux lignes réservées : sans ça, `text-wrap: balance` casse les trois
-   titres en 2/1/2 lignes et les corps des cartes ne partagent plus de ligne
-   de base : la grille sans le réglage typographique. */
-.preuve h3 { margin-bottom: 0.7rem; min-block-size: 2lh; }
-.preuve p { font-size: 0.97rem; color: rgb(var(--texte)); }
-.preuve-note {
-  margin-top: auto; padding-top: 1rem;
-  color: rgb(var(--sourdine)); font-size: 0.92rem;
-}
+.dire-suite p { margin: 0; }
 
-.paires { list-style: none; margin: 1.1rem 0 0; padding: 0; }
-.paires li {
-  display: grid; gap: 0.15rem;
-  padding: 0.6rem 0;
-  border-top: 1px solid rgb(var(--filet));
-}
+/* Les deux voix ne s'affrontent plus en colonnes : elles se suivent DANS la
+   phrase. La chasse fixe reste ce qui se prononce, le Garamond ce qui
+   s'écrit, et on lit une phrase au lieu de balayer un tableau. Tailles en
+   `em` : chaque famille est corrigée optiquement par rapport au texte qui la
+   porte, Courier chassant large et Garamond petit. */
 .dit {
-  font-family: var(--machine); font-size: 0.76rem; line-height: 1.5;
+  font-family: var(--machine); font-size: 0.86em;
   color: rgb(var(--sourdine));
 }
 /* espace FINE INSÉCABLE (U+202F) dans les guillemets, comme dans l'acte :
@@ -614,25 +595,14 @@ a { color: rgb(var(--accent)); }
 .dit::before { content: "«\00202F"; }
 .dit::after { content: "\00202F»"; }
 .ecrit {
-  font-family: var(--acte); font-size: 1.08rem; line-height: 1.3;
+  font-family: var(--acte); font-size: 1.12em;
   color: rgb(var(--encre));
+  white-space: nowrap;
 }
 .ecrit sup { font-size: 0.62em; vertical-align: 0.5em; }
 
-.jetons { list-style: none; margin: 1.1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
-.jetons li {
-  font-family: var(--machine); font-size: 0.74rem; line-height: 1.4;
-  color: rgb(var(--accent));
-  background: rgb(var(--accent) / .07);
-  border: 1px solid rgb(var(--accent) / .22);
-  border-radius: 2px;
-  padding: 0.25rem 0.45rem;
-}
-.jetons li::before { content: "«\00202F"; }
-.jetons li::after { content: "\00202F»"; }
-
 .legende-demo {
-  margin-top: 1.75rem; max-width: 58ch;
+  margin-top: 1.75rem; max-width: 34ch;
   font-family: var(--acte);
   font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
   line-height: 1.4;
@@ -675,7 +645,7 @@ a { color: rgb(var(--accent)); }
 .inclus { list-style: none; margin: 0 0 1.6rem; padding: 0; }
 .inclus li {
   position: relative; padding-left: 1.15rem; margin-bottom: 0.5rem;
-  font-size: 0.94rem; color: rgb(var(--texte));
+  font-size: 0.95rem; color: rgb(var(--texte));
 }
 .inclus li::before {
   content: ""; position: absolute; left: 0; top: 0.62em;
@@ -683,69 +653,21 @@ a { color: rgb(var(--accent)); }
 }
 .offre .bouton { margin-top: auto; align-self: flex-start; }
 
-.ancrage { margin-top: clamp(2rem, 1rem + 2.5vw, 3rem); }
-.tableau-ancrage { width: 100%; border-collapse: collapse; }
-/* Une vraie légende de tableau, dans <caption>, à la place d'une phrase
-   entière mise en capitales espacées au-dessus : une phrase n'est pas une
-   étiquette, et le doublon avec la légende cachée disparaît. */
-.tableau-ancrage caption {
-  caption-side: top; text-align: left;
-  max-width: 54ch; padding-bottom: 0.85rem;
-  font-size: 0.95rem; line-height: 1.5;
+/* C'etait un <table> de trois lignes, plus une media query qui le
+   redecoupait en grille sous 44rem : une cinquantaine de lignes de CSS pour
+   trois prix. Une phrase les porte aussi bien, et la comparaison se fait
+   d'elle-meme puisque nos deux formules sont juste au-dessus. */
+.ancrage {
+  margin-top: clamp(2rem, 1rem + 2.5vw, 3rem);
+  padding-top: 1.4rem;
+  border-top: 1px solid rgb(var(--filet));
+  max-width: 62ch;
+  font-size: 0.95rem; line-height: 1.6;
   color: rgb(var(--sourdine));
 }
-.tableau-ancrage th, .tableau-ancrage td {
-  text-align: left; vertical-align: baseline;
-  padding: 0.9rem 1rem 0.9rem 0;
-  border-top: 1px solid rgb(var(--filet-net));
-  font-weight: 400;
-}
-.tableau-ancrage tr:last-child th, .tableau-ancrage tr:last-child td {
-  border-bottom: 1px solid rgb(var(--filet-net));
-}
-.tableau-ancrage th { color: rgb(var(--encre)); font-size: 0.97rem; width: 38%; }
-.chiffre {
+.ancrage b {
+  color: rgb(var(--encre)); font-weight: 600;
   font-variant-numeric: tabular-nums lining-nums;
-  white-space: nowrap; color: rgb(var(--encre));
-  font-weight: 600; width: 22%;
-}
-.periode {
-  display: block; font-weight: 400; font-size: 0.8rem;
-  color: rgb(var(--sourdine)); letter-spacing: 0;
-}
-.glose { color: rgb(var(--sourdine)); font-size: 0.88rem; line-height: 1.45; }
-.ligne-nous th, .ligne-nous .chiffre { color: rgb(var(--accent)); font-weight: 600; }
-.ligne-nous th { position: relative; padding-left: 0.9rem; }
-.ligne-nous th::before {
-  content: ""; position: absolute; left: 0; top: 0.95rem; bottom: 0.95rem;
-  width: 2px; background: rgb(var(--accent));
-}
-/* Sur téléphone, la comparaison DOIT rester une comparaison : intitulé à
-   gauche, chiffre à droite, alignés, et non quatre blocs empilés qui obligent à
-   retenir un nombre à travers 130 px de glose. La glose passe dessous, plus
-   petite, hors du champ de comparaison. */
-@media (max-width: 44rem) {
-  .tableau-ancrage, .tableau-ancrage tbody { display: block; }
-  .tableau-ancrage tr {
-    display: grid; grid-template-columns: minmax(0, 1fr) auto;
-    gap: 0 1rem; align-items: baseline;
-    position: relative;
-    border-top: 1px solid rgb(var(--filet-net));
-    padding: 0.9rem 0;
-  }
-  .tableau-ancrage th, .tableau-ancrage td {
-    display: block; width: auto; border: 0; padding: 0;
-  }
-  .tableau-ancrage .chiffre { text-align: right; }
-  .tableau-ancrage .periode { display: inline; font-size: 0.72rem; }
-  .tableau-ancrage .glose { grid-column: 1 / -1; margin-top: 0.35rem; font-size: 0.8rem; }
-  .tableau-ancrage tr:last-child { border-bottom: 1px solid rgb(var(--filet-net)); }
-  /* Aucun filet vertical ici : une fois la ligne redevenue UNE ligne
-     (intitulé | chiffre), l'intitulé et le chiffre en bleu gras suffisent à
-     dire laquelle est la nôtre. Le filet ne servait qu'à recoller les trois
-     blocs de l'empilement précédent : le défaut a disparu, le remède aussi. */
-  .ligne-nous th { padding-left: 0; }
-  .ligne-nous th::before { display: none; }
 }
 
 /* le boîtier : un plan, pas un produit. Le filet discontinu suffit à le
@@ -776,17 +698,31 @@ a { color: rgb(var(--accent)); }
    à pleine taille, ce qui le tempère à droite, en petit. Aucune puce,
    aucun tiret, et le manque garde le premier rang de lecture. */
 .limites .tete-section { max-width: 40rem; }
+/* Deux colonnes d'items, et non deux colonnes PAR item : la page gagne la
+   moitié de sa largeur et la section perd la moitié de sa hauteur. Chaque
+   aveu porte son propre filet de tête, donc les filets s'alignent dans leur
+   colonne. (Un filet de section en pleine largeur au-dessus d'items limités
+   à 60ch ne s'alignait avec rien : c'était visible.) */
 .aveux {
   list-style: none; margin: 0; padding: 0;
   border-top: 1px solid rgb(var(--filet));
 }
+@media (min-width: 58rem) {
+  .aveux {
+    display: grid; grid-template-columns: 1fr 1fr;
+    column-gap: 4rem; align-items: start;
+    border-top: 0;
+  }
+  .aveu { border-top: 1px solid rgb(var(--filet)); border-bottom: 0; max-width: none; }
+}
+/* Une seule colonne. Le manque énoncé, puis ce qui le tempère juste dessous :
+   deux colonnes obligeaient l'œil à repartir à gauche pour chaque ligne, et
+   c'était le sixième bloc de ce modèle dans la page. */
 .aveu {
-  display: grid; gap: 0.5rem 3rem;
+  display: grid; gap: 0.4rem;
   padding: clamp(1.05rem, 0.8rem + 0.9vw, 1.5rem) 0;
   border-bottom: 1px solid rgb(var(--filet));
-}
-@media (min-width: 58rem) {
-  .aveu { grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); align-items: baseline; }
+  max-width: 60ch;
 }
 .aveu-fait {
   margin: 0;
@@ -838,19 +774,6 @@ a { color: rgb(var(--accent)); }
   object-fit: cover;
 }
 .auteur-dire h2 { margin-bottom: 1.1rem; }
-.coordonnees {
-  margin: 1.75rem 0 0; padding-top: 1.25rem;
-  border-top: 1px solid rgb(var(--filet));
-  display: grid; gap: 0.85rem;
-}
-@media (min-width: 40rem) {
-  .coordonnees { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
-}
-.coordonnees dt {
-  font-size: 0.9rem;
-  color: rgb(var(--sourdine)); margin-bottom: 0.15rem;
-}
-.coordonnees dd { margin: 0; font-size: 0.95rem; color: rgb(var(--encre)); }
 
 /* ─────────────────────────────────────────────────── 13. formulaire ─── */
 
