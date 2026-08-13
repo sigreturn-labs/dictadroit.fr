@@ -1,0 +1,19 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# 🔴🔴 FICHIER TEMPORAIRE — À SUPPRIMER AVANT LA PREMIÈRE ANNONCE 🔴🔴
+# ═══════════════════════════════════════════════════════════════════════════
+# POURQUOI : le site est mis en ligne AVANT la relecture du texte, uniquement
+# pour prouver les deux choses qu'un poste de développement ne peut pas
+# prouver — que la redirection de Web3Forms tombe bien sur NOTRE merci.html,
+# et que le courriel arrive avec le champ « frustration » entier.
+#
+# QUAND LE SUPPRIMER : avant la première annonce Google Ads. Laisser ce
+# fichier pendant une campagne payante, c'est payer pour une page que Google
+# n'explore pas — et rien, nulle part, ne le signale.
+#
+# À SUPPRIMER ENSEMBLE, EN UN SEUL GESTE : ce fichier ET les trois balises
+# <meta name="robots" content="noindex, nofollow"> des trois pages.
+# CONTRÔLE MÉCANIQUE :  grep -rn "noindex" landing/   → doit être vide.
+# ═══════════════════════════════════════════════════════════════════════════
+
+User-agent: *
+Disallow: /

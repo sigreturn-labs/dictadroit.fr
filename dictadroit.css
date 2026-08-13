@@ -1,0 +1,1010 @@
+@charset "utf-8";
+/* ══════════════════════════════════════════════════════════════════════════
+   Dictadroit — feuille de style unique. Écrite à la main, sans framework,
+   sans étape de compilation, sans une seule requête vers un domaine tiers.
+
+   LA THÈSE : la page fait devant le visiteur ce que le logiciel fait au
+   cabinet. Deux registres typographiques se répondent — la parole en chasse
+   fixe, minuscules, sans ponctuation ; l'acte en Garamond, avec la
+   typographie judiciaire française (guillemets et espaces fines, petites
+   capitales, moyens numérotés, alinéas justifiés).
+
+   LA COULEUR : en France, l'original d'un acte se reconnaît à la signature à
+   l'encre bleue ; la photocopie est en noir. Ce bleu-là, et lui seul, porte
+   les actions de la page. Le papier est froid (blanc administratif), jamais
+   crème : ce métier ne vit pas sur du papier d'édition.
+
+   Couleurs déclarées en triplets RVB pour composer les alphas :
+       color: rgb(var(--encre));  ·  background: rgb(var(--accent) / .08)
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ─────────────────────────────────────────────────────── 1. polices ─── */
+
+/* Deux instances STATIQUES d'Archivo, pas la police variable : l'ajout de
+   l'espace fine insécable (U+202F, absente des trois familles d'origine)
+   invalide les tables de variations, et Firefox les jette en silence — la
+   page perdait alors toute distinction de graisse. Vérifié au navigateur. */
+@font-face {
+  font-family: "Archivo";
+  src: url("polices/archivo-400-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Archivo";
+  src: url("polices/archivo-600-latin.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "EB Garamond";
+  src: url("polices/garamond-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Courier Prime";
+  src: url("polices/courier-latin.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Courier Prime";
+  src: url("polices/courier-bold-latin.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ──────────────────────────────────────────────────────── 2. jetons ─── */
+
+:root {
+  /* clair — le papier administratif, froid */
+  --papier:    247 247 245;
+  --panneau:   238 239 236;
+  --feuille:   255 255 255;
+  --filet:     214 216 212;
+  --filet-net: 190 193 188;
+  /* Le filet des CONTRÔLES (champs, bouton de contour). WCAG 1.4.11 demande
+     3:1 pour ce qui délimite un contrôle, et --filet-net n'est qu'à 1,70:1.
+     Recalculé des DEUX côtés du trait, parce qu'un champ est posé sur le
+     papier À L'INTÉRIEUR d'une carte plus claire : clair 3,24:1 sur le
+     papier et 3,47:1 sur la feuille ; nuit 4,24:1 et 3,37:1. */
+  --filet-controle: 132 138 148;
+  --encre:      16  18  22;
+  --texte:      46  50  58;
+  --sourdine:  102 108 118;
+  --accent:     27  58 138;   /* le bleu de signature */
+  --accent-vif: 22  48 118;
+  --sur-accent:255 255 255;   /* ce qui s'écrit SUR le bleu */
+
+  /* le bloc inversé : un seul dans toute la page */
+  --inv-fond:      16  18  22;
+  --inv-texte:    247 247 245;
+  --inv-sourdine: 154 161 172;
+  --inv-accent:   138 169 240;
+  --inv-filet:     45  50  58;
+
+  --grotesque: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --acte: "EB Garamond", Garamond, "Times New Roman", serif;
+  --machine: "Courier Prime", "Courier New", ui-monospace, monospace;
+
+  --rayon: 3px;
+  --ombre-feuille: 0 1px 2px rgb(var(--encre) / .05),
+                   0 12px 28px -14px rgb(var(--encre) / .22);
+  color-scheme: light;
+}
+
+/* sombre — inversion cohérente : le papier devient la nuit, la feuille reste
+   la surface la plus claire, et le bloc inversé passe au papier pour que le
+   rythme de la page tienne dans les deux thèmes. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="clair"]) {
+    --papier:     15  17  20;
+    --panneau:    23  26  31;
+    --feuille:    34  39  46;
+    --filet:      43  48  56;
+    --filet-net:  62  69  80;
+    --filet-controle: 112 120 132;
+    --encre:     237 238 234;
+    --texte:     199 203 209;
+    --sourdine:  139 146 156;
+    --accent:    138 169 240;
+    --accent-vif:170 194 250;
+    --sur-accent: 15  17  20;
+
+    --inv-fond:     247 247 245;
+    --inv-texte:     16  18  22;
+    --inv-sourdine: 102 108 118;
+    --inv-accent:    27  58 138;
+    --inv-filet:    214 216 212;
+
+    /* de nuit, une ombre noire sur une page noire ne se voit pas : la feuille
+       flotte alors par une LUMIÈRE d'un pixel, pas par une ombre. */
+    --ombre-feuille: 0 0 0 1px rgb(255 255 255 / .07),
+                     0 18px 40px -20px rgb(0 0 0 / .9);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="sombre"] {
+  --papier:     15  17  20;
+  --panneau:    23  26  31;
+  --feuille:    34  39  46;
+  --filet:      43  48  56;
+  --filet-net:  62  69  80;
+  --filet-controle: 112 120 132;
+  --encre:     237 238 234;
+  --texte:     199 203 209;
+  --sourdine:  139 146 156;
+  --accent:    138 169 240;
+  --accent-vif:170 194 250;
+  --sur-accent: 15  17  20;
+
+  --inv-fond:     247 247 245;
+  --inv-texte:     16  18  22;
+  --inv-sourdine: 102 108 118;
+  --inv-accent:    27  58 138;
+  --inv-filet:    214 216 212;
+
+  --ombre-feuille: 0 0 0 1px rgb(255 255 255 / .07),
+                   0 18px 40px -20px rgb(0 0 0 / .9);
+  color-scheme: dark;
+}
+
+/* ───────────────────────────────────────────────── 3. base et texte ─── */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+  scroll-padding-top: 4.5rem;
+}
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: rgb(var(--papier));
+  color: rgb(var(--texte));
+  font-family: var(--grotesque);
+  font-size: 1.0625rem;
+  line-height: 1.62;
+  font-synthesis-weight: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  margin: 0;
+  color: rgb(var(--encre));
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.08;
+  text-wrap: balance;
+}
+/* Plafond abaissé de 3,9 à 3,6 rem. Le titre de l'accroche, lui, est plafonné
+   plus finement encore par la largeur de sa colonne (voir §5, .hero h1). */
+h1 { font-size: clamp(2.05rem, 1.35rem + 2.9vw, 3.6rem); letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.6rem, 1.2rem + 1.7vw, 2.5rem); }
+h3 { font-size: clamp(1.1rem, 1rem + 0.4vw, 1.28rem); letter-spacing: -0.012em; line-height: 1.25; }
+
+p { margin: 0 0 1em; }
+p:last-child { margin-bottom: 0; }
+
+b, strong { font-weight: 600; color: rgb(var(--encre)); }
+
+a { color: rgb(var(--accent)); }
+.lien {
+  color: rgb(var(--accent));
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.lien:hover { text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid rgb(var(--accent));
+  outline-offset: 3px;
+  border-radius: 1px;
+}
+
+::selection { background: rgb(var(--accent) / .18); }
+
+.visuellement-cache {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+.saut {
+  position: absolute; left: 0.75rem; top: -4rem; z-index: 20;
+  background: rgb(var(--accent)); color: rgb(var(--feuille));
+  padding: 0.6rem 1rem; border-radius: var(--rayon); text-decoration: none;
+  transition: top .15s ease;
+}
+.saut:focus { top: 0.75rem; }
+
+/* Il n'y a pas de surtitre sur cette page. La micro-étiquette en capitales
+   posée au-dessus d'un titre est la signature visuelle n°1 de la page
+   d'atterrissage fabriquée : les H1 et H2 portent leur poids tout seuls. */
+
+/* les marqueurs de ce qui reste à renseigner — volontairement voyants */
+.a-completer {
+  display: inline;
+  font-family: var(--machine);
+  font-size: 0.8em;
+  line-height: 1.45;
+  color: rgb(var(--accent-vif));
+  background: rgb(var(--accent) / .09);
+  border-bottom: 2px dashed rgb(var(--accent) / .55);
+  padding: 0.1em 0.35em;
+}
+
+.page { width: min(100% - 2.5rem, 1180px); margin-inline: auto; }
+@media (min-width: 60rem) { .page { width: min(100% - 5rem, 1180px); } }
+
+.section { padding-block: clamp(3.25rem, 1.6rem + 5.4vw, 6.5rem); }
+
+.tete-section { max-width: 46rem; margin-bottom: clamp(2rem, 1rem + 2.5vw, 3.25rem); }
+.tete-section h2 + .tete-note { margin-top: 1.1rem; }
+.tete-note { color: rgb(var(--sourdine)); max-width: 40rem; }
+
+/* ────────────────────────────────────────────────────── 4. en-tête ─── */
+
+/* Collant, parce que la page fait 7 700 px et que son unique travail est de
+   récupérer une adresse : un cartouche d'imprimeur qui reste à portée, pas un
+   bandeau de croissance. Hauteur constante — la réduire au défilement
+   demanderait un écouteur JavaScript, et cette page tient sans. */
+.entete {
+  position: sticky; top: 0; z-index: 10;
+  border-bottom: 1px solid rgb(var(--filet));
+  background: rgb(var(--papier));
+}
+.entete-rang {
+  display: flex; align-items: center; gap: 1rem;
+  min-height: 3.5rem; flex-wrap: wrap;
+}
+.marque {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  color: rgb(var(--encre)); text-decoration: none;
+  font-weight: 600; font-size: 1.06rem; letter-spacing: -0.025em;
+}
+.paraphe { display: block; overflow: visible; }
+.paraphe--mini { width: 1.55rem; height: 1.35rem; color: rgb(var(--accent)); }
+.marque-note {
+  margin: 0; color: rgb(var(--sourdine)); font-size: 0.8rem;
+  border-left: 1px solid rgb(var(--filet)); padding-left: 1rem;
+}
+.entete-nav { margin-left: auto; display: flex; align-items: baseline; gap: 1.4rem; }
+.entete-nav a {
+  color: rgb(var(--texte)); text-decoration: none; font-size: 0.92rem;
+  padding-block: 0.2rem; border-bottom: 1px solid transparent;
+}
+.entete-nav a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
+/* le seul lien qui survit sur téléphone : le chemin vers le formulaire */
+.entete-cta { color: rgb(var(--accent)); font-weight: 600; }
+.entete-cta:hover { border-bottom-color: rgb(var(--accent)); }
+@media (max-width: 47rem) {
+  .marque-note, .entete-nav a:not(.entete-cta) { display: none; }
+  .entete-rang { min-height: 3rem; }
+  .entete-nav { gap: 0; }
+}
+
+/* ───────────────────────────────────────────────────────── 5. hero ─── */
+
+.hero { padding-block: clamp(2.25rem, 1rem + 4.5vw, 5rem) clamp(3rem, 1.5rem + 5vw, 6rem); }
+.hero-rang { display: grid; gap: clamp(2.5rem, 1rem + 5vw, 4rem); align-items: start; }
+@media (min-width: 64rem) {
+  .hero-rang { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4.5rem; }
+  /* La troisième déclarative — « Rien ne sort du cabinet. » — DOIT tenir sur
+     une ligne : c'est la composition du titre, et une phrase coupée en deux
+     au milieu n'est plus une déclarative. Mesuré au navigateur (Archivo 600,
+     -0,03 em) : elle réclame 10,03 fois le corps du texte. En deux colonnes,
+     la colonne vaut (largeur de page − gouttière) / 2 — donc le corps est
+     plafonné par la COLONNE, pas par la fenêtre, sinon la coupure revient
+     entre 1024 et 1280 px où le titre grandit plus vite que sa colonne.
+     Diviseur 21 = 10,5 par colonne : la marge couvre la barre de défilement
+     que 100vw compte et que la colonne n'a pas. */
+  .hero h1 { font-size: min(3.35rem, (min(100vw - 5rem, 1180px) - 4.5rem) / 21); }
+}
+
+.hero h1 { margin-bottom: 1.15rem; }
+.h1-bleu { color: rgb(var(--accent)); }
+.chapeau {
+  font-size: clamp(1.06rem, 1rem + 0.35vw, 1.22rem);
+  color: rgb(var(--texte));
+  max-width: 32ch;
+  margin-bottom: 1.6rem;
+}
+.actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+.hero-etat {
+  margin-top: 1.6rem; padding-top: 1.1rem;
+  border-top: 1px solid rgb(var(--filet));
+  font-size: 0.92rem; color: rgb(var(--sourdine)); max-width: 34rem;
+}
+
+.hero-fiche {
+  margin: 1.5rem 0 0; display: grid;
+}
+.hero-fiche > div {
+  display: grid; gap: 0.15rem 1.25rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgb(var(--filet));
+}
+@media (min-width: 26rem) {
+  .hero-fiche > div { grid-template-columns: 5.5rem minmax(0, 1fr); align-items: baseline; }
+}
+.hero-fiche > div:last-child { border-bottom: 1px solid rgb(var(--filet)); }
+.hero-fiche dt {
+  font-family: var(--machine); font-size: 0.68rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: rgb(var(--sourdine));
+}
+.hero-fiche dd { margin: 0; font-size: 0.92rem; color: rgb(var(--texte)); }
+
+/* ─────────────────────────────────────────────────────── 6. boutons ─── */
+
+.bouton {
+  display: inline-flex; align-items: center; justify-content: center;
+  font: inherit; font-weight: 600; font-size: 0.97rem; letter-spacing: -0.006em;
+  padding: 0.78rem 1.35rem; border-radius: var(--rayon);
+  border: 1px solid transparent; cursor: pointer; text-decoration: none;
+  text-align: center;
+  transition: background-color .16s ease, border-color .16s ease,
+              color .16s ease, transform .16s ease;
+}
+.bouton--bleu {
+  background: rgb(var(--accent));
+  color: rgb(var(--sur-accent));
+  border-color: rgb(var(--accent));
+}
+.bouton--bleu:hover { background: rgb(var(--accent-vif)); border-color: rgb(var(--accent-vif)); }
+
+.bouton--fil {
+  background: transparent; color: rgb(var(--encre));
+  border-color: rgb(var(--filet-controle));
+}
+.bouton--fil:hover { border-color: rgb(var(--encre)); background: rgb(var(--encre) / .04); }
+
+.bouton--fil-bleu {
+  background: rgb(var(--feuille)); color: rgb(var(--accent));
+  border-color: rgb(var(--accent) / .5);
+}
+.bouton--fil-bleu:hover { border-color: rgb(var(--accent)); background: rgb(var(--accent) / .07); }
+
+.bouton--large { padding: 0.95rem 2rem; font-size: 1.02rem; }
+.bouton:active { transform: translateY(1px); }
+/* « Envoi… » pendant le POST : sur une liaison lente, un bouton qui ne change
+   pas d'état se fait cliquer deux fois. */
+.bouton[disabled] { cursor: default; opacity: 0.72; }
+.bouton[disabled]:active { transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .bouton { transition: none; }
+  .bouton:active { transform: none; }
+}
+
+/* ────────────────────────── 7. l'objet de transformation (signature) ─── */
+
+.transformation { margin: 0; }
+
+.volet-titre {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  font-family: var(--machine); font-size: 0.72rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+  color: rgb(var(--sourdine));
+  padding-bottom: 0.55rem;
+}
+.volet-num { color: rgb(var(--encre)); }
+
+.parole {
+  background: rgb(var(--panneau));
+  border: 1px solid rgb(var(--filet));
+  border-radius: var(--rayon);
+  padding: clamp(1rem, 0.6rem + 1.2vw, 1.6rem);
+}
+.parole p {
+  margin: 0;
+  font-family: var(--machine);
+  font-size: clamp(0.78rem, 0.72rem + 0.22vw, 0.875rem);
+  line-height: 1.95;
+  color: rgb(var(--texte));
+  overflow-wrap: break-word;
+}
+.cmd {
+  font-weight: 700;
+  color: rgb(var(--accent));
+  box-shadow: inset 0 -1px 0 0 rgb(var(--accent) / .38);
+}
+
+/* la bascule : le filet qui dit « et ça devient ceci » */
+.bascule {
+  position: relative;
+  display: flex; align-items: center; gap: 1rem;
+  margin: 1.5rem 0 1.9rem;
+  color: rgb(var(--sourdine));
+  font-family: var(--machine); font-size: 0.7rem;
+  letter-spacing: 0.13em; text-transform: uppercase;
+}
+.bascule::before, .bascule::after {
+  content: ""; height: 1px; background: rgb(var(--filet-net)); flex: 1 1 auto;
+}
+.bascule span { flex: 0 0 auto; }
+.bascule::after { flex: 0 0 1.75rem; }
+
+.feuille {
+  position: relative;
+  background: rgb(var(--feuille));
+  border: 1px solid rgb(var(--filet));
+  border-radius: var(--rayon);
+  box-shadow: var(--ombre-feuille);
+  padding: clamp(1.4rem, 0.8rem + 2vw, 2.6rem) clamp(1.2rem, 0.6rem + 2.4vw, 2.8rem)
+           clamp(1rem, 0.6rem + 1.4vw, 1.6rem);
+}
+
+.acte {
+  font-family: var(--acte);
+  font-size: clamp(1rem, 0.94rem + 0.28vw, 1.14rem);
+  line-height: 1.5;
+  color: rgb(var(--encre));
+}
+.acte-rituel {
+  margin: 0 0 1.1em;
+  text-align: center;
+  font-variant-caps: all-small-caps;
+  font-feature-settings: "c2sc", "smcp";
+  letter-spacing: 0.14em;
+  font-size: 0.98em;
+}
+.acte-rituel:not(:first-child) { margin-top: 1.5em; }
+.acte-moyen {
+  margin: 0 0 0.9em;
+  font-variant-caps: all-small-caps;
+  font-feature-settings: "c2sc", "smcp";
+  letter-spacing: 0.07em;
+  font-size: 1em;
+}
+.acte-alinea {
+  margin: 0 0 0.75em;
+  text-indent: 1.7em;
+  text-align: justify;
+  hyphens: auto;
+}
+.acte-alinea:last-child { margin-bottom: 0; }
+
+/* Les trois lignes que la PREMIÈRE version ne compose pas encore toute seule :
+   marquées d'un filet dans la marge, comme une barre de révision sur un
+   projet d'acte, et non retirées de la démonstration. La feuille dit alors
+   elle-même où elle en est — au lieu de quatre rétractations en prose. */
+.acte-v2 { position: relative; }
+.acte-v2::before {
+  content: ""; position: absolute;
+  left: -0.85em; top: 0.12em; bottom: 0.12em;
+  width: 2px; background: rgb(var(--accent));
+}
+.acte-marge {
+  position: absolute; left: -2.4rem; top: 0;
+  font-family: var(--machine); font-size: 0.62rem; line-height: 1.6;
+  letter-spacing: 0.08em; color: rgb(var(--accent));
+}
+/* sous 64 rem la feuille n'a plus de marge où poser la note : le filet reste,
+   et la légende sous la feuille dit ce qu'il veut dire. */
+@media (max-width: 63.99rem) { .acte-marge { display: none; } }
+
+.transformation-note {
+  margin-top: 0.9rem;
+  font-size: 0.85rem; line-height: 1.5;
+  color: rgb(var(--sourdine));
+}
+
+.acte-signature {
+  margin-top: clamp(1.4rem, 1rem + 1.4vw, 2.2rem);
+  display: flex; justify-content: flex-end;
+}
+.acte-signature .paraphe {
+  width: 7.5rem; height: 2.5rem;
+  color: rgb(var(--accent));
+  border-bottom: 1px solid rgb(var(--filet));
+  padding-bottom: 0.35rem;
+}
+.paraphe-trait { stroke-dasharray: 1; stroke-dashoffset: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .paraphe-trait { animation: signer 1.5s cubic-bezier(.62, .04, .35, 1) .45s forwards; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .paraphe-trait { stroke-dashoffset: 0; }
+}
+@keyframes signer { to { stroke-dashoffset: 0; } }
+
+/* ──────────────────────── 8. le bloc inversé : la souveraineté ──────── */
+
+.local {
+  background: rgb(var(--inv-fond));
+  color: rgb(var(--inv-texte) / .82);
+  padding-block: clamp(3rem, 1.5rem + 5vw, 5.5rem);
+}
+.local h2 { color: rgb(var(--inv-texte)); }
+.local-rang { display: grid; gap: clamp(2.25rem, 1rem + 4vw, 4rem); }
+@media (min-width: 62rem) {
+  .local-rang { grid-template-columns: minmax(0, 0.92fr) minmax(0, 1fr); align-items: start; }
+}
+.local-chapeau {
+  margin-top: 1.3rem; max-width: 34ch;
+  color: rgb(var(--inv-texte) / .78);
+}
+/* Les trente secondes, montrées au lieu d'être promises — et la colonne de
+   gauche cesse d'être vide sur 296 px. */
+.verif {
+  list-style: none; margin: 1.9rem 0 0; padding: 0;
+  max-width: 30rem;
+  counter-reset: verif;
+}
+.verif li {
+  counter-increment: verif;
+  display: grid; grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: 0.75rem; align-items: baseline;
+  padding: 0.7rem 0;
+  border-top: 1px solid rgb(var(--inv-filet));
+  color: rgb(var(--inv-texte) / .9);
+  font-size: 0.97rem;
+}
+.verif li:last-child { border-bottom: 1px solid rgb(var(--inv-filet)); }
+.verif li::before {
+  content: counter(verif) ".";
+  font-family: var(--machine); font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  color: rgb(var(--inv-accent));
+}
+.grille-intro {
+  color: rgb(var(--inv-sourdine)); font-size: 0.95rem; margin-bottom: 1.4rem;
+  max-width: 44ch;
+}
+.cnb { margin: 0; border-top: 1px solid rgb(var(--inv-filet)); }
+.cnb-ligne {
+  display: grid; gap: 0.3rem 2rem;
+  padding: 0.95rem 0;
+  border-bottom: 1px solid rgb(var(--inv-filet));
+}
+@media (min-width: 40rem) {
+  .cnb-ligne { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: baseline; }
+}
+.cnb dt {
+  font-family: var(--machine); font-size: 0.78rem; line-height: 1.5;
+  letter-spacing: 0.03em;
+  color: rgb(var(--inv-sourdine));
+}
+.cnb dd {
+  margin: 0;
+  font-family: var(--acte); font-size: 1.12rem; line-height: 1.35;
+  color: rgb(var(--inv-texte));
+}
+.grille-note {
+  margin-top: 1.3rem; font-size: 0.86rem; color: rgb(var(--inv-sourdine));
+  max-width: 52ch;
+}
+.local :focus-visible { outline-color: rgb(var(--inv-accent)); }
+
+/* ──────────────────────────────────────────── 9. ce que fait la v1 ─── */
+
+.preuves-grille {
+  display: grid; gap: 1px;
+  background: rgb(var(--filet));
+  border: 1px solid rgb(var(--filet));
+  border-radius: var(--rayon);
+  overflow: hidden;
+}
+@media (min-width: 52rem) { .preuves-grille { grid-template-columns: repeat(3, 1fr); } }
+.preuve {
+  background: rgb(var(--papier));
+  padding: clamp(1.35rem, 0.9rem + 1.4vw, 2rem);
+  display: flex; flex-direction: column;
+}
+/* deux lignes réservées : sans ça, `text-wrap: balance` casse les trois
+   titres en 2/1/2 lignes et les corps des cartes ne partagent plus de ligne
+   de base — la grille sans le réglage typographique. */
+.preuve h3 { margin-bottom: 0.7rem; min-block-size: 2lh; }
+.preuve p { font-size: 0.97rem; color: rgb(var(--texte)); }
+.preuve-note {
+  margin-top: auto; padding-top: 1rem;
+  color: rgb(var(--sourdine)); font-size: 0.92rem;
+}
+
+.paires { list-style: none; margin: 1.1rem 0 0; padding: 0; }
+.paires li {
+  display: grid; gap: 0.15rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid rgb(var(--filet));
+}
+.dit {
+  font-family: var(--machine); font-size: 0.76rem; line-height: 1.5;
+  color: rgb(var(--sourdine));
+}
+/* espace FINE INSÉCABLE (U+202F) dans les guillemets, comme dans l'acte :
+   l'espace ordinaire employée ici était sécable et pouvait tomber en fin de
+   ligne. Écrite en six chiffres hexadécimaux pour que l'échappement soit
+   clos sans ambiguïté. */
+.dit::before { content: "«\00202F"; }
+.dit::after { content: "\00202F»"; }
+.ecrit {
+  font-family: var(--acte); font-size: 1.08rem; line-height: 1.3;
+  color: rgb(var(--encre));
+}
+.ecrit sup { font-size: 0.62em; vertical-align: 0.5em; }
+
+.jetons { list-style: none; margin: 1.1rem 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.jetons li {
+  font-family: var(--machine); font-size: 0.74rem; line-height: 1.4;
+  color: rgb(var(--accent));
+  background: rgb(var(--accent) / .07);
+  border: 1px solid rgb(var(--accent) / .22);
+  border-radius: 2px;
+  padding: 0.25rem 0.45rem;
+}
+.jetons li::before { content: "«\00202F"; }
+.jetons li::after { content: "\00202F»"; }
+
+.legende-demo {
+  margin-top: 1.75rem; max-width: 58ch;
+  font-family: var(--acte);
+  font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
+  line-height: 1.4;
+  color: rgb(var(--texte));
+}
+.legende-puce { color: rgb(var(--accent)); font-weight: 600; }
+
+/* ──────────────────────────────────────────────────────── 10. prix ─── */
+
+.prix {
+  background: rgb(var(--panneau));
+  border-block: 1px solid rgb(var(--filet));
+}
+.offres { display: grid; gap: 1.25rem; }
+@media (min-width: 48rem) { .offres { grid-template-columns: 1fr 1fr; } }
+.offre {
+  background: rgb(var(--feuille));
+  border: 1px solid rgb(var(--filet-net));
+  border-radius: var(--rayon);
+  padding: clamp(1.4rem, 0.9rem + 1.6vw, 2.1rem);
+  display: flex; flex-direction: column;
+}
+.offre h3 { margin-bottom: 0.9rem; }
+.montant {
+  margin: 0 0 0.35rem;
+  display: flex; align-items: baseline; flex-wrap: wrap; gap: 0.5rem;
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.nombre {
+  font-size: clamp(2rem, 1.5rem + 1.8vw, 2.9rem);
+  font-weight: 600; letter-spacing: -0.035em; line-height: 1;
+  color: rgb(var(--encre));
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.unite { font-size: 0.9rem; color: rgb(var(--sourdine)); font-weight: 400; }
+.montant-second {
+  margin: 0 0 1.2rem; font-size: 0.95rem; color: rgb(var(--texte));
+  font-variant-numeric: tabular-nums lining-nums;
+}
+.inclus { list-style: none; margin: 0 0 1.6rem; padding: 0; }
+.inclus li {
+  position: relative; padding-left: 1.15rem; margin-bottom: 0.5rem;
+  font-size: 0.94rem; color: rgb(var(--texte));
+}
+.inclus li::before {
+  content: ""; position: absolute; left: 0; top: 0.62em;
+  width: 0.6rem; height: 1px; background: rgb(var(--accent));
+}
+.offre .bouton { margin-top: auto; align-self: flex-start; }
+
+.ancrage { margin-top: clamp(2rem, 1rem + 2.5vw, 3rem); }
+.ancrage-titre {
+  font-family: var(--machine); font-size: 0.74rem;
+  letter-spacing: 0.11em; text-transform: uppercase;
+  color: rgb(var(--sourdine)); margin-bottom: 0.9rem;
+}
+.tableau-ancrage { width: 100%; border-collapse: collapse; }
+.tableau-ancrage th, .tableau-ancrage td {
+  text-align: left; vertical-align: baseline;
+  padding: 0.9rem 1rem 0.9rem 0;
+  border-top: 1px solid rgb(var(--filet-net));
+  font-weight: 400;
+}
+.tableau-ancrage tr:last-child th, .tableau-ancrage tr:last-child td {
+  border-bottom: 1px solid rgb(var(--filet-net));
+}
+.tableau-ancrage th { color: rgb(var(--encre)); font-size: 0.97rem; width: 38%; }
+.chiffre {
+  font-variant-numeric: tabular-nums lining-nums;
+  white-space: nowrap; color: rgb(var(--encre));
+  font-weight: 600; width: 22%;
+}
+.periode {
+  display: block; font-weight: 400; font-size: 0.8rem;
+  color: rgb(var(--sourdine)); letter-spacing: 0;
+}
+.glose { color: rgb(var(--sourdine)); font-size: 0.88rem; line-height: 1.45; }
+.ligne-nous th, .ligne-nous .chiffre { color: rgb(var(--accent)); font-weight: 600; }
+.ligne-nous th { position: relative; padding-left: 0.9rem; }
+.ligne-nous th::before {
+  content: ""; position: absolute; left: 0; top: 0.95rem; bottom: 0.95rem;
+  width: 2px; background: rgb(var(--accent));
+}
+/* Sur téléphone, la comparaison DOIT rester une comparaison : intitulé à
+   gauche, chiffre à droite, alignés — pas quatre blocs empilés qui obligent à
+   retenir un nombre à travers 130 px de glose. La glose passe dessous, plus
+   petite, hors du champ de comparaison. */
+@media (max-width: 44rem) {
+  .tableau-ancrage, .tableau-ancrage tbody { display: block; }
+  .tableau-ancrage tr {
+    display: grid; grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0 1rem; align-items: baseline;
+    position: relative;
+    border-top: 1px solid rgb(var(--filet-net));
+    padding: 0.9rem 0;
+  }
+  .tableau-ancrage th, .tableau-ancrage td {
+    display: block; width: auto; border: 0; padding: 0;
+  }
+  .tableau-ancrage .chiffre { text-align: right; }
+  .tableau-ancrage .periode { display: inline; font-size: 0.72rem; }
+  .tableau-ancrage .glose { grid-column: 1 / -1; margin-top: 0.35rem; font-size: 0.8rem; }
+  .tableau-ancrage tr:last-child { border-bottom: 1px solid rgb(var(--filet-net)); }
+  /* Aucun filet vertical ici : une fois la ligne redevenue UNE ligne
+     (intitulé | chiffre), l'intitulé et le chiffre en bleu gras suffisent à
+     dire laquelle est la nôtre. Le filet ne servait qu'à recoller les trois
+     blocs de l'empilement précédent — le défaut a disparu, le remède aussi. */
+  .ligne-nous th { padding-left: 0; }
+  .ligne-nous th::before { display: none; }
+}
+
+/* le boîtier : un plan, pas un produit — le filet discontinu suffit à le
+   dire. L'aplat bleu qui était ici en faisait le seul encart coloré de la
+   page : sur téléphone, en pleine largeur, il ressemblait à une publicité
+   insérée dans l'article. Une seule colonne : le bloc ne pèse pas deux. */
+.boitier {
+  margin-top: clamp(2rem, 1rem + 2.5vw, 3rem);
+  border: 1px dashed rgb(var(--accent) / .55);
+  border-radius: var(--rayon);
+  padding: clamp(1.4rem, 0.9rem + 1.6vw, 2.1rem);
+  max-width: 46rem;
+}
+.boitier h3 { margin-bottom: 0.9rem; }
+.boitier-corps p { font-size: 0.95rem; max-width: 54ch; }
+.montant--bleu .nombre { color: rgb(var(--accent)); }
+.montant--bleu { margin-bottom: 1rem; }
+.boitier-garde { color: rgb(var(--texte)); }
+.boitier-garde b { color: rgb(var(--encre)); }
+.boitier .bouton { margin-top: 0.4rem; }
+
+/* ────────────────────────────────────── 11. ce que ça ne fait pas ─── */
+
+.limites .tete-section { max-width: 40rem; }
+.aveux { list-style: none; margin: 0; padding: 0; max-width: 54rem; }
+.aveux li {
+  position: relative;
+  padding: clamp(1.1rem, 0.8rem + 1vw, 1.6rem) 0 clamp(1.1rem, 0.8rem + 1vw, 1.6rem) 2.2rem;
+  border-top: 1px solid rgb(var(--filet));
+  font-family: var(--acte);
+  font-size: clamp(1.14rem, 1rem + 0.55vw, 1.42rem);
+  line-height: 1.42;
+  color: rgb(var(--texte));
+}
+.aveux li:last-child { border-bottom: 1px solid rgb(var(--filet)); }
+.aveux li::before {
+  content: "—"; position: absolute; left: 0; top: clamp(1.05rem, 0.75rem + 1vw, 1.55rem);
+  color: rgb(var(--accent)); font-family: var(--acte);
+}
+.aveu-tete { color: rgb(var(--encre)); }
+
+/* ─────────────────────────────────────────────────────── 12. auteur ─── */
+
+.auteur-rang { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3.5rem); align-items: start; }
+@media (min-width: 52rem) {
+  .auteur-rang { grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); }
+}
+/* Le portrait : un médaillon, comme sur le site de l'éditeur.
+   LE POINT QUI COMPTE — la surface et son filet SUIVENT le thème. Ce sont
+   --panneau et --filet, que le système inverse déjà : aucun jeton emprunté,
+   aucun jeton neuf. Une platine qui reste claire sur une page de nuit est un
+   carré blanc collé au milieu du noir, et c'était le défaut.
+   Le fichier est un détourage à canal alpha : c'est le disque qui lui donne
+   son fond. Le cercle ne coupe que 5,3 % du sujet — le bord des avant-bras —
+   et le dessin porte ses propres blancs (26 % de ses pixels), donc il tient
+   sur les deux fonds ; son bord est un gris moyen, aucun halo. Mesuré.
+   PAS de filtre de désaturation : le fichier est DÉJÀ monochrome (0,04 % de
+   pixels chromatiques), la règle n'aurait strictement aucun effet.
+   PAS d'effet de survol : ce portrait n'est pas un contrôle et ne mène nulle
+   part — l'agrandir au survol y inventerait une affordance qui n'existe pas.
+   PAS de repères d'angle : le disque et son filet sont déjà l'encadrement,
+   et quatre équerres autour d'un cercle en feraient un second. */
+.portrait {
+  position: relative;
+  width: min(100%, 14rem);
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgb(var(--panneau));
+  border: 1px solid rgb(var(--filet));
+}
+.portrait img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.auteur-dire h2 { margin-bottom: 1.1rem; }
+.coordonnees {
+  margin: 1.75rem 0 0; padding-top: 1.25rem;
+  border-top: 1px solid rgb(var(--filet));
+  display: grid; gap: 0.85rem;
+}
+@media (min-width: 40rem) {
+  .coordonnees { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
+}
+.coordonnees dt {
+  font-family: var(--machine); font-size: 0.7rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: rgb(var(--sourdine)); margin-bottom: 0.3rem;
+}
+.coordonnees dd { margin: 0; font-size: 0.95rem; color: rgb(var(--encre)); }
+
+/* ─────────────────────────────────────────────────── 13. formulaire ─── */
+
+.contact-cadre {
+  background: rgb(var(--feuille));
+  border: 1px solid rgb(var(--filet-net));
+  border-radius: var(--rayon);
+  padding: clamp(1.5rem, 0.8rem + 3vw, 3.5rem);
+  max-width: 46rem; margin-inline: auto;
+}
+.formulaire { margin-top: 0.5rem; }
+.champ { margin-bottom: 1.5rem; }
+.champ label {
+  display: block; font-weight: 600; color: rgb(var(--encre));
+  margin-bottom: 0.45rem; font-size: 1rem;
+}
+.aide { font-size: 0.89rem; color: rgb(var(--sourdine)); margin-bottom: 0.6rem; }
+input[type="email"], input[type="text"], textarea {
+  width: 100%; font: inherit; font-size: 1rem;
+  color: rgb(var(--encre));
+  background: rgb(var(--papier));
+  border: 1px solid rgb(var(--filet-controle));
+  border-radius: var(--rayon);
+  padding: 0.75rem 0.85rem;
+  transition: border-color .15s ease, box-shadow .15s ease;
+}
+/* quatre lignes, pas neuf : le champ FACULTATIF ne doit pas peser cinq fois
+   le champ obligatoire. Il grandit si le visiteur écrit (resize: vertical). */
+textarea { min-height: 6rem; resize: vertical; line-height: 1.55; }
+/* pleine sourdine, sans alpha : à /.85 le texte d'invite tombait à 3,66:1 */
+input::placeholder, textarea::placeholder { color: rgb(var(--sourdine)); }
+input:focus, textarea:focus {
+  outline: none;
+  border-color: rgb(var(--accent));
+  box-shadow: 0 0 0 3px rgb(var(--accent) / .18);
+}
+/* Erreur : pas de rouge. La page n'a qu'une couleur et c'est le bleu de
+   signature ; une adresse mal formée se signale par le trait d'encre, le plus
+   appuyé de la page, et par la ligne d'aide qui passe à l'encre elle aussi. */
+input:user-invalid, textarea:user-invalid {
+  border-color: rgb(var(--encre));
+  box-shadow: inset 0 0 0 1px rgb(var(--encre));
+}
+.champ:has(input:user-invalid) .aide { color: rgb(var(--encre)); }
+@media (prefers-reduced-motion: reduce) { input, textarea { transition: none; } }
+
+.champ--case { margin-bottom: 1.5rem; }
+/* Le lien « Demander une démonstration » vise cette case : la marge de
+   défilement la pose assez bas pour que le champ d'adresse — le seul champ
+   obligatoire — reste visible au-dessus. Mesuré : 330 px séparent les deux,
+   26 rem laissent l'adresse et la question de formule dans la vue. */
+#demo { scroll-margin-top: 26rem; }
+.case {
+  display: flex; align-items: flex-start; gap: 0.65rem;
+  font-weight: 400 !important; color: rgb(var(--texte)) !important;
+  cursor: pointer; margin-bottom: 0 !important;
+}
+.case input {
+  width: 1.15rem; height: 1.15rem; margin: 0.18rem 0 0;
+  accent-color: rgb(var(--accent)); flex: 0 0 auto;
+}
+
+/* ─── la question de formule : le signal d'offre passe par le formulaire,
+   jamais par un événement. Un bouton d'offre présélectionne la réponse quand
+   il y a du JavaScript ; sans JavaScript, le visiteur la renseigne — et dans
+   les deux cas la préférence est DÉCLARÉE, pas devinée. ─── */
+.formule {
+  margin: 0 0 1.5rem; padding: 0; border: 0;
+}
+.formule legend {
+  padding: 0; margin-bottom: 0.45rem;
+  font-weight: 600; color: rgb(var(--encre)); font-size: 1rem;
+}
+.formule-choix { display: grid; gap: 0; margin-top: 0.55rem; }
+.formule-choix label {
+  display: grid; grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.65rem; align-items: baseline;
+  padding: 0.62rem 0; margin-bottom: 0;
+  border-top: 1px solid rgb(var(--filet));
+  cursor: pointer; font-size: 0.97rem; font-weight: 400;
+  color: rgb(var(--texte));
+}
+.formule-choix label:last-child { border-bottom: 1px solid rgb(var(--filet)); }
+.formule-choix input {
+  width: 1.05rem; height: 1.05rem; margin: 0;
+  accent-color: rgb(var(--accent));
+  justify-self: center; align-self: center;
+}
+.formule-choix label:hover { color: rgb(var(--encre)); }
+.formule-prix { color: rgb(var(--sourdine)); }
+
+.mention-rgpd {
+  margin-top: 1.5rem; padding-top: 1.25rem;
+  border-top: 1px solid rgb(var(--filet));
+  font-size: 0.88rem; color: rgb(var(--sourdine));
+}
+
+/* ───────────────────────────────────────────────────────── 14. pied ─── */
+
+.pied {
+  border-top: 1px solid rgb(var(--filet));
+  padding-block: 2.5rem 3rem;
+  font-size: 0.88rem; color: rgb(var(--sourdine));
+}
+.pied-rang { display: grid; gap: 1.25rem; }
+@media (min-width: 52rem) {
+  .pied-rang { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); }
+  .pied-note { grid-column: 1 / -1; }
+}
+.pied-nom {
+  font-weight: 600; color: rgb(var(--encre)); font-size: 1rem;
+  letter-spacing: -0.02em; margin-bottom: 0.3rem;
+}
+.pied-liens { display: flex; flex-direction: column; gap: 0.4rem; align-items: flex-start; }
+@media (min-width: 52rem) { .pied-liens { align-items: flex-end; text-align: right; } }
+.pied-liens a { color: rgb(var(--texte)); text-decoration: none; border-bottom: 1px solid rgb(var(--filet-net)); }
+.pied-liens a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
+.pied-note {
+  padding-top: 1.25rem; border-top: 1px solid rgb(var(--filet));
+  font-size: 0.82rem; max-width: 70ch;
+}
+
+/* ───────────────────────────────── 15. pages annexes (merci, légales) ─── */
+
+.feuillet { padding-block: clamp(3rem, 1.5rem + 5vw, 6rem); }
+.feuillet-cadre {
+  background: rgb(var(--feuille));
+  border: 1px solid rgb(var(--filet-net));
+  border-radius: var(--rayon);
+  padding: clamp(1.6rem, 0.9rem + 3vw, 3.5rem);
+  max-width: 44rem; margin-inline: auto;
+}
+.feuillet-cadre h1 { margin-bottom: 1.2rem; }
+.feuillet-cadre .actions { margin-top: 2rem; }
+.merci-suite {
+  margin-top: 1.75rem; padding-top: 1.4rem;
+  border-top: 1px solid rgb(var(--filet));
+  color: rgb(var(--sourdine)); font-size: 0.95rem;
+}
+
+.legal { max-width: 44rem; }
+.legal h1 { margin-bottom: 1.1rem; }
+.legal h2 {
+  margin: 2.75rem 0 0.9rem; padding-top: 1.1rem;
+  border-top: 1px solid rgb(var(--filet));
+  font-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+}
+.legal p, .legal dd { color: rgb(var(--texte)); }
+.legal dl { margin: 0 0 1.25rem; }
+.legal dt {
+  font-family: var(--machine); font-size: 0.74rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgb(var(--sourdine)); margin-top: 1rem;
+}
+.legal dd { margin: 0.25rem 0 0; }
+.legal code {
+  font-family: var(--machine); font-size: 0.85em;
+  background: rgb(var(--panneau)); padding: 0.1em 0.3em; border-radius: 2px;
+}
+.legal .maj { margin-top: 2.5rem; font-size: 0.88rem; color: rgb(var(--sourdine)); }

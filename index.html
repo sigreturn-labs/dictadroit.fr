@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     🔴🔴 NOINDEX TEMPORAIRE — À RETIRER AVANT LA PREMIÈRE ANNONCE 🔴🔴
+     ═══════════════════════════════════════════════════════════════════════
+     POURQUOI : la page est mise en ligne AVANT sa relecture, uniquement pour
+     prouver les deux seules choses qu’un poste de développement ne peut pas
+     prouver — que la redirection de Web3Forms tombe bien sur NOTRE
+     merci.html, et que le courriel arrive avec le champ « frustration »
+     entier. Ce sont les deux pannes qui feraient rater le sprint EN SILENCE.
+
+     QUAND LA RETIRER : dès que le propriétaire a validé le texte, et de
+     toute façon AVANT la première annonce Google Ads. Une campagne qui
+     tourne sur une page en noindex consomme le budget sur une page que
+     Google n’indexe pas, et rien, nulle part, ne le signale.
+
+     À RETIRER ENSEMBLE, EN UN SEUL GESTE : ce bloc et sa balise sur les
+     TROIS pages (index.html, merci.html, mentions-legales.html), plus le
+     fichier landing/robots.txt.
+     CONTRÔLE MÉCANIQUE :  grep -rn "noindex" landing/   → doit être vide.
+     ═══════════════════════════════════════════════════════════════════════ -->
+<meta name="robots" content="noindex, nofollow">
+
+<!-- ═══════════════════════════════════════════════════════════════════════
+     ⚙ CONSTANTE DE DÉPLOIEMENT — L’ADRESSE QUI REÇOIT LE FORMULAIRE
+     ═══════════════════════════════════════════════════════════════════════
+     Destination : Web3Forms (https://api.web3forms.com/submit), qui répond
+     en 303 vers merci.html — la conversion part donc SANS JavaScript.
+     L’adresse s’écrit à DEUX endroits, et nulle part ailleurs :
+
+       1. ICI, dans l’attribut action du <form> — repère : @@URL-COLLECTE@@
+       2. dans mesure.js, en tête de fichier : URL_COLLECTE
+
+     mesure.js compare les deux au chargement, aligne le formulaire et
+     prévient dans la console s’ils ont divergé. Mais le visiteur sans
+     JavaScript ne connaît que l’attribut : c’est lui qui fait foi.
+
+     La clé d’accès Web3Forms est PUBLIQUE par conception (fonctionnement
+     documenté du service) et le formulaire est restreint au domaine
+     dictadroit.fr : une soumission depuis un autre domaine est refusée.
+     ═══════════════════════════════════════════════════════════════════════ -->
+
+<!-- Une seule promesse, écrite à l’identique partout : le H1, la carte de
+     partage et l’extrait de recherche disent « Rien ne sort du cabinet. »
+     Trois formulations d’une même promesse = une page assemblée. Le <title>
+     est front-chargé pour survivre à la coupure de Google (58 signes). -->
+<title>Dictée vocale locale pour avocats et notaires — Dictadroit</title>
+<meta name="description" content="Vous dictez, l’acte s’écrit : rien ne sort du cabinet. Dictadroit transcrit votre parole et met en forme vos conclusions et vos actes, entièrement sur votre ordinateur. Conçu en France pour les professions du droit.">
+<link rel="canonical" href="https://dictadroit.fr/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="Dictadroit">
+<meta property="og:title" content="Vous dictez. L’acte s’écrit. Rien ne sort du cabinet.">
+<meta property="og:description" content="Dictée et mise en forme de vos conclusions et de vos actes, entièrement sur votre ordinateur. Conçu en France pour les professions du droit.">
+<meta property="og:url" content="https://dictadroit.fr/">
+<!-- La carte de partage est la feuille d’acte de la page, rendue en
+     1200 × 630 depuis ce même HTML : aucune photo de banque, aucune image
+     générée — c’est la page elle-même, en plus petit. -->
+<meta property="og:image" content="https://dictadroit.fr/images/partage.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:alt" content="Une feuille de conclusions composée en Garamond, signée à l’encre bleue, et la phrase : rien ne sort du cabinet.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20fill='%23F7F7F5'/%3E%3Cpath%20d='M4%2023C9%209%2014%205%2016.5%209.5C19%2014%2011%2024%208.5%2020.5C6%2017%2015%2010%2028%2018'%20fill='none'%20stroke='%231B3A8A'%20stroke-width='2.6'%20stroke-linecap='round'%20stroke-linejoin='round'/%3E%3C/svg%3E">
+
+<link rel="preload" href="polices/archivo-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="dictadroit.css">
+</head>
+<body>
+
+<!--
+  THESIS: la page fait devant vous ce que le logiciel fait au cabinet — la parole
+  brute, en chasse fixe, devient un acte composé en Garamond avec la typographie
+  judiciaire française. Elle refuse la colonne unique de prose grise à densité
+  constante de la version rejetée, et la carte SaaS à dégradé.
+  OWN-WORLD: papier administratif froid (#F7F7F5), feuille blanche posée dessus,
+  filets fins, un seul bleu — celui de la signature à l’encre, qui distingue
+  l’original de la photocopie. Archivo pour l’autorité, EB Garamond pour l’acte,
+  Courier Prime pour la parole. Un seul bloc inversé dans toute la page.
+  STORY: un avocat comprend en un écran que sa dictée devient un acte propre, que
+  rien ne sort de son poste, puis qu’il paie moins que son logiciel figé — et il
+  laisse son adresse.
+  FIRST VIEWPORT: à gauche le titre, deux lignes de chapeau, deux boutons dont le
+  premier en bleu ; à droite l’objet de transformation (panneau de parole → feuille
+  d’acte signée). Sur mobile : titre et premier bouton avant tout défilement.
+  FORM: objet de démonstration typographique en tête de page, forme n°1 de la
+  liste ; direction arrêtée par le propriétaire dans le brief (pas de tirage).
+  FINISH: unreviewed and undocumented is unfinished; this build ends with the
+  finish review, the verdict, and DESIGN.md
+-->
+
+<a class="saut" href="#contenu">Aller au contenu</a>
+
+<header class="entete">
+  <div class="page entete-rang">
+    <a class="marque" href="/">
+      <svg class="paraphe paraphe--mini" viewBox="0 0 32 28" aria-hidden="true" focusable="false">
+        <path d="M2 21C7 7 12 3 14.5 7.5C17 12 9 22 6.5 18.5C4 15 13 8 26 16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>Dictadroit</span>
+    </a>
+    <p class="marque-note">Dictée et mise en forme d’actes, en local</p>
+    <nav class="entete-nav" aria-label="Sections de la page">
+      <a href="#local">Le local</a>
+      <a href="#prix">Les prix</a>
+      <a class="entete-cta" href="#contact">Laisser mon adresse</a>
+    </nav>
+  </div>
+</header>
+
+<main id="contenu">
+
+  <!-- ══════════════════════════════════════════════════════════ hero ═══
+       EMPLACEMENT DE LA VIDÉO DE DÉMONSTRATION (Tâche 6 du sprint) :
+       elle s’insérera dans la section « demonstration » plus bas, au-dessus
+       de la légende. Tant qu’elle n’existe pas, l’objet ci-dessous — parole
+       à gauche, acte à droite — tient ce rôle et se suffit à lui-même.   -->
+  <section class="hero">
+    <div class="page hero-rang">
+
+      <div class="hero-dire">
+        <h1>Vous dictez.<br>L’acte s’écrit.<br><span class="h1-bleu">Rien ne sort du cabinet.</span></h1>
+        <p class="chapeau">Dictadroit transcrit votre parole et met en forme vos conclusions
+          et vos actes, entièrement sur votre ordinateur.</p>
+        <div class="actions">
+          <a class="bouton bouton--bleu" href="#contact">Laisser mon adresse</a>
+          <!-- vise la case elle-même, et non la section : le navigateur y amène
+               le focus avec ou sans JavaScript. mesure.js, lui, la coche. -->
+          <a class="bouton bouton--fil" href="#demo" id="js-demo">Demander une démonstration</a>
+        </div>
+        <p class="hero-etat">Le logiciel est en cours d’écriture. La démonstration dure un
+          quart d’heure, en visio, sur le prototype — elle sert autant à vous montrer qu’à
+          vous écouter.</p>
+
+        <dl class="hero-fiche">
+          <div>
+            <dt>Pour</dt>
+            <dd>Avocats, notaires, commissaires de justice</dd>
+          </div>
+          <div>
+            <dt>Poste</dt>
+            <dd>Windows, sans carte graphique</dd>
+          </div>
+          <div>
+            <dt>Prix</dt>
+            <dd>39&#8239;€ HT par mois, ou 690&#8239;€ HT une fois</dd>
+          </div>
+          <div>
+            <dt>Éditeur</dt>
+            <dd>Sigreturn Labs, société française</dd>
+          </div>
+        </dl>
+      </div>
+
+      <!-- ─── l’objet de transformation : la parole devient un acte ─── -->
+      <div class="hero-montrer">
+        <figure class="transformation">
+          <figcaption class="volet-titre">
+            <span class="volet-num">Ce que vous dites</span>
+          </figcaption>
+
+          <div class="parole" lang="fr">
+            <p><b class="cmd">plaise au tribunal</b><br>
+            <b class="cmd">premier moyen</b> sur la recevabilité de la demande<br>
+            <b class="cmd">à la ligne</b><br>
+            l’action a été introduite le douze mars deux mille vingt-cinq devant le tribunal
+            judiciaire de nanterre <b class="cmd">virgule</b> soit avant l’expiration du délai
+            de prescription <b class="cmd">point</b><br>
+            <b class="cmd">à la ligne</b><br>
+            la société vermont soutient <b class="cmd">ouvrez les guillemets</b> que l’action
+            serait tardive <b class="cmd">fermez les guillemets</b>
+            <b class="cmd">point-virgule</b> elle n’en rapporte pas la preuve
+            <b class="cmd">point</b><br>
+            <b class="cmd">par ces motifs</b><br>
+            condamner la société vermont à payer trois mille euros au titre de l’article sept
+            cent du code de procédure civile <b class="cmd">point</b></p>
+          </div>
+
+          <p class="bascule"><span>Ce qui s’écrit</span></p>
+
+          <div class="feuille" lang="fr">
+            <div class="acte">
+              <p class="acte-rituel acte-v2"><span class="acte-marge" aria-hidden="true">v2</span>Plaise au Tribunal</p>
+              <p class="acte-moyen acte-v2">I.&#160;— Sur la recevabilité de la demande</p>
+              <p class="acte-alinea">L’action a été introduite le 12&#160;mars 2025 devant le
+                tribunal judiciaire de Nanterre, soit avant l’expiration du délai de
+                prescription.</p>
+              <p class="acte-alinea">La société Vermont soutient
+                «&#8239;que l’action serait tardive&#8239;»&#8239;; elle n’en rapporte pas la
+                preuve.</p>
+              <p class="acte-rituel acte-v2">Par ces motifs</p>
+              <p class="acte-alinea">Condamner la société Vermont à payer 3&#8239;000&#8239;€ au
+                titre de l’article 700 du code de procédure civile.</p>
+            </div>
+            <div class="acte-signature" aria-hidden="true">
+              <svg class="paraphe" viewBox="0 0 120 40" role="presentation" focusable="false">
+                <path class="paraphe-trait" d="M4 30C14 8 24 2 29 8C34 14 22 33 16 28C10 23 20 9 42 12C60 14.5 66 27 84 19C93 15 101 11 116 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+
+          <p class="transformation-note"><span class="legende-puce">En bleu</span>, les
+            commandes dictées&#8239;; le reste est écrit tel quel. Les trois lignes marquées
+            d’un filet dans la marge ne sont pas encore automatiques.</p>
+        </figure>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════ le bloc inversé ═══ -->
+  <section class="local" id="local">
+    <div class="page local-rang">
+      <div class="local-dire">
+        <h2>Débranchez internet.<br>Dictez quand même.</h2>
+        <p class="local-chapeau">Il n’y a pas de compte à créer, pas de serveur à joindre, pas
+          de clé à renseigner. La transcription, le dictionnaire et la mise en forme tournent
+          sur votre machine. Trente secondes de vérification, et vous n’avez plus à me croire
+          sur parole.</p>
+        <ol class="verif">
+          <li>Coupez le Wi-Fi, ou débranchez le câble.</li>
+          <li>Appuyez sur la touche et dictez une phrase.</li>
+          <li>Le texte s’écrit. Rebranchez si vous voulez.</li>
+        </ol>
+      </div>
+
+      <div class="local-grille">
+        <p class="grille-intro">La grille du Conseil national des barreaux, parue début 2026,
+          est une recommandation. Voici ce qu’elle demande&#160;— et ce qu’un logiciel qui ne
+          sort pas du poste y répond.</p>
+        <dl class="cnb">
+          <div class="cnb-ligne">
+            <dt>Hébergement dans l’Union européenne</dt>
+            <dd lang="fr">Il n’y a pas d’hébergement.</dd>
+          </div>
+          <div class="cnb-ligne">
+            <dt>Fournisseur non soumis aux lois extraterritoriales américaines</dt>
+            <dd lang="fr">Un éditeur français, avec un SIRET et un nom sur la facture.</dd>
+          </div>
+          <div class="cnb-ligne">
+            <dt>Aucun entraînement sur vos données</dt>
+            <dd lang="fr">Vos textes ne quittent pas le poste&#8239;: il n’y a rien à entraîner.</dd>
+          </div>
+          <div class="cnb-ligne">
+            <dt>Protection du secret professionnel</dt>
+            <dd lang="fr">Le secret reste au cabinet, au sens propre.</dd>
+          </div>
+        </dl>
+        <p class="grille-note">Ces quatre lignes ne reposent sur aucun engagement de ma
+          part&#8239;: il n’y a pas de serveur pour le trahir. Aucun label, aucune homologation,
+          aucune certification n’existe pour ce type de logiciel — personne ne peut vous en
+          vendre une, moi non plus.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═════════════════════════════════════════ ce que fait la v1 ═══ -->
+  <section class="section preuves" id="demonstration">
+    <div class="page">
+      <div class="tete-section">
+        <h2>Vous ne changez pas de logiciel&#8239;: le texte arrive là où votre curseur
+          clignote.</h2>
+      </div>
+
+      <div class="preuves-grille">
+
+        <article class="preuve">
+          <h3>Un raccourci, partout où vous écrivez</h3>
+          <p>Vous appuyez sur une touche, vous dictez, et le texte s’insère au curseur —
+            dans Word, dans Outlook, dans votre logiciel de cabinet.</p>
+          <p class="preuve-note">Rien à installer dans Word, aucun bouton à trouver dans un
+            ruban&#8239;: ce qui marche dans un traitement de texte marche partout ailleurs.</p>
+        </article>
+
+        <article class="preuve">
+          <h3>Le vocabulaire du droit, écrit juste</h3>
+          <p>Une table de correspondance entre ce que la machine entend de travers et le terme
+            exact&#8239;: juridictions, formules latines, abréviations d’actes. Elle ne devine
+            rien&#8239;: elle applique une liste, et cette liste s’allonge à chaque cabinet.</p>
+          <ul class="paires">
+            <li><span class="dit">cassation civile première chambre</span><span class="ecrit" lang="fr">Cass. civ. 1<sup>re</sup></span></li>
+            <li><span class="dit">tribunal judiciaire de nanterre</span><span class="ecrit" lang="fr">tribunal judiciaire de Nanterre</span></li>
+            <li><span class="dit">article sept cent</span><span class="ecrit" lang="fr">article 700</span></li>
+          </ul>
+        </article>
+
+        <article class="preuve">
+          <h3>La ponctuation se dicte dans la phrase</h3>
+          <p>Sans toucher au clavier. Ce sont des règles, pas une intelligence artificielle qui
+            interprète&#8239;: le résultat est le même à chaque fois.</p>
+          <ul class="jetons">
+            <li>point</li>
+            <li>virgule</li>
+            <li>à la ligne</li>
+            <li>point-virgule</li>
+            <li>ouvrez les guillemets</li>
+          </ul>
+        </article>
+
+      </div>
+
+      <p class="legende-demo">Vos conclusions, vos actes, vos courriers — et vos notes
+        d’audience, dictées à chaud en sortant de la salle.</p>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════════ prix ═══ -->
+  <section class="section prix" id="prix">
+    <div class="page">
+      <div class="tete-section">
+        <h2>Par poste, hors taxes, sans astérisque.</h2>
+        <p class="tete-note">Il n’y a rien à télécharger aujourd’hui, puisque le logiciel n’est
+          pas terminé. Ces deux formules sont celles qui seront proposées à la sortie&#8239;:
+          dites-moi laquelle vous conviendrait, c’est exactement ce que je cherche à savoir.</p>
+      </div>
+
+      <div class="offres">
+
+        <article class="offre">
+          <h3>Abonnement</h3>
+          <p class="montant"><span class="nombre">39&#8239;€</span> <span class="unite">HT / mois</span></p>
+          <p class="montant-second">ou <b>390&#8239;€ HT</b> par an, par poste.<br>
+            Pack cabinet&#8239;: 3&#160;postes, <b>890&#8239;€ HT</b> par an.</p>
+          <ul class="inclus">
+            <li>Mises à jour du logiciel, des modèles et du dictionnaire</li>
+            <li>Support en français, par la personne qui écrit le code</li>
+            <li>Résiliable à l’échéance</li>
+          </ul>
+          <!-- une ANCRE, pas un bouton : sans JavaScript un <button type="button">
+               hors formulaire ne fait rien, et un contrôle inerte est pire qu’un
+               contrôle absent. Le JavaScript ne fait plus qu’y présélectionner la
+               réponse à la question « quelle formule vous intéresse ? ». -->
+          <a class="bouton bouton--bleu js-offre" href="#contact"
+             data-evt="offre_abonnement" data-offre="abonnement">
+            L’abonnement me conviendrait
+          </a>
+        </article>
+
+        <article class="offre">
+          <h3>Licence perpétuelle</h3>
+          <p class="montant"><span class="nombre">690&#8239;€</span> <span class="unite">HT, une fois</span></p>
+          <p class="montant-second">+ maintenance <b>149&#8239;€ HT</b> par an,<br>
+            que vous pouvez arrêter.</p>
+          <ul class="inclus">
+            <li>La licence reste valable sans la maintenance&#8239;: le logiciel continue de
+              fonctionner</li>
+            <li>La maintenance apporte les mises à jour des modèles et du dictionnaire</li>
+            <li>Le support est compris dans la maintenance</li>
+          </ul>
+          <a class="bouton bouton--bleu js-offre" href="#contact"
+             data-evt="offre_perpetuelle" data-offre="perpetuelle">
+            La licence me conviendrait
+          </a>
+        </article>
+
+      </div>
+
+      <div class="ancrage">
+        <p class="ancrage-titre">Ce que coûte la dictée aujourd’hui, aux prix publics constatés
+          en août&#160;2026</p>
+        <table class="tableau-ancrage">
+          <caption class="visuellement-cache">Comparaison des prix publics constatés en août 2026</caption>
+          <tbody>
+            <tr>
+              <th scope="row">Le logiciel de dictée installé dans les cabinets</th>
+              <td class="chiffre">990&#8239;€ HT</td>
+              <td class="glose">prix public constaté à l’achat, dictionnaire juridique en
+                supplément&#8239;; figé — son éditeur a réorienté son activité vers la
+                santé</td>
+            </tr>
+            <tr>
+              <th scope="row">L’offre en ligne proposée à la place par les revendeurs</th>
+              <td class="chiffre">473&#8239;€ HT<span class="periode">/ an / utilisateur</span></td>
+              <td class="glose">prix public constaté&#8239;; la dictée est traitée sur un
+                serveur, hors de votre poste</td>
+            </tr>
+            <tr class="ligne-nous">
+              <th scope="row">Dictadroit</th>
+              <td class="chiffre">390&#8239;€ HT<span class="periode">/ an / poste</span></td>
+              <td class="glose">tout se passe sur votre machine</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- ─── porte du boîtier : test de demande, aucun paiement ─── -->
+      <div class="boitier">
+        <h3>Le même logiciel, sur une machine à part</h3>
+        <div class="boitier-corps">
+          <p class="montant montant--bleu"><span class="nombre">1&#8239;990&#8239;€</span>
+            <span class="unite">HT — puis 190&#8239;€ HT par an</span></p>
+          <p>Un petit ordinateur préconfiguré, sans WiFi ni Bluetooth, relié à votre poste par
+            un câble. Rien à installer, rien à administrer, la première année de suivi comprise.
+            Il ne sera construit que si assez de cabinets le demandent&#8239;: ce lien ne fait
+            que compter.</p>
+          <p class="boitier-garde"><b>Aucun paiement, aucun panier, aucune coordonnée
+            bancaire.</b></p>
+          <a class="bouton bouton--fil-bleu js-offre" href="#contact"
+             data-evt="boitier_interesse" data-offre="boitier">
+            Le boîtier m’intéresse
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════ ce que ça ne fait pas ═══ -->
+  <section class="section limites" id="limites">
+    <div class="page">
+      <div class="tete-section">
+        <h2>Ce que Dictadroit ne fait pas.</h2>
+        <p class="tete-note">Écrit noir sur blanc, avant que vous ne laissiez votre
+          adresse.</p>
+      </div>
+      <ul class="aveux" lang="fr">
+        <li><span class="aveu-tete">Il ne cherche pas la jurisprudence et ne rédige pas à votre
+          place.</span> Il écrit ce que vous dictez. La réflexion reste la vôtre.</li>
+        <li><span class="aveu-tete">Il ne met pas encore vos actes en forme tout seul.</span>
+          La première version pose la ponctuation que vous dictez&#8239;; la numérotation des
+          moyens et les formules d’usage viennent après.</li>
+        <li><span class="aveu-tete">Il n’ajoute pas de bouton dans Word.</span> Un raccourci
+          clavier insère le texte au curseur, dans Word comme ailleurs — c’est plus simple à
+          installer, et ça marche dans toutes vos applications.</li>
+        <li><span class="aveu-tete">Il ne fonctionne pas sur Mac.</span> Windows
+          d’abord&#8239;; si vous êtes sur Mac, dites-le-moi dans le champ ci-dessous, c’est ce
+          qui décidera.</li>
+        <li><span class="aveu-tete">Il ne synchronise rien entre vos postes.</span> Une licence,
+          un poste, et les fichiers restent là où vous les rangez.</li>
+        <li><span class="aveu-tete">Il n’existe pas encore en version stable.</span> Ce qui se
+          voit aujourd’hui, c’est le prototype, en visio, avec moi.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════════ auteur ═══ -->
+  <section class="section auteur" id="auteur">
+    <div class="page auteur-rang">
+      <div class="auteur-portrait">
+        <!-- Le portrait de l’auteur, servi depuis ce domaine comme tout le
+             reste : aucune requête vers un tiers, aucune image de banque.
+             C’est un détourage à canal alpha ; le médaillon lui donne son
+             fond, et ce fond s’inverse avec le thème de la page. -->
+        <div class="portrait">
+          <!-- différée : le portrait pèse 77 Ko, soit un tiers de la page, et
+               il est à 5 000 px du premier écran. Les dimensions sont écrites
+               pour que la place soit réservée d’avance — aucun décalage. -->
+          <img src="images/adam.webp" width="500" height="500"
+               loading="lazy" decoding="async"
+               alt="Portrait d’Adam Taguirov, l’auteur du logiciel.">
+        </div>
+      </div>
+      <div class="auteur-dire">
+        <h2>Qui écrit ce logiciel</h2>
+        <p>Je m’appelle Adam&#160;Taguirov. J’ai été policier avant d’écrire des
+          logiciels&#8239;: les procès-verbaux, les auditions, les heures passées à taper ce
+          qu’on venait d’entendre, je connais. J’étais de l’autre côté de la table, et j’ai vu
+          ce que le temps de frappe coûte à un dossier.</p>
+        <p>Dictadroit est développé en France, par moi seul, en parallèle de mon activité.
+          C’est un choix assumé&#8239;: pas d’investisseur à rembourser, donc aucune raison de
+          faire remonter vos textes vers un serveur pour les monétiser un jour. Quand vous
+          écrirez, vous aurez la personne qui écrit le code.</p>
+        <dl class="coordonnees">
+          <div>
+            <dt>Courriel</dt>
+            <dd><a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a></dd>
+          </div>
+          <div>
+            <dt>Éditeur</dt>
+            <dd>Sigreturn Labs, SASU au capital de 1&#160;000&#8239;€</dd>
+          </div>
+          <div>
+            <dt>Immatriculation</dt>
+            <dd>SIREN 104&#160;567&#160;854, RCS Paris</dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════════════════════ formulaire ═══ -->
+  <section class="section contact" id="contact">
+    <div class="page">
+      <div class="contact-cadre">
+        <div class="tete-section">
+          <h2>Laissez-moi votre adresse.</h2>
+          <p class="tete-note">Je vous préviens quand la première version est prête. Un message
+            quand il y a quelque chose à dire, jamais de lettre d’information.</p>
+        </div>
+
+        <!-- @@URL-COLLECTE@@ — l’attribut action ci-dessous EST la constante de
+             déploiement décrite en tête de fichier. Le formulaire fonctionne
+             sans JavaScript : ne jamais déplacer la soumission dans mesure.js. -->
+        <form class="formulaire" method="POST" action="https://api.web3forms.com/submit"
+              accept-charset="utf-8">
+
+          <!-- Web3Forms : la clé d’accès est publique par conception, c’est le
+               fonctionnement documenté du service. `redirect` renvoie en 303 vers
+               merci.html — donc la conversion ne dépend d’aucun JavaScript.
+               `replyto` prend automatiquement la valeur du champ email. -->
+          <input type="hidden" name="access_key" value="9b2c7b57-9155-4ba8-bfcb-314f95ccc755">
+          <input type="hidden" name="redirect" value="https://dictadroit.fr/merci.html">
+          <input type="hidden" name="subject" value="Dictadroit — nouveau contact">
+          <input type="hidden" name="from_name" value="Dictadroit">
+
+          <div class="champ">
+            <label for="email">Votre adresse électronique</label>
+            <p class="aide" id="aide-email">C’est la seule chose obligatoire, et la seule que
+              j’utilise pour vous répondre.</p>
+            <input type="email" id="email" name="email" required autocomplete="email"
+                   spellcheck="false" aria-describedby="aide-email"
+                   placeholder="prenom.nom@cabinet.fr">
+          </div>
+
+          <!-- La préférence de formule est DÉCLARÉE ici, dans le formulaire, et
+               non déduite d’un clic : elle survit à un JavaScript absent, elle
+               ne tient qu’à un seul chemin de données, et « je ne sais pas
+               encore » est lui-même une réponse. Les boutons d’offre plus haut
+               ne font que présélectionner la case correspondante. -->
+          <fieldset class="champ formule">
+            <legend>Quelle formule vous intéresse&#8239;?</legend>
+            <div class="formule-choix">
+              <label for="offre-abonnement">
+                <input type="radio" id="offre-abonnement" name="offre" value="abonnement">
+                <span>L’abonnement <span class="formule-prix">— 39&#8239;€ HT par mois</span></span>
+              </label>
+              <label for="offre-perpetuelle">
+                <input type="radio" id="offre-perpetuelle" name="offre" value="perpetuelle">
+                <span>La licence perpétuelle <span class="formule-prix">— 690&#8239;€ HT une fois</span></span>
+              </label>
+              <label for="offre-boitier">
+                <input type="radio" id="offre-boitier" name="offre" value="boitier">
+                <span>Le boîtier <span class="formule-prix">— s’il est construit un jour</span></span>
+              </label>
+              <label for="offre-indecis">
+                <input type="radio" id="offre-indecis" name="offre" value="indecis">
+                <span>Je ne sais pas encore</span>
+              </label>
+            </div>
+          </fieldset>
+
+          <div class="champ champ--case">
+            <label class="case" for="demo">
+              <input type="checkbox" id="demo" name="demo" value="oui">
+              <span>Je veux une démonstration de 15&#160;minutes, en visio.</span>
+            </label>
+          </div>
+
+          <div class="champ champ--long">
+            <label for="frustration">Qu’est-ce qui vous exaspère le plus, aujourd’hui, quand
+              vous dictez ou quand vous tapez&#8239;?</label>
+            <p class="aide">Facultatif — écrivez autant que vous voulez. C’est ce qui m’est le
+              plus utile&#8239;: ce champ décide de ce que je construis d’abord.</p>
+            <textarea id="frustration" name="frustration" rows="4"
+                      placeholder="Par exemple&#8239;: le temps passé à reprendre la mise en forme après la dictée, les noms propres jamais reconnus, la secrétaire qui n’est plus là le vendredi…"></textarea>
+          </div>
+
+          <input type="hidden" name="gclid" id="champ-gclid" value="">
+          <input type="hidden" name="utm_source" id="champ-utm_source" value="">
+          <input type="hidden" name="utm_medium" id="champ-utm_medium" value="">
+          <input type="hidden" name="utm_campaign" id="champ-utm_campaign" value="">
+          <input type="hidden" name="utm_term" id="champ-utm_term" value="">
+
+          <!-- Piège à robots de Web3Forms : invisible, hors de l’ordre de
+               tabulation, jamais requis. Un robot le coche, personne d’autre. -->
+          <input type="checkbox" name="botcheck" style="display:none" tabindex="-1"
+                 autocomplete="off" aria-hidden="true">
+
+          <button type="submit" class="bouton bouton--bleu bouton--large">Envoyer</button>
+        </form>
+
+        <p class="mention-rgpd">Votre adresse me sert à vous répondre et à vous prévenir, rien
+          d’autre&#8239;: ni revente, ni prospection, ni lettre d’information. Ce formulaire est
+          acheminé par un prestataire, qui voit donc passer votre message — c’est écrit dans les
+          <a class="lien" href="mentions-legales.html">mentions légales</a>, avec son nom. Vous
+          pouvez demander la suppression de vos données à tout moment&#8239;: un courriel à
+          <a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a> suffit,
+          et c’est fait le jour même.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="pied">
+  <div class="page pied-rang">
+    <div class="pied-marque">
+      <p class="pied-nom">Dictadroit</p>
+      <p>Dictée et mise en forme d’actes, en local, pour les professions du droit.
+        Édité par <b>Sigreturn Labs</b>, SASU au capital de 1&#160;000&#8239;€,
+        SIRET 104&#160;567&#160;854&#160;00013, RCS Paris —
+        1&#160;rue Marguerin, 75014&#160;Paris.</p>
+    </div>
+    <nav class="pied-liens" aria-label="Liens de bas de page">
+      <a href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>
+      <a href="mentions-legales.html">Mentions légales</a>
+    </nav>
+    <p class="pied-note">Ce site ne dépose aucun cookie, ne charge aucune ressource extérieure
+      et n’emploie aucun service de mesure publicitaire&#8239;: les polices de caractères
+      elles-mêmes sont servies depuis ce domaine. La seule chose qui en sort est le formulaire,
+      vers le prestataire qui l’achemine jusqu’à ma boîte — il est nommé dans les mentions
+      légales.</p>
+  </div>
+</footer>
+
+<script src="mesure.js"></script>
+</body>
+</html>
