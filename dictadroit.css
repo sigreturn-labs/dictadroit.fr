@@ -125,11 +125,16 @@
     --accent-vif:170 194 250;
     --sur-accent: 15  17  20;
 
-    --inv-fond:     247 247 245;
-    --inv-texte:     16  18  22;
-    --inv-sourdine: 102 108 118;
-    --inv-accent:    27  58 138;
-    --inv-filet:    214 216 212;
+    /* 🔴 De nuit, le bloc inversé ne repasse PAS au papier. Une bande claire
+       en pleine largeur au milieu d'une page sombre éblouit : on lit ce site
+       le soir, au cabinet, et le rythme de la page ne vaut pas une brûlure.
+       Il devient la surface la plus HAUTE du thème sombre, la feuille : le
+       bloc reste distinct de son voisinage, sans flash. */
+    --inv-fond:      34  39  46;
+    --inv-texte:    237 238 234;
+    --inv-sourdine: 154 161 172;
+    --inv-accent:   138 169 240;
+    --inv-filet:     62  69  80;
 
     /* de nuit, une ombre noire sur une page noire ne se voit pas : la feuille
        flotte alors par une LUMIÈRE d'un pixel, pas par une ombre. */
@@ -152,11 +157,11 @@
   --accent-vif:170 194 250;
   --sur-accent: 15  17  20;
 
-  --inv-fond:     247 247 245;
-  --inv-texte:     16  18  22;
-  --inv-sourdine: 102 108 118;
-  --inv-accent:    27  58 138;
-  --inv-filet:    214 216 212;
+  --inv-fond:      34  39  46;
+  --inv-texte:    237 238 234;
+  --inv-sourdine: 154 161 172;
+  --inv-accent:   138 169 240;
+  --inv-filet:     62  69  80;
 
   --ombre-feuille: 0 0 0 1px rgb(255 255 255 / .07),
                    0 18px 40px -20px rgb(0 0 0 / .9);
@@ -236,6 +241,15 @@ a { color: rgb(var(--accent)); }
    d'atterrissage fabriquée : les H1 et H2 portent leur poids tout seuls. */
 
 .page { width: min(100% - 2.5rem, 1180px); margin-inline: auto; }
+
+/* 🔴 LA REGLE D'ALIGNEMENT. Un bloc occupe TOUT le cadre, ou il est CENTRE.
+   Jamais aligne a gauche avec du vide a droite : le vide se lit comme un
+   oubli, pas comme une intention. `.colonne` est la forme centree ; ce qu'elle
+   contient reste ferre a gauche, c'est le BLOC qui se centre, pas le texte. */
+.colonne { max-width: 46rem; margin-inline: auto; }
+.colonne > .tete-section,
+.colonne > .dire-suite,
+.colonne > .legende-demo { max-width: none; }
 @media (min-width: 60rem) { .page { width: min(100% - 5rem, 1180px); } }
 
 .section { padding-block: clamp(3.25rem, 1.6rem + 5.4vw, 6.5rem); }
@@ -656,7 +670,9 @@ a { color: rgb(var(--accent)); }
    Le logiciel installe aujourd'hui n'y figure pas : il n'a pas de cout annuel,
    et l'inclure demanderait de comparer un achat unique a des loyers. Le dire
    en note coute moins cher en credibilite que de le faire entrer de force. */
-.comparatif { margin: clamp(2rem, 1rem + 2.5vw, 3rem) 0 0; max-width: 46rem; }
+/* Plein cadre : une barre plus longue se lit mieux, et le comparatif
+   partage alors ses deux bords avec les cartes de tarif juste au-dessus. */
+.comparatif { margin: clamp(2rem, 1rem + 2.5vw, 3rem) 0 0; }
 .comparatif figcaption {
   font-size: 0.9rem; line-height: 1.5; color: rgb(var(--sourdine));
   margin-bottom: 1.1rem; max-width: 54ch;
@@ -708,10 +724,23 @@ a { color: rgb(var(--accent)); }
   border: 1px dashed rgb(var(--accent) / .55);
   border-radius: var(--rayon);
   padding: clamp(1.4rem, 0.9rem + 1.6vw, 2.1rem);
-  max-width: 46rem;
 }
 .boitier h3 { margin-bottom: 0.9rem; }
-.boitier-corps p { font-size: 0.95rem; max-width: 54ch; }
+/* Plein cadre, mais coupé en deux à l'intérieur : un encart large dont le
+   texte s'arrête au tiers rouvrirait le vide à droite qu'on vient de fermer. */
+@media (min-width: 48rem) {
+  .boitier-corps {
+    display: grid; grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 1rem 3rem; align-items: start;
+  }
+  /* Le prix tient toute la hauteur de sa colonne, le reste s'empile dans
+     l'autre. Sinon le bouton s'etire sur une demi-page et deux vides
+     s'ouvrent : c'est exactement ce que faisait la version precedente. */
+  .boitier-corps .montant { grid-column: 1; grid-row: 1 / -1; margin: 0; align-self: center; }
+  .boitier-corps > :not(.montant) { grid-column: 2; }
+  .boitier-corps .bouton { justify-self: start; }
+}
+.boitier-corps p { font-size: 0.95rem; max-width: none; }
 .montant--bleu .nombre { color: rgb(var(--accent)); }
 .montant--bleu { margin-bottom: 1rem; }
 .boitier-garde { color: rgb(var(--texte)); }
@@ -770,9 +799,12 @@ a { color: rgb(var(--accent)); }
 
 /* ─────────────────────────────────────────────────────── 12. auteur ─── */
 
-.auteur-rang { display: grid; gap: clamp(1.75rem, 1rem + 3vw, 3.5rem); align-items: start; }
-@media (min-width: 64rem) {
-  .auteur-rang { grid-template-columns: 1fr 1fr; gap: 4.5rem; }
+.auteur-rang { display: grid; gap: 1.75rem; align-items: start; }
+/* Le portrait n'a pas besoin d'une demi-page : agrandi a la taille de sa
+   colonne il ecrasait le texte, et le bloc devenait laid. Une vignette collee
+   au texte, dans une colonne centree : c'est un visage, pas une affiche. */
+@media (min-width: 40rem) {
+  .auteur-rang { grid-template-columns: 13rem minmax(0, 1fr); gap: 2.5rem; }
 }
 /* Le portrait : un médaillon, comme sur le site de l'éditeur.
    LE POINT QUI COMPTE : la surface et son filet SUIVENT le thème. Ce sont
@@ -791,9 +823,7 @@ a { color: rgb(var(--accent)); }
    et quatre équerres autour d'un cercle en feraient un second. */
 .portrait {
   position: relative;
-  /* Il remplit sa colonne : sur un marche ou l'editeur solo inconnu est le
-     risque principal, le visage EST un argument, pas une vignette. */
-  width: min(100%, 25rem);
+  width: min(100%, 13rem);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
@@ -814,9 +844,7 @@ a { color: rgb(var(--accent)); }
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.5rem, 0.8rem + 3vw, 3.5rem);
-  /* Aligné à gauche comme tout le reste. C'était le SEUL bloc centré du corps,
-     et son axe ne tombait sur celui d'aucune autre section. */
-  max-width: 46rem;
+  max-width: 46rem; margin-inline: auto;
 }
 .formulaire { margin-top: 0.5rem; }
 .champ { margin-bottom: 1.5rem; }
@@ -938,7 +966,7 @@ input:user-invalid, textarea:user-invalid {
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.6rem, 0.9rem + 3vw, 3.5rem);
-  max-width: 46rem;
+  max-width: 46rem; margin-inline: auto;
 }
 .feuillet-cadre h1 { margin-bottom: 1.2rem; }
 .feuillet-cadre .actions { margin-top: 2rem; }
