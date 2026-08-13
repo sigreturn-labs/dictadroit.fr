@@ -1,10 +1,10 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   Dictadroit — mesure de fréquentation et d'événements.
+   Dictadroit : mesure de fréquentation et d'événements.
 
    PRINCIPE : ce fichier est une AMÉLIORATION. La page fonctionne sans lui.
    Le formulaire est un <form method="POST"> natif, encodé en
    application/x-www-form-urlencoded : si ce script meurt, ne se charge pas
-   ou est bloqué, la conversion part quand même — Web3Forms répond en 303 et
+   ou est bloqué, la conversion part quand même : Web3Forms répond en 303 et
    le navigateur arrive sur merci.html. NE JAMAIS déplacer la soumission ici.
 
    La mesure d'événements, elle, n'a pas encore de destination : tant que
@@ -27,7 +27,7 @@
 
      URL_EVENEMENTS n'a pas encore de destination : la chaîne vide DÉSACTIVE
      l'envoi, et aucune requête ne part. Le jour où un point de collecte
-     existe, une seule ligne à changer — le reste du fichier est prêt.
+     existe, une seule ligne à changer, le reste du fichier est prêt.
      ══════════════════════════════════════════════════════════════════════ */
   var URL_COLLECTE   = 'https://api.web3forms.com/submit';
   var URL_EVENEMENTS = '';
@@ -49,7 +49,7 @@
      peut être rattachée à un clic Google Ads, et le sprint perd sa mesure.
      Repli quand le JavaScript est coupé : le champ caché part vide, mais la
      soumission porte l'en-tête Referer, qui contient l'URL complète de la
-     page d'arrivée — donc le gclid. Il faut alors le relire dans les données
+     page d'arrivée, donc le gclid. Il faut alors le relire dans les données
      du prestataire, et non dans le champ. */
   function campagne() {
     var p = parametres();
@@ -115,7 +115,7 @@
   if (formulaire) {
     /* Garde-fou : l'attribut action et la constante ci-dessus doivent dire
        la même chose. Sinon, les visiteurs sans JavaScript posteraient
-       ailleurs que les autres — une fuite silencieuse de conversions. */
+       ailleurs que les autres : une fuite silencieuse de conversions. */
     var actionEcrite = formulaire.getAttribute('action') || '';
     if (actionEcrite !== URL_COLLECTE) {
       if (window.console && console.warn) {
@@ -189,13 +189,13 @@
 
   /* La porte du boîtier passe désormais par .js-offre ci-dessus : c'est une
      ancre vers le formulaire, elle mène quelque part sans JavaScript, et la
-     marque d'intérêt est comptée par la case « Le boîtier » du formulaire —
+     marque d'intérêt est comptée par la case « Le boîtier » du formulaire,
      donc par un envoi réel, pas par un clic deviné. */
 
   /* --- bouton « démonstration » de l'accroche : coche la case ------------ */
   /* Le lien pointe sur la case elle-même (href="#demo") : le navigateur y
      amène le visiteur et le focus, avec ou sans JavaScript. Ici, on ne fait
-     que la cocher d'avance — on ne déplace rien, la navigation native suffit
+     que la cocher d'avance : on ne déplace rien, la navigation native suffit
      et les deux chemins arrivent au même endroit. L'événement, lui, est
      compté à l'ENVOI, quand la demande existe vraiment. */
   var boutonDemo = document.getElementById('js-demo');

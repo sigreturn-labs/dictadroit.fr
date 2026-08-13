@@ -1,10 +1,10 @@
 @charset "utf-8";
 /* ══════════════════════════════════════════════════════════════════════════
-   Dictadroit — feuille de style unique. Écrite à la main, sans framework,
+   Dictadroit : feuille de style unique. Écrite à la main, sans framework,
    sans étape de compilation, sans une seule requête vers un domaine tiers.
 
    LA THÈSE : la page fait devant le visiteur ce que le logiciel fait au
-   cabinet. Deux registres typographiques se répondent — la parole en chasse
+   cabinet. Deux registres typographiques se répondent : la parole en chasse
    fixe, minuscules, sans ponctuation ; l'acte en Garamond, avec la
    typographie judiciaire française (guillemets et espaces fines, petites
    capitales, moyens numérotés, alinéas justifiés).
@@ -22,7 +22,7 @@
 
 /* Deux instances STATIQUES d'Archivo, pas la police variable : l'ajout de
    l'espace fine insécable (U+202F, absente des trois familles d'origine)
-   invalide les tables de variations, et Firefox les jette en silence — la
+   invalide les tables de variations, et Firefox les jette en silence. La
    page perdait alors toute distinction de graisse. Vérifié au navigateur. */
 @font-face {
   font-family: "Archivo";
@@ -63,7 +63,7 @@
 /* ──────────────────────────────────────────────────────── 2. jetons ─── */
 
 :root {
-  /* clair — le papier administratif, froid */
+  /* clair : le papier administratif, froid */
   --papier:    247 247 245;
   --panneau:   238 239 236;
   --feuille:   255 255 255;
@@ -91,6 +91,14 @@
 
   --grotesque: "Archivo", "Helvetica Neue", Arial, sans-serif;
   --acte: "EB Garamond", Garamond, "Times New Roman", serif;
+  /* Courier Prime ne sert QU'À LA PAROLE PRONONCÉE : le panneau de dictée,
+     les termes tels qu'on les dit, les commandes de ponctuation. Elle n'est
+     jamais un intitulé, une légende ni un numéro. Une chasse fixe posée sur
+     un libellé n'apprend rien sur le libellé : elle déguise la page en
+     terminal, et c'est la première chose que voit un lecteur qui cherche
+     une page fabriquée. Partout ailleurs, la hiérarchie se fait au poids,
+     à la taille et à la couleur. (Seule exception hors parole : le <code>
+     des mentions légales, qui contient de vrais noms de paramètres.) */
   --machine: "Courier Prime", "Courier New", ui-monospace, monospace;
 
   --rayon: 3px;
@@ -99,7 +107,7 @@
   color-scheme: light;
 }
 
-/* sombre — inversion cohérente : le papier devient la nuit, la feuille reste
+/* sombre : inversion cohérente. Le papier devient la nuit, la feuille reste
    la surface la plus claire, et le bloc inversé passe au papier pour que le
    rythme de la page tienne dans les deux thèmes. */
 @media (prefers-color-scheme: dark) {
@@ -214,10 +222,6 @@ a { color: rgb(var(--accent)); }
 
 ::selection { background: rgb(var(--accent) / .18); }
 
-.visuellement-cache {
-  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-  overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0;
-}
 
 .saut {
   position: absolute; left: 0.75rem; top: -4rem; z-index: 20;
@@ -230,18 +234,6 @@ a { color: rgb(var(--accent)); }
 /* Il n'y a pas de surtitre sur cette page. La micro-étiquette en capitales
    posée au-dessus d'un titre est la signature visuelle n°1 de la page
    d'atterrissage fabriquée : les H1 et H2 portent leur poids tout seuls. */
-
-/* les marqueurs de ce qui reste à renseigner — volontairement voyants */
-.a-completer {
-  display: inline;
-  font-family: var(--machine);
-  font-size: 0.8em;
-  line-height: 1.45;
-  color: rgb(var(--accent-vif));
-  background: rgb(var(--accent) / .09);
-  border-bottom: 2px dashed rgb(var(--accent) / .55);
-  padding: 0.1em 0.35em;
-}
 
 .page { width: min(100% - 2.5rem, 1180px); margin-inline: auto; }
 @media (min-width: 60rem) { .page { width: min(100% - 5rem, 1180px); } }
@@ -256,7 +248,7 @@ a { color: rgb(var(--accent)); }
 
 /* Collant, parce que la page fait 7 700 px et que son unique travail est de
    récupérer une adresse : un cartouche d'imprimeur qui reste à portée, pas un
-   bandeau de croissance. Hauteur constante — la réduire au défilement
+   bandeau de croissance. Hauteur constante, parce que la réduire au défilement
    demanderait un écouteur JavaScript, et cette page tient sans. */
 .entete {
   position: sticky; top: 0; z-index: 10;
@@ -299,11 +291,11 @@ a { color: rgb(var(--accent)); }
 .hero-rang { display: grid; gap: clamp(2.5rem, 1rem + 5vw, 4rem); align-items: start; }
 @media (min-width: 64rem) {
   .hero-rang { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 4.5rem; }
-  /* La troisième déclarative — « Rien ne sort du cabinet. » — DOIT tenir sur
+  /* La troisième déclarative, « Rien ne sort du cabinet. », DOIT tenir sur
      une ligne : c'est la composition du titre, et une phrase coupée en deux
      au milieu n'est plus une déclarative. Mesuré au navigateur (Archivo 600,
      -0,03 em) : elle réclame 10,03 fois le corps du texte. En deux colonnes,
-     la colonne vaut (largeur de page − gouttière) / 2 — donc le corps est
+     la colonne vaut (largeur de page − gouttière) / 2, donc le corps est
      plafonné par la COLONNE, pas par la fenêtre, sinon la coupure revient
      entre 1024 et 1280 px où le titre grandit plus vite que sa colonne.
      Diviseur 21 = 10,5 par colonne : la marge couvre la barre de défilement
@@ -335,15 +327,14 @@ a { color: rgb(var(--accent)); }
   border-top: 1px solid rgb(var(--filet));
 }
 @media (min-width: 26rem) {
-  .hero-fiche > div { grid-template-columns: 5.5rem minmax(0, 1fr); align-items: baseline; }
+  .hero-fiche > div { grid-template-columns: 6rem minmax(0, 1fr); align-items: baseline; }
 }
 .hero-fiche > div:last-child { border-bottom: 1px solid rgb(var(--filet)); }
-.hero-fiche dt {
-  font-family: var(--machine); font-size: 0.68rem;
-  letter-spacing: 0.13em; text-transform: uppercase;
-  color: rgb(var(--sourdine));
-}
-.hero-fiche dd { margin: 0; font-size: 0.92rem; color: rgb(var(--texte)); }
+/* L'intitulé se retire, le fait porte. Sa colonne dit déjà que c'est un
+   intitulé ; le mettre en petites capitales espacées à chasse fixe n'y
+   ajoutait qu'un déguisement. */
+.hero-fiche dt { font-size: 0.92rem; color: rgb(var(--sourdine)); }
+.hero-fiche dd { margin: 0; font-size: 0.95rem; color: rgb(var(--encre)); }
 
 /* ─────────────────────────────────────────────────────── 6. boutons ─── */
 
@@ -390,15 +381,15 @@ a { color: rgb(var(--accent)); }
 
 .transformation { margin: 0; }
 
+/* Les deux légendes de l'objet : elles nomment les deux états du même
+   texte, et c'est tout leur travail. Il se fait au poids. */
 .volet-titre {
   display: flex; align-items: baseline; justify-content: space-between;
   gap: 1rem; flex-wrap: wrap;
-  font-family: var(--machine); font-size: 0.72rem;
-  letter-spacing: 0.13em; text-transform: uppercase;
-  color: rgb(var(--sourdine));
-  padding-bottom: 0.55rem;
+  font-size: 0.86rem; font-weight: 600;
+  color: rgb(var(--encre));
+  padding-bottom: 0.6rem;
 }
-.volet-num { color: rgb(var(--encre)); }
 
 .parole {
   background: rgb(var(--panneau));
@@ -425,9 +416,8 @@ a { color: rgb(var(--accent)); }
   position: relative;
   display: flex; align-items: center; gap: 1rem;
   margin: 1.5rem 0 1.9rem;
-  color: rgb(var(--sourdine));
-  font-family: var(--machine); font-size: 0.7rem;
-  letter-spacing: 0.13em; text-transform: uppercase;
+  color: rgb(var(--encre));
+  font-size: 0.86rem; font-weight: 600;
 }
 .bascule::before, .bascule::after {
   content: ""; height: 1px; background: rgb(var(--filet-net)); flex: 1 1 auto;
@@ -475,24 +465,17 @@ a { color: rgb(var(--accent)); }
 }
 .acte-alinea:last-child { margin-bottom: 0; }
 
-/* Les trois lignes que la PREMIÈRE version ne compose pas encore toute seule :
-   marquées d'un filet dans la marge, comme une barre de révision sur un
-   projet d'acte, et non retirées de la démonstration. La feuille dit alors
-   elle-même où elle en est — au lieu de quatre rétractations en prose. */
-.acte-v2 { position: relative; }
-.acte-v2::before {
+/* Les trois lignes que la première version ne compose pas encore toute
+   seule : signalées par un filet dans la marge, comme la barre de révision
+   d'un projet d'acte, et non retirées de la démonstration. La légende sous
+   la feuille dit en français ce que ce filet veut dire. L'abréviation « v2 »
+   qui était posée là ne voulait rien dire pour qui découvre le produit. */
+.acte-revision { position: relative; }
+.acte-revision::before {
   content: ""; position: absolute;
   left: -0.85em; top: 0.12em; bottom: 0.12em;
   width: 2px; background: rgb(var(--accent));
 }
-.acte-marge {
-  position: absolute; left: -2.4rem; top: 0;
-  font-family: var(--machine); font-size: 0.62rem; line-height: 1.6;
-  letter-spacing: 0.08em; color: rgb(var(--accent));
-}
-/* sous 64 rem la feuille n'a plus de marge où poser la note : le filet reste,
-   et la légende sous la feuille dit ce qu'il veut dire. */
-@media (max-width: 63.99rem) { .acte-marge { display: none; } }
 
 .transformation-note {
   margin-top: 0.9rem;
@@ -535,7 +518,7 @@ a { color: rgb(var(--accent)); }
   margin-top: 1.3rem; max-width: 34ch;
   color: rgb(var(--inv-texte) / .78);
 }
-/* Les trente secondes, montrées au lieu d'être promises — et la colonne de
+/* Les trente secondes, montrées au lieu d'être promises. Et la colonne de
    gauche cesse d'être vide sur 296 px. */
 .verif {
   list-style: none; margin: 1.9rem 0 0; padding: 0;
@@ -554,8 +537,8 @@ a { color: rgb(var(--accent)); }
 .verif li:last-child { border-bottom: 1px solid rgb(var(--inv-filet)); }
 .verif li::before {
   content: counter(verif) ".";
-  font-family: var(--machine); font-size: 0.8rem;
-  letter-spacing: 0.06em;
+  font-size: 0.95rem; font-weight: 600;
+  font-variant-numeric: tabular-nums lining-nums;
   color: rgb(var(--inv-accent));
 }
 .grille-intro {
@@ -571,9 +554,11 @@ a { color: rgb(var(--accent)); }
 @media (min-width: 40rem) {
   .cnb-ligne { grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: baseline; }
 }
+/* Ce que demande la grille d'un côté, ce qu'on y répond de l'autre : le
+   contraste des deux familles suffit à les séparer, sans qu'aucun intitulé
+   ait à se déguiser. */
 .cnb dt {
-  font-family: var(--machine); font-size: 0.78rem; line-height: 1.5;
-  letter-spacing: 0.03em;
+  font-size: 0.9rem; line-height: 1.5;
   color: rgb(var(--inv-sourdine));
 }
 .cnb dd {
@@ -604,7 +589,7 @@ a { color: rgb(var(--accent)); }
 }
 /* deux lignes réservées : sans ça, `text-wrap: balance` casse les trois
    titres en 2/1/2 lignes et les corps des cartes ne partagent plus de ligne
-   de base — la grille sans le réglage typographique. */
+   de base : la grille sans le réglage typographique. */
 .preuve h3 { margin-bottom: 0.7rem; min-block-size: 2lh; }
 .preuve p { font-size: 0.97rem; color: rgb(var(--texte)); }
 .preuve-note {
@@ -699,12 +684,16 @@ a { color: rgb(var(--accent)); }
 .offre .bouton { margin-top: auto; align-self: flex-start; }
 
 .ancrage { margin-top: clamp(2rem, 1rem + 2.5vw, 3rem); }
-.ancrage-titre {
-  font-family: var(--machine); font-size: 0.74rem;
-  letter-spacing: 0.11em; text-transform: uppercase;
-  color: rgb(var(--sourdine)); margin-bottom: 0.9rem;
-}
 .tableau-ancrage { width: 100%; border-collapse: collapse; }
+/* Une vraie légende de tableau, dans <caption>, à la place d'une phrase
+   entière mise en capitales espacées au-dessus : une phrase n'est pas une
+   étiquette, et le doublon avec la légende cachée disparaît. */
+.tableau-ancrage caption {
+  caption-side: top; text-align: left;
+  max-width: 54ch; padding-bottom: 0.85rem;
+  font-size: 0.95rem; line-height: 1.5;
+  color: rgb(var(--sourdine));
+}
 .tableau-ancrage th, .tableau-ancrage td {
   text-align: left; vertical-align: baseline;
   padding: 0.9rem 1rem 0.9rem 0;
@@ -732,7 +721,7 @@ a { color: rgb(var(--accent)); }
   width: 2px; background: rgb(var(--accent));
 }
 /* Sur téléphone, la comparaison DOIT rester une comparaison : intitulé à
-   gauche, chiffre à droite, alignés — pas quatre blocs empilés qui obligent à
+   gauche, chiffre à droite, alignés, et non quatre blocs empilés qui obligent à
    retenir un nombre à travers 130 px de glose. La glose passe dessous, plus
    petite, hors du champ de comparaison. */
 @media (max-width: 44rem) {
@@ -754,12 +743,12 @@ a { color: rgb(var(--accent)); }
   /* Aucun filet vertical ici : une fois la ligne redevenue UNE ligne
      (intitulé | chiffre), l'intitulé et le chiffre en bleu gras suffisent à
      dire laquelle est la nôtre. Le filet ne servait qu'à recoller les trois
-     blocs de l'empilement précédent — le défaut a disparu, le remède aussi. */
+     blocs de l'empilement précédent : le défaut a disparu, le remède aussi. */
   .ligne-nous th { padding-left: 0; }
   .ligne-nous th::before { display: none; }
 }
 
-/* le boîtier : un plan, pas un produit — le filet discontinu suffit à le
+/* le boîtier : un plan, pas un produit. Le filet discontinu suffit à le
    dire. L'aplat bleu qui était ici en faisait le seul encart coloré de la
    page : sur téléphone, en pleine largeur, il ressemblait à une publicité
    insérée dans l'article. Une seule colonne : le bloc ne pèse pas deux. */
@@ -780,23 +769,38 @@ a { color: rgb(var(--accent)); }
 
 /* ────────────────────────────────────── 11. ce que ça ne fait pas ─── */
 
+/* Ces six phrases sont le premier dispositif de crédibilité de la page. En
+   liste à puces, tirets en tête, elles avaient l'air d'un formulaire de
+   décharge. Elles reprennent donc la forme de la grille du CNB, sur le
+   papier au lieu du bloc noir : le manque énoncé à gauche, en Garamond et
+   à pleine taille, ce qui le tempère à droite, en petit. Aucune puce,
+   aucun tiret, et le manque garde le premier rang de lecture. */
 .limites .tete-section { max-width: 40rem; }
-.aveux { list-style: none; margin: 0; padding: 0; max-width: 54rem; }
-.aveux li {
-  position: relative;
-  padding: clamp(1.1rem, 0.8rem + 1vw, 1.6rem) 0 clamp(1.1rem, 0.8rem + 1vw, 1.6rem) 2.2rem;
+.aveux {
+  list-style: none; margin: 0; padding: 0;
   border-top: 1px solid rgb(var(--filet));
+}
+.aveu {
+  display: grid; gap: 0.5rem 3rem;
+  padding: clamp(1.05rem, 0.8rem + 0.9vw, 1.5rem) 0;
+  border-bottom: 1px solid rgb(var(--filet));
+}
+@media (min-width: 58rem) {
+  .aveu { grid-template-columns: minmax(0, 1.04fr) minmax(0, 1fr); align-items: baseline; }
+}
+.aveu-fait {
+  margin: 0;
   font-family: var(--acte);
-  font-size: clamp(1.14rem, 1rem + 0.55vw, 1.42rem);
-  line-height: 1.42;
-  color: rgb(var(--texte));
+  font-size: clamp(1.16rem, 1rem + 0.6vw, 1.46rem);
+  line-height: 1.28;
+  color: rgb(var(--encre));
 }
-.aveux li:last-child { border-bottom: 1px solid rgb(var(--filet)); }
-.aveux li::before {
-  content: "—"; position: absolute; left: 0; top: clamp(1.05rem, 0.75rem + 1vw, 1.55rem);
-  color: rgb(var(--accent)); font-family: var(--acte);
+.aveu-suite {
+  margin: 0;
+  font-size: 0.95rem; line-height: 1.55;
+  color: rgb(var(--sourdine));
+  max-width: 46ch;
 }
-.aveu-tete { color: rgb(var(--encre)); }
 
 /* ─────────────────────────────────────────────────────── 12. auteur ─── */
 
@@ -805,18 +809,18 @@ a { color: rgb(var(--accent)); }
   .auteur-rang { grid-template-columns: minmax(0, 17rem) minmax(0, 1fr); }
 }
 /* Le portrait : un médaillon, comme sur le site de l'éditeur.
-   LE POINT QUI COMPTE — la surface et son filet SUIVENT le thème. Ce sont
+   LE POINT QUI COMPTE : la surface et son filet SUIVENT le thème. Ce sont
    --panneau et --filet, que le système inverse déjà : aucun jeton emprunté,
    aucun jeton neuf. Une platine qui reste claire sur une page de nuit est un
    carré blanc collé au milieu du noir, et c'était le défaut.
    Le fichier est un détourage à canal alpha : c'est le disque qui lui donne
-   son fond. Le cercle ne coupe que 5,3 % du sujet — le bord des avant-bras —
+   son fond. Le cercle ne coupe que 5,3 % du sujet, le bord des avant-bras,
    et le dessin porte ses propres blancs (26 % de ses pixels), donc il tient
    sur les deux fonds ; son bord est un gris moyen, aucun halo. Mesuré.
    PAS de filtre de désaturation : le fichier est DÉJÀ monochrome (0,04 % de
    pixels chromatiques), la règle n'aurait strictement aucun effet.
    PAS d'effet de survol : ce portrait n'est pas un contrôle et ne mène nulle
-   part — l'agrandir au survol y inventerait une affordance qui n'existe pas.
+   part : l'agrandir au survol y inventerait une affordance qui n'existe pas.
    PAS de repères d'angle : le disque et son filet sont déjà l'encadrement,
    et quatre équerres autour d'un cercle en feraient un second. */
 .portrait {
@@ -843,9 +847,8 @@ a { color: rgb(var(--accent)); }
   .coordonnees { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; }
 }
 .coordonnees dt {
-  font-family: var(--machine); font-size: 0.7rem;
-  letter-spacing: 0.12em; text-transform: uppercase;
-  color: rgb(var(--sourdine)); margin-bottom: 0.3rem;
+  font-size: 0.9rem;
+  color: rgb(var(--sourdine)); margin-bottom: 0.15rem;
 }
 .coordonnees dd { margin: 0; font-size: 0.95rem; color: rgb(var(--encre)); }
 
@@ -896,8 +899,8 @@ input:user-invalid, textarea:user-invalid {
 
 .champ--case { margin-bottom: 1.5rem; }
 /* Le lien « Demander une démonstration » vise cette case : la marge de
-   défilement la pose assez bas pour que le champ d'adresse — le seul champ
-   obligatoire — reste visible au-dessus. Mesuré : 330 px séparent les deux,
+   défilement la pose assez bas pour que le champ d'adresse, le seul champ
+   obligatoire, reste visible au-dessus. Mesuré : 330 px séparent les deux,
    26 rem laissent l'adresse et la question de formule dans la vue. */
 #demo { scroll-margin-top: 26rem; }
 .case {
@@ -912,7 +915,7 @@ input:user-invalid, textarea:user-invalid {
 
 /* ─── la question de formule : le signal d'offre passe par le formulaire,
    jamais par un événement. Un bouton d'offre présélectionne la réponse quand
-   il y a du JavaScript ; sans JavaScript, le visiteur la renseigne — et dans
+   il y a du JavaScript ; sans JavaScript, le visiteur la renseigne, et dans
    les deux cas la préférence est DÉCLARÉE, pas devinée. ─── */
 .formule {
   margin: 0 0 1.5rem; padding: 0; border: 0;
@@ -988,7 +991,9 @@ input:user-invalid, textarea:user-invalid {
   color: rgb(var(--sourdine)); font-size: 0.95rem;
 }
 
-.legal { max-width: 44rem; }
+/* Les mentions légales se composent comme la page de remerciement : même
+   feuillet, même largeur, centré. C'était la seule page du site à partir en
+   fer à gauche dans une colonne de 1180 px. */
 .legal h1 { margin-bottom: 1.1rem; }
 .legal h2 {
   margin: 2.75rem 0 0.9rem; padding-top: 1.1rem;
@@ -998,11 +1003,12 @@ input:user-invalid, textarea:user-invalid {
 .legal p, .legal dd { color: rgb(var(--texte)); }
 .legal dl { margin: 0 0 1.25rem; }
 .legal dt {
-  font-family: var(--machine); font-size: 0.74rem;
-  letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgb(var(--sourdine)); margin-top: 1rem;
+  font-size: 0.9rem;
+  color: rgb(var(--sourdine)); margin-top: 1.15rem;
 }
-.legal dd { margin: 0.25rem 0 0; }
+.legal dd { margin: 0.2rem 0 0; }
+/* La seule chasse fixe de la page hors parole, et elle est justifiée : ce
+   sont des noms de paramètres d'URL, écrits à la lettre. */
 .legal code {
   font-family: var(--machine); font-size: 0.85em;
   background: rgb(var(--panneau)); padding: 0.1em 0.3em; border-radius: 2px;
