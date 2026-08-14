@@ -355,11 +355,6 @@ a { color: rgb(var(--accent)); }
   margin-bottom: 1.6rem;
 }
 .actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-.hero-etat {
-  margin-top: 1.6rem; padding-top: 1.1rem;
-  border-top: 1px solid rgb(var(--filet));
-  font-size: 0.9rem; color: rgb(var(--sourdine)); max-width: 34rem;
-}
 
 
 /* ─────────────────────────────────────────────────────── 6. boutons ─── */
@@ -407,15 +402,19 @@ a { color: rgb(var(--accent)); }
 
 .transformation { margin: 0; }
 
-/* Les deux légendes de l'objet : elles nomment les deux états du même
-   texte, et c'est tout leur travail. Il se fait au poids. */
+/* Les deux légendes de l'objet : elles nomment les deux états du même texte,
+   et c'est tout leur travail. Il se fait au poids.
+   UNE SEULE REGLE POUR LES DEUX, c'est le point. « Ce qui s'écrit » portait
+   un filet de part et d'autre, « Ce que vous dites » n'en portait aucun :
+   deux règles distinctes pour deux étiquettes jumelles ne restent jamais
+   d'accord bien longtemps. Le filet est parti — il décorait la bascule sans
+   rien dire de plus que le mot lui-même. */
 .volet-titre {
-  display: flex; align-items: baseline; justify-content: space-between;
-  gap: 1rem; flex-wrap: wrap;
+  margin: 0 0 0.6rem;
   font-size: 0.86rem; font-weight: 600;
   color: rgb(var(--encre));
-  padding-bottom: 0.6rem;
 }
+.volet-titre--suite { margin-top: 1.9rem; }
 
 .parole {
   background: rgb(var(--panneau));
@@ -445,20 +444,6 @@ a { color: rgb(var(--accent)); }
   text-decoration-thickness: 1px;
   text-underline-offset: 0.22em;
 }
-
-/* la bascule : le filet qui dit « et ça devient ceci » */
-.bascule {
-  position: relative;
-  display: flex; align-items: center; gap: 1rem;
-  margin: 1.5rem 0 1.9rem;
-  color: rgb(var(--encre));
-  font-size: 0.86rem; font-weight: 600;
-}
-.bascule::before, .bascule::after {
-  content: ""; height: 1px; background: rgb(var(--filet-net)); flex: 1 1 auto;
-}
-.bascule span { flex: 0 0 auto; }
-.bascule::after { flex: 0 0 1.75rem; }
 
 .feuille {
   position: relative;
@@ -501,23 +486,12 @@ a { color: rgb(var(--accent)); }
 }
 .acte-alinea:last-child { margin-bottom: 0; }
 
-/* Les trois lignes que la première version ne compose pas encore toute
-   seule : signalées par un filet dans la marge, comme la barre de révision
-   d'un projet d'acte, et non retirées de la démonstration. La légende sous
-   la feuille dit en français ce que ce filet veut dire. L'abréviation « v2 »
-   qui était posée là ne voulait rien dire pour qui découvre le produit. */
-.acte-revision { position: relative; }
-.acte-revision::before {
-  content: ""; position: absolute;
-  left: -0.85em; top: 0.12em; bottom: 0.12em;
-  width: 2px; background: rgb(var(--accent));
-}
-
-.transformation-note {
-  margin-top: 0.9rem;
-  font-size: 0.86rem; line-height: 1.5;
-  color: rgb(var(--sourdine));
-}
+/* LE FILET DE RÉVISION EN MARGE EST PARTI, ET SA LÉGENDE AVEC.
+   Il signalait les deux lignes que la première version ne compose pas encore
+   seule — un signal qui ne se comprend qu'avec sa légende, donc deux éléments
+   à lire pour une nuance de calendrier. La démonstration montre maintenant ce
+   qu'elle montre, sans clé de lecture. Ne pas remettre le filet sans remettre
+   la légende : seul, il redevient une décoration bleue inexpliquée. */
 
 .acte-signature {
   margin-top: clamp(1.4rem, 1rem + 1.4vw, 2.2rem);
@@ -594,10 +568,6 @@ a { color: rgb(var(--accent)); }
   color: rgb(var(--inv-texte));
   max-width: 42ch;
 }
-.grille-note {
-  margin-top: 1.3rem; font-size: 0.86rem; color: rgb(var(--inv-sourdine));
-  max-width: 52ch;
-}
 .local :focus-visible { outline-color: rgb(var(--inv-accent)); }
 
 /* ──────────────────────────────────────────── 9. ce que fait la v1 ─── */
@@ -647,7 +617,6 @@ a { color: rgb(var(--accent)); }
   line-height: 1.4;
   color: rgb(var(--texte));
 }
-.legende-puce { color: rgb(var(--accent)); font-weight: 600; }
 
 /* ──────────────────────────────────────────────────────── 10. prix ─── */
 
@@ -686,15 +655,6 @@ a { color: rgb(var(--accent)); }
 .inclus-note {
   margin: 0 0 1.6rem; font-size: 0.95rem; line-height: 1.55;
   color: rgb(var(--texte));
-}
-.inclus { list-style: none; margin: 0 0 1.6rem; padding: 0; }
-.inclus li {
-  position: relative; padding-left: 1.15rem; margin-bottom: 0.5rem;
-  font-size: 0.95rem; color: rgb(var(--texte));
-}
-.inclus li::before {
-  content: ""; position: absolute; left: 0; top: 0.62em;
-  width: 0.6rem; height: 1px; background: rgb(var(--accent));
 }
 .offre .bouton { margin-top: auto; align-self: flex-start; }
 
@@ -783,46 +743,26 @@ a { color: rgb(var(--accent)); }
 
 /* ────────────────────────────────────── 11. ce que ça ne fait pas ─── */
 
-/* Ces six phrases sont le premier dispositif de crédibilité de la page. En
-   liste à puces, tirets en tête, elles avaient l'air d'un formulaire de
-   décharge. Elles reprennent donc la forme de la grille du CNB, sur le
-   papier au lieu du bloc noir : le manque énoncé à gauche, en Garamond et
-   à pleine taille, ce qui le tempère à droite, en petit. Aucune puce,
-   aucun tiret, et le manque garde le premier rang de lecture. */
-/* meme mesure que toutes les autres tetes : 46 rem. */
-/* Deux colonnes d'items, et non deux colonnes PAR item : la page gagne la
-   moitié de sa largeur et la section perd la moitié de sa hauteur. Chaque
-   aveu porte son propre filet de tête, donc les filets s'alignent dans leur
-   colonne. (Un filet de section en pleine largeur au-dessus d'items limités
-   à 60ch ne s'alignait avec rien : c'était visible.) */
-/* UN filet par aveu, en tete, et jamais deux : la regle de base arrivait
-   APRES la media query, donc a specificite egale le filet du bas revenait et
-   chaque aveu en portait deux.
-   Et des COLONNES DE JOURNAL, pas une grille : une grille etire chaque rangee
-   a la hauteur du plus grand, si bien qu'un aveu court laissait 70 px de vide
-   sous lui et un aveu long 20 px. Les ecarts n'etaient jamais les memes. En
-   flux multi-colonnes, chaque aveu garde exactement son propre espacement. */
-.aveux {
-  list-style: none; margin: 0; padding: 0;
-  border-bottom: 1px solid rgb(var(--filet));
-}
-.aveu {
-  display: grid; gap: 0.4rem;
-  padding: clamp(1.05rem, 0.8rem + 0.9vw, 1.5rem) 0;
-  border-top: 1px solid rgb(var(--filet));
-  max-width: 60ch;
-  break-inside: avoid;
-}
-@media (min-width: 64rem) {
-  .aveux { column-count: 2; column-gap: 4.5rem; }
-  .aveu { max-width: none; }
-}
+/* Cette section a été une liste de six aveux, puis de trois, puis de deux.
+   Il n'en reste qu'UN, et une liste d'un élément n'est pas une petite liste :
+   c'est une liste tronquée. Les filets de tête n'ont plus rien à séparer, les
+   colonnes de journal n'ont plus rien à répartir, et l'œil cherche le suivant.
+   Tout ce gréement est donc parti. Reste une déclaration, à la mesure de la
+   colonne du reste de la page — plus grande qu'avant, puisqu'elle est seule à
+   porter la section, et c'est de toute façon la phrase qui sépare ce logiciel
+   d'une IA qui rédige à votre place.
+   🔴 SI UN SECOND AVEU REVIENT : reprendre la liste (ul.aveux + li.aveu), avec
+   UN filet de tête par aveu et `column-count: 2` au-delà de 64 rem — jamais une
+   grille, qui étirait chaque rangée à la hauteur du plus grand et donnait des
+   écarts tous différents. L'historique complet est dans DESIGN.md. */
 .aveu-fait {
-  margin: 0;
+  margin: 0 0 0.7rem;
   font-family: var(--acte);
-  font-size: clamp(1.16rem, 1rem + 0.6vw, 1.46rem);
-  line-height: 1.28;
+  font-size: clamp(1.34rem, 1.08rem + 1vw, 1.85rem);
+  line-height: 1.24;
   color: rgb(var(--encre));
+  max-width: 30ch;
+  text-wrap: balance;
 }
 .aveu-suite {
   margin: 0;
@@ -833,13 +773,20 @@ a { color: rgb(var(--accent)); }
 
 /* ─────────────────────────────────────────────────────── 12. auteur ─── */
 
-.auteur-rang { display: grid; gap: 1.75rem; align-items: start; }
-/* Le portrait n'a pas besoin d'une demi-page : agrandi a la taille de sa
-   colonne il ecrasait le texte, et le bloc devenait laid. Une vignette collee
-   au texte, dans une colonne centree : c'est un visage, pas une affiche. */
-@media (min-width: 40rem) {
-  .auteur-rang { grid-template-columns: 13rem minmax(0, 1fr); gap: 2.5rem; }
+/* LE PORTRAIT N'EST PLUS UNE COLONNE, C'EST UNE VIGNETTE DE SIGNATURE.
+   En grille `13rem | 1fr` il coinçait le texte dans une gouttière, et sous
+   40 rem il tombait en premier, tout en haut, gros disque centré au-dessus
+   d'un titre : il pesait alors plus lourd que ce qu'il a à dire. Posé sur la
+   ligne du titre, il fait ce qu'il doit faire — mettre un visage sur un nom —
+   et le texte récupère toute la mesure de la colonne.
+   Le titre garde son `text-wrap: balance` : sur téléphone il tient sur deux
+   lignes courtes à côté du médaillon, centré verticalement contre lui. */
+.auteur-tete {
+  display: flex; align-items: center;
+  gap: clamp(0.85rem, 0.6rem + 0.9vw, 1.25rem);
+  margin-bottom: clamp(1.4rem, 0.9rem + 1.5vw, 2rem);
 }
+.auteur-tete h2 { margin: 0; }
 /* Le portrait : un médaillon, comme sur le site de l'éditeur.
    LE POINT QUI COMPTE : la surface et son filet SUIVENT le thème. Ce sont
    --panneau et --filet, que le système inverse déjà : aucun jeton emprunté,
@@ -857,7 +804,8 @@ a { color: rgb(var(--accent)); }
    et quatre équerres autour d'un cercle en feraient un second. */
 .portrait {
   position: relative;
-  width: min(100%, 13rem);
+  flex: 0 0 auto;
+  width: clamp(3.4rem, 2.5rem + 2.9vw, 5rem);
   aspect-ratio: 1 / 1;
   border-radius: 50%;
   overflow: hidden;
@@ -869,7 +817,11 @@ a { color: rgb(var(--accent)); }
   width: 100%; height: 100%;
   object-fit: cover;
 }
-.auteur-dire h2 { margin-bottom: 1.1rem; }
+/* Le texte de l'auteur était le plus long bloc de prose de la page : deux
+   paragraphes de 110 mots pour dire trois choses. Il en dit toujours trois,
+   en 68 mots. */
+.auteur-dire { display: grid; gap: 1.1rem; }
+.auteur-dire p { margin: 0; max-width: 62ch; }
 
 /* ─────────────────────────────────────────────────── 13. formulaire ─── */
 
@@ -981,7 +933,6 @@ input:user-invalid, textarea:user-invalid {
 .pied-rang { display: grid; gap: 1.25rem; }
 @media (min-width: 64rem) {
   .pied-rang { grid-template-columns: 1fr 1fr; gap: 4.5rem; }
-  .pied-note { grid-column: 1 / -1; }
 }
 .pied-nom {
   font-weight: 600; color: rgb(var(--encre)); font-size: 1rem;
@@ -991,13 +942,10 @@ input:user-invalid, textarea:user-invalid {
 @media (min-width: 64rem) { .pied-liens { align-items: flex-end; text-align: right; } }
 .pied-liens a { color: rgb(var(--texte)); text-decoration: none; border-bottom: 1px solid rgb(var(--filet-net)); }
 .pied-liens a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
-/* Le trait est porte par le bloc, la mesure par le texte : sinon le filet
-   s'arretait a 552 px sous une grille qui en fait 1 180. */
-.pied-note {
-  padding-top: 1.25rem; border-top: 1px solid rgb(var(--filet));
-  font-size: 0.86rem; max-width: none;
-}
-.pied-note > span { display: block; max-width: 57ch; }
+/* La note de pied (« aucun cookie, aucune ressource extérieure ») et son filet
+   sont partis : le fait reste vrai et reste écrit dans les mentions légales,
+   où on va le vérifier. En bas de page, il ajoutait une troisième rangée et un
+   trait de plus à une page qui en avait déjà trop. */
 
 /* ───────────────────────────────── 15. pages annexes (merci, légales) ─── */
 
@@ -1059,11 +1007,11 @@ input:user-invalid, textarea:user-invalid {
 
 /* ── EN UNE COLONNE, RIEN NE RESTE FERRE A GAUCHE AVEC DU VIDE A DROITE ──
    La regle d'alignement de la page (plein cadre, ou centre) n'avait jamais ete
-   appliquee au bas de la page en une colonne : le portrait laissait 130 px de
-   vide a sa droite sur un iPhone, et les deux actions du premier ecran, une
-   fois empilees, s'arretaient a des largeurs differentes. */
+   appliquee au bas de la page en une colonne : les deux actions du premier
+   ecran, une fois empilees, s'arretaient a des largeurs differentes.
+   (Le portrait etait le second cas : il est desormais colle au titre de sa
+   section, donc il n'y a plus de vide a sa droite a rattraper.) */
 @media (max-width: 40rem) {
-  .portrait { margin-inline: auto; }
   .actions { display: grid; gap: 0.75rem; }
   .actions .bouton { width: 100%; }
 }
