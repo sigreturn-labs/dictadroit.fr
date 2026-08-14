@@ -285,9 +285,6 @@ a { color: rgb(var(--accent)); }
 }
 .paraphe { display: block; overflow: visible; }
 .paraphe--mini { width: 1.55rem; height: 1.35rem; color: rgb(var(--accent)); }
-/* Elle prend l'espace disponible : le selecteur de theme et la navigation se
-   retrouvent donc groupes a droite, au lieu de flotter au milieu. */
-.marque-note { flex: 1 1 auto; }
 .marque-note {
   margin: 0; color: rgb(var(--sourdine)); font-size: 0.86rem;
   border-left: 1px solid rgb(var(--filet)); padding-left: 1rem;
@@ -1071,40 +1068,52 @@ input:user-invalid, textarea:user-invalid {
   .actions .bouton { width: 100%; }
 }
 
-/* ── selecteur de theme : clair · automatique · sombre ──────────────────
-   Trois icones DESSINEES, meme trait que le paraphe de la marque. Le groupe
-   est un radiogroup : une seule halte de tabulation, on circule aux fleches.
-   Aucun aplat colore : c'est un reglage, pas une action, et le bleu de
-   signature reste reserve a ce qui agit. */
-.theme-choix {
-  display: flex; gap: 0;
-  border: 1px solid rgb(var(--filet-controle));
-  border-radius: var(--rayon);
-  overflow: hidden;
-  flex: 0 0 auto;
-}
+/* ── bouton de theme : un seul, rotatif ─────────────────────────────────
+   Discret par construction : pas de cadre, pas d'aplat, juste l'icone du mode
+   courant en sourdine. Trois boutons faisaient passer l'en-tete a deux lignes
+   sur telephone et repoussaient l'appel a l'action sous la marque.
+   L'icone est DESSINEE, meme trait que le paraphe de la marque. */
 .theme-bouton {
+  /* C'est LUI qui pousse a droite, pas la note de marque : elle disparait sous
+     832 px, et le groupe repartait alors se coller a gauche. */
+  margin-left: auto;
   display: grid; place-items: center;
-  width: 2.15rem; height: 1.9rem;
+  width: 2.15rem; height: 2.15rem;
   padding: 0; border: 0; background: transparent;
+  border-radius: var(--rayon);
   color: rgb(var(--sourdine));
   cursor: pointer;
-  transition: background-color .16s ease, color .16s ease;
+  flex: 0 0 auto;
+  transition: color .16s ease, background-color .16s ease;
 }
-.theme-bouton + .theme-bouton { border-left: 1px solid rgb(var(--filet)); }
-.theme-bouton svg { width: 1.05rem; height: 1.05rem; display: block; }
-.theme-bouton:hover { color: rgb(var(--encre)); background: rgb(var(--encre) / .04); }
-/* L'etat actif se marque a l'ENCRE, pas au bleu : le bleu de signature ne
-   porte que ce qui agit, et choisir un thema est un reglage. */
-.theme-bouton[aria-checked="true"] {
-  color: rgb(var(--papier));
-  background: rgb(var(--encre));
-}
+.theme-bouton svg { width: 1.15rem; height: 1.15rem; display: block; }
+.theme-bouton:hover { color: rgb(var(--encre)); background: rgb(var(--encre) / .05); }
 @media (prefers-reduced-motion: reduce) { .theme-bouton { transition: none; } }
 
-/* Sur telephone l'en-tete ne garde que l'appel a l'action : le selecteur y
-   tient encore, mais il passe apres la marque et avant le lien. */
+/* Annonce du changement d'etat : lue par un lecteur d'ecran, invisible a l'oeil,
+   et surtout PAS `display: none`, qui la rendrait muette. */
+.hors-ecran {
+  position: absolute; width: 1px; height: 1px;
+  margin: -1px; padding: 0; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+
+/* ── l'en-tete doit tenir sur UNE ligne ─────────────────────────────────
+   Mesure a 360 px : marque 105 + bouton 34 + appel a l'action 137 + deux
+   gouttieres de 16 = 308 px pour 308 disponibles. Zero marge, donc le moindre
+   arrondi renvoyait l'appel a l'action a la ligne suivante. */
 @media (max-width: 47rem) {
-  .theme-choix { order: 2; }
-  .entete-nav { order: 3; }
+  .entete-rang { gap: 0.6rem; }
+}
+/* Sous 384 px, le logotype se reduit a sa marque : le mot coute 80 px, et la
+   page le redit dans son titre, son pied et son adresse. Le nom accessible du
+   lien est porte par aria-label, pose dans le HTML. */
+@media (max-width: 24rem) {
+  .marque span { display: none; }
+}
+
+/* La note de marque part AVANT les liens de navigation : entre 752 et 832 px,
+   tout reapparaissait d'un coup et l'en-tete passait a deux lignes. */
+@media (max-width: 52rem) {
+  .marque-note { display: none; }
 }
