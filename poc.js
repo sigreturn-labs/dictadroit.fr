@@ -9,8 +9,8 @@
  *   1. la parole et l'acte s'écrivent EN MÊME TEMPS, au rythme de la voix — « vous
  *      dictez, l'acte s'écrit » ;
  *   2. à la fin, les mots corrigés se soulignent d'un trait d'encre, et le trait reste ;
- *   3. une phrase dit ce que ça donne. Pas un tableau de bord, pas de légende : la page
- *      parle comme elle parle partout ailleurs.
+ *   3. et c'est tout. Pas de bilan chiffré, pas de légende : ce que le visiteur emporte
+ *      est l'acte, pas un score.
  *
  * Amélioration progressive : le bouton est `hidden` en HTML et n'est révélé que d'ici.
  * Sans JavaScript, la page garde son illustration statique et ne propose aucune commande
@@ -39,10 +39,6 @@
   var donnees = null, audio = null, trame = 0, minuteries = [];
   var enCours = false, fini = false;
   var libelle = bouton.querySelector(".demo-libelle");
-  var bilan = document.createElement("p");
-  bilan.className = "demo-bilan";
-  bilan.hidden = true;
-  feuille.insertAdjacentElement("afterend", bilan);
 
   barre.hidden = false;
 
@@ -222,25 +218,14 @@
       Array.prototype.forEach.call(liste, function (m) { m.classList.add("vu"); });
     });
 
-    plus_tard(function () { acte.classList.add("corrige"); }, 450);
-
+    /* La démonstration s'arrête là : l'acte est écrit, ce qui a été corrigé se voit.
+     * Elle portait une phrase de bilan chiffré ; elle a été retirée. Ce que le visiteur
+     * doit emporter est l'acte, pas un score — et les chiffres, s'ils l'intéressent, se
+     * disent dans le corps de la page, pas en pied de démonstration. */
     plus_tard(function () {
-      /* Une PHRASE, pas un tableau de bord. La version précédente alignait trois
-       * pourcentages en gras sous une légende à pastilles : c'est le réflexe qui fabrique
-       * des pages qui se ressemblent toutes. Ici la page parle comme elle parle partout
-       * ailleurs, et ne retient que ce qu'un juriste veut savoir — le vocabulaire est-il
-       * juste, et est-ce que ça suit quand je dicte. */
-      var m = donnees.mesure;
-      var restants = m.termes_rates_apres;
-      bilan.textContent =
-        "Sur les " + m.termes_total + " termes de droit de ce passage, la reconnaissance " +
-        "en manquait " + m.termes_rates_avant + ". " +
-        (restants ? "Il en reste " + restants + ", " : "Il n’en manque plus aucun, ") +
-        "et le texte se fige moins d’une demi-seconde après chaque phrase, sur " +
-        "processeur seul.";
-      bilan.hidden = false;
+      acte.classList.add("corrige");
       annoncer("Démonstration terminée.");
-    }, 950);
+    }, 450);
 
     enCours = false; fini = true;
     bouton.removeAttribute("data-joue");
@@ -262,7 +247,6 @@
     figure.setAttribute("data-demo", "");
     parole.hidden = false;
     acte.hidden = false;
-    bilan.hidden = true;
     preparer();
 
     enCours = true;

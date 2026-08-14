@@ -1195,8 +1195,7 @@ input:user-invalid, textarea:user-invalid {
    que la page n'a pas, et une grille pastille|intitulé que « la règle des voix qui
    se suivent » interdit précisément. Ici, une correction se souligne comme un
    correcteur souligne — d'un trait d'encre, dans le bleu de la marque, et rien de
-   plus. Ce qui compte est QU'un mot a été corrigé, pas de quelle passe il vient ;
-   ça, la phrase de bilan le dit en français. */
+   plus. Ce qui compte est QU'un mot a été corrigé, pas de quelle passe il vient. */
 .acte-live mark {
   background: none; color: inherit;
   text-decoration: underline;
