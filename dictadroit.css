@@ -102,14 +102,22 @@
   --machine: "Courier Prime", "Courier New", ui-monospace, monospace;
 
   --rayon: 3px;
-  /* LA MESURE : la largeur d'une colonne de texte, et il n'y en a qu'une dans
-     toute la page. Mesuré sur la vraie police : 71 signes par ligne en
-     moyenne, 76 au plus. Tout bloc de prose la vaut ; le bloc de l'auteur la
-     vaut PLUS son dessin, jamais moins, ce qui garantit que les deux sections
-     lisent à la même mesure. Ne pas rentrer un paragraphe à l'intérieur d'une
-     colonne plus large : ça fabrique le vide à droite (voir la règle
-     d'alignement). C'est la colonne qu'on rétrécit. */
-  --mesure: 32rem;
+  /* LA MESURE : la largeur d'UN BLOC de la page, et il n'y en a qu'une. Les
+     colonnes de prose, les deux colonnes du bloc inversé, le bloc de l'auteur,
+     la carte de contact et les pages annexes la valent toutes : un seul gabarit
+     pour tout le site. Ce qui est DANS un bloc va jusqu'à son bord — on ne
+     rentre pas un paragraphe à l'intérieur d'un bloc plus large, ça fabrique le
+     vide à droite (voir la règle d'alignement) ; c'est le bloc qu'on ajuste.
+     🔴 46 rem, ET PAS MOINS. Mesuré à 32, 35, 37, 39 et 42 rem : en dessous, le
+     titre de la section de démonstration se casse en TROIS lignes, et il ne
+     tient sur deux qu'à partir de 46. Une colonne étroite au milieu d'un cadre
+     de 1 180 px n'achète qu'un titre haché.
+     Contrepartie assumée et mesurée : la prose y va jusqu'à ~100 signes par
+     ligne, au-dessus des 75 recommandés. Elle est tenue par des paragraphes
+     COURTS (2 à 4 lignes) et un interligne de 1,62 ; c'est ce qui la rend
+     lisible malgré la longueur. Rallonger les paragraphes de cette section
+     rouvrirait le problème que la largeur cache. */
+  --mesure: 46rem;
   --ombre-feuille: 0 1px 2px rgb(var(--encre) / .05),
                    0 12px 28px -14px rgb(var(--encre) / .22);
   color-scheme: light;
@@ -797,7 +805,14 @@ a { color: rgb(var(--accent)); }
    pixels chromatiques), la règle n'aurait strictement aucun effet.
    PAS d'effet de survol : ce portrait n'est pas un contrôle et ne mène nulle
    part ; l'agrandir au survol y inventerait une affordance qui n'existe pas. */
-.auteur-titre { margin-bottom: clamp(1.2rem, 0.85rem + 1.1vw, 1.7rem); }
+/* Le seul titre centré de la page, et c'est voulu : cette section n'annonce
+   pas une fonction du logiciel, elle présente quelqu'un. Le titre se pose au
+   milieu de son bloc comme l'en-tête d'une lettre, et le dessin qui le suit
+   n'a plus à se disputer la première ligne avec lui. */
+.auteur-titre {
+  text-align: center;
+  margin-bottom: clamp(1.4rem, 1rem + 1.3vw, 2rem);
+}
 
 /* Sous 40 rem, le dessin FLOTTE et le texte l'habille. Empilé, il redevenait
    un bloc posé tout en haut avec du vide à sa droite — les deux défauts qu'on
@@ -817,7 +832,6 @@ a { color: rgb(var(--accent)); }
    texte lit donc exactement à la même mesure que la prose de la section
    précédente, et ce n'est pas une coïncidence à entretenir à la main. */
 @media (min-width: 40rem) {
-  .auteur .colonne { max-width: calc(var(--mesure) + 12rem + 2rem); }
   .auteur-rang {
     display: grid; grid-template-columns: 12rem minmax(0, 1fr);
     gap: 2rem; align-items: start;
@@ -843,10 +857,10 @@ a { color: rgb(var(--accent)); }
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.5rem, 0.8rem + 3vw, 3.5rem);
-  /* la carte vaut LA MESURE plus ses marges intérieures : son texte lit donc
-     à la même mesure que le reste de la page, et la note de bas de carte n'a
-     plus besoin d'une largeur à elle pour rattraper le coup. */
-  max-width: calc(var(--mesure) + 7rem); margin-inline: auto;
+  /* la carte vaut la même largeur que les colonnes de la page : un seul
+     gabarit de bloc pour tout le site, et la note de bas de carte n'a plus
+     besoin d'une largeur à elle pour rattraper le coup. */
+  max-width: var(--mesure); margin-inline: auto;
 }
 .formulaire { margin-top: 0.5rem; }
 .champ { margin-bottom: 1.5rem; }
@@ -973,7 +987,7 @@ input:user-invalid, textarea:user-invalid {
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.6rem, 0.9rem + 3vw, 3.5rem);
-  max-width: calc(var(--mesure) + 7rem); margin-inline: auto;
+  max-width: var(--mesure); margin-inline: auto;
 }
 .feuillet-cadre h1 { margin-bottom: 1.2rem; }
 .feuillet-cadre .actions { margin-top: 2rem; }
