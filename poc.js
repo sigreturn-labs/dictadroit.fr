@@ -159,10 +159,17 @@
     var nActe = construire_acte();
     motsParole = parole.querySelectorAll(".mot");
     motsActe = acte.querySelectorAll(".mot");
+
+    /* 🔴 L'ACTE SUIT LA VOIX, IL NE LA DEVANCE JAMAIS. Un texte qui s'écrit avant que le
+     * mot soit prononcé se lit comme une animation truquée ; un texte qui suit de peu se
+     * lit comme un logiciel qui travaille. Et c'est la vérité du produit : la latence
+     * mesurée est de `mesure.latence_s` par énoncé — le texte se fige dans la pause du
+     * dicteur, jamais avant lui. On applique donc ce retard-là, pas un retard décoratif. */
+    var retard = (donnees.mesure && donnees.mesure.latence_s) || 0.4;
     for (var i = 0; i < motsActe.length; i++) {
       var j = Math.min(tempsParole.length - 1,
                        Math.floor(i * tempsParole.length / Math.max(nActe, 1)));
-      motsActe[i].dataset.t = tempsParole[j] || 0;
+      motsActe[i].dataset.t = (tempsParole[j] || 0) + retard;
     }
   }
 
@@ -294,7 +301,7 @@
 
     libelle.textContent = "Chargement…";
     bouton.disabled = true;
-    fetch("poc.json?v=23493865")
+    fetch("poc.json?v=e41840a0")
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { donnees = d; bouton.disabled = false; demarrer(); })
       .catch(function () {
