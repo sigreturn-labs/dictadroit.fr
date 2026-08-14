@@ -23,14 +23,13 @@
   var feuille = figure.querySelector(".feuille");
   if (!parole || !acte || !feuille) return;
 
-  // Le navigateur sait-il lire ce fichier ? Si non, on ne propose rien : un bouton qui
-  // échoue coûte plus cher en confiance qu'un bouton absent.
-  var sonde = document.createElement("audio");
-  if (!sonde.canPlayType || !sonde.canPlayType("audio/mpeg")) return;
-
-  var LIBELLE = { repos: "Écouter une dictée réelle", joue: "Interrompre",
+  var LIBELLE = { repos: "Voir le logiciel écrire", joue: "Interrompre",
                   rejoue: "Revoir la démonstration" };
   var DELAI_PASSE = 2300;        // ms entre deux passes de correction
+  /* Sans son, l'affichage n'a plus à suivre une voix : il suit une horloge, et rien
+   * n'oblige à garder le tempo de la parole. Une minute de texte qui s'écrit en silence
+   * est longue ; à 2,4× elle dure vingt-deux secondes, ce qui se regarde jusqu'au bout. */
+  var VITESSE_MUETTE = 2.4;
   var doux = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var donnees = null, audio = null, trame = 0, minuteries = [], enCours = false, fini = false;
@@ -118,6 +117,23 @@
     parole.innerHTML = html.join("");
   }
 
+  /* Révélation sans son : les mêmes instants, joués par une horloge au lieu d'une voix. */
+  function reveler_minute() {
+    var mots = parole.querySelectorAll(".mot");
+    var dernier = 0;
+    Array.prototype.forEach.call(mots, function (m) {
+      var quand = parseFloat(m.dataset.t) * 1000 / VITESSE_MUETTE;
+      dernier = Math.max(dernier, quand);
+      plus_tard(function () { m.classList.add("vu"); }, quand);
+    });
+    plus_tard(function () {
+      enCours = false;
+      bouton.removeAttribute("data-joue");
+      libelle.textContent = LIBELLE.rejoue;
+      corriger();
+    }, dernier + 600);
+  }
+
   function suivre() {
     if (!audio || audio.paused) return;
     var t = audio.currentTime;
@@ -201,6 +217,15 @@
     acte.innerHTML = "";
     preparer_parole();
 
+    if (!donnees.audio) {
+      enCours = true;
+      bouton.setAttribute("data-joue", "");
+      libelle.textContent = LIBELLE.joue;
+      annoncer("Démonstration en cours.");
+      reveler_minute();
+      return;
+    }
+
     if (!audio) {
       // Posé DANS le document, et pas construit à la volée : le navigateur rattache alors
       // la lecture au cycle de vie de la page (arrêt à la navigation, gestion média du
@@ -246,7 +271,7 @@
 
     libelle.textContent = "Chargement…";
     bouton.disabled = true;
-    fetch("poc.json?v=9d9b1c19")
+    fetch("poc.json?v=5ff905a0")
       .then(function (r) {
         if (!r.ok) throw new Error(r.status);
         return r.json();

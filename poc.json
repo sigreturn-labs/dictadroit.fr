@@ -1,5 +1,4 @@
 {
- "audio": "medias/dictee-vitrine.mp3?v=13c39809",
  "duree_s": 52.81,
  "enonces": [
   {
@@ -580,14 +579,14 @@
   }
  ],
  "mesure": {
-  "wer_avant": 29.55,
-  "wer_apres": 4.55,
+  "wer_avant": 31.11,
+  "wer_apres": 6.67,
   "tej_avant": 55.56,
   "tej_apres": 11.11,
-  "mots": 88,
+  "mots": 90,
   "enonces": 7,
-  "latence_s": 0.468,
-  "facteur_temps_reel": 0.061,
+  "latence_s": 0.464,
+  "facteur_temps_reel": 0.06,
   "lexique": 229,
   "moteur": "istupakov/canary-1b-v2-onnx",
   "fils": 4

@@ -205,10 +205,16 @@
                 <rect x="8.9" y="3.4" width="2.5" height="9.2" rx="0.6"/>
               </g>
             </svg>
-            <span class="demo-libelle">Écouter une dictée réelle</span>
+            <span class="demo-libelle">Voir le logiciel écrire</span>
           </button>
-          <p class="demo-note" id="js-demo-note">53 secondes, une seule prise, au téléphone.
-            Le texte qui s’écrit est produit par le logiciel pendant la lecture.</p>
+          <!-- ⚠️ AUCUN SON, ET C’EST DÉLIBÉRÉ (voir labo/exporter_demo.py). Ne pas
+               réintroduire d’enregistrement ici : ni la voix réelle, ni une synthèse,
+               qui prononce mal les commandes et fabrique des fautes qui ne sont pas
+               celles du produit. Le libellé du bouton ne doit donc jamais promettre
+               d’écouter quoi que ce soit. -->
+          <p class="demo-note" id="js-demo-note">Une dictée réelle de 53&#8239;secondes,
+            transcrite puis mise en forme par le logiciel. Ce qui défile est sa sortie,
+            pas une reconstitution.</p>
         </div>
         <p class="hors-ecran" id="js-demo-etat" role="status" aria-live="polite"></p>
       </div>
@@ -561,6 +567,6 @@
 </footer>
 
 <script src="mesure.js?v=124753b2"></script>
-<script src="poc.js?v=3e21aa8a" defer></script>
+<script src="poc.js?v=a2dc349e" defer></script>
 </body>
 </html>
