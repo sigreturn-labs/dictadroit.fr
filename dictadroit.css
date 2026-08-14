@@ -1050,3 +1050,14 @@ input:user-invalid, textarea:user-invalid {
 .sommaire a { color: rgb(var(--texte)); text-decoration: none; border-bottom: 1px solid rgb(var(--filet-net)); }
 .sommaire a:hover { color: rgb(var(--accent)); border-bottom-color: rgb(var(--accent)); }
 .feuillet h2 { scroll-margin-top: 5.5rem; }
+
+/* ── EN UNE COLONNE, RIEN NE RESTE FERRE A GAUCHE AVEC DU VIDE A DROITE ──
+   La regle d'alignement de la page (plein cadre, ou centre) n'avait jamais ete
+   appliquee au bas de la page en une colonne : le portrait laissait 130 px de
+   vide a sa droite sur un iPhone, et les deux actions du premier ecran, une
+   fois empilees, s'arretaient a des largeurs differentes. */
+@media (max-width: 40rem) {
+  .portrait { margin-inline: auto; }
+  .actions { display: grid; gap: 0.75rem; }
+  .actions .bouton { width: 100%; }
+}
