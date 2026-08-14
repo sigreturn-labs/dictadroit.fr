@@ -1074,8 +1074,12 @@ input:user-invalid, textarea:user-invalid {
    sur telephone et repoussaient l'appel a l'action sous la marque.
    L'icone est DESSINEE, meme trait que le paraphe de la marque. */
 .theme-bouton {
-  /* C'est LUI qui pousse a droite, pas la note de marque : elle disparait sous
-     832 px, et le groupe repartait alors se coller a gauche. */
+  /* C'est le bouton qui pousse vers la droite, et la navigation lache sa
+     propre poussee JUSTE quand il est la (voir la regle de voisinage plus bas).
+     A deux marges automatiques, le vide se partage en deux parts egales et le
+     bouton flotte au milieu : mesure, 240 px de chaque cote a 1440. Avec la
+     seule marge de la navigation, tout le vide se met ENTRE les deux : 465 px.
+     Une seule marge, portee par le premier du groupe, les colle ensemble. */
   margin-left: auto;
   display: grid; place-items: center;
   width: 2.15rem; height: 2.15rem;
@@ -1117,3 +1121,9 @@ input:user-invalid, textarea:user-invalid {
 @media (max-width: 52rem) {
   .marque-note { display: none; }
 }
+
+/* Le voisinage direct : quand le bouton precede la navigation, c'est lui qui
+   pousse, et elle renonce a sa marge. Sans JavaScript le bouton n'existe pas,
+   la regle ne s'applique pas, et la navigation garde sa poussee : les deux
+   chemins finissent colles au bord droit. */
+.theme-bouton + .entete-nav { margin-left: 0; }
