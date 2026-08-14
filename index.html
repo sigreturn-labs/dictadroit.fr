@@ -72,7 +72,18 @@
 <link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="dictadroit.css?v=b46b0689">
+<link rel="stylesheet" href="dictadroit.css?v=03e415de">
+
+<!-- Le theme choisi doit etre pose AVANT le premier rendu, sinon la page
+     s'affiche dans le mauvais thema puis bascule sous les yeux du visiteur.
+     Trois lignes en ligne dans le <head>, c'est le seul endroit qui le permet ;
+     le controle lui-meme est construit par mesure.js, plus bas. -->
+<script>
+  try {
+    var t = localStorage.getItem("dictadroit-theme");
+    if (t === "clair" || t === "sombre") document.documentElement.dataset.theme = t;
+  } catch (e) { /* stockage refuse : on reste en automatique, ce qui est le defaut */ }
+</script>
 </head>
 <body>
 
@@ -115,8 +126,8 @@
                le focus avec ou sans JavaScript. mesure.js, lui, la coche. -->
           <a class="bouton bouton--fil" href="#demo" id="js-demo">Demander une démonstration</a>
         </div>
-        <p class="hero-etat">Le logiciel est en cours d’écriture, pour Windows. La
-          démonstration dure un quart d’heure, en visio, sur le prototype.</p>
+        <p class="hero-etat">Le logiciel est en cours d’écriture. La démonstration dure un
+          quart d’heure, en visio, sur le prototype.</p>
       </div>
 
       <!-- ─── l’objet de transformation : la parole devient un acte ─── -->
@@ -247,11 +258,8 @@
           <p class="montant"><span class="nombre">39&#8239;€</span> <span class="unite">HT / mois</span></p>
           <p class="montant-second">ou <b>390&#8239;€ HT</b> par an, par poste.<br>
             Pack cabinet&#8239;: 3&#160;postes, <b>890&#8239;€ HT</b> par an.</p>
-          <ul class="inclus">
-            <li>Mises à jour du logiciel, des modèles et du dictionnaire</li>
-            <li>Support en français, par la personne qui écrit le code</li>
-            <li>Résiliable à l’échéance</li>
-          </ul>
+          <p class="inclus-note">Mises à jour et support en français compris, par la personne
+            qui écrit le code. Résiliable à l’échéance.</p>
           <!-- une ANCRE, pas un bouton : sans JavaScript un <button type="button">
                hors formulaire ne fait rien, et un contrôle inerte est pire qu’un
                contrôle absent. Le JavaScript ne fait plus qu’y présélectionner la
@@ -267,12 +275,8 @@
           <p class="montant"><span class="nombre">690&#8239;€</span> <span class="unite">HT, une fois</span></p>
           <p class="montant-second">+ maintenance <b>149&#8239;€ HT</b> par an,<br>
             que vous pouvez arrêter.</p>
-          <ul class="inclus">
-            <li>La licence reste valable sans la maintenance&#8239;: le logiciel continue de
-              fonctionner</li>
-            <li>La maintenance apporte les mises à jour des modèles et du dictionnaire</li>
-            <li>Le support est compris dans la maintenance</li>
-          </ul>
+          <p class="inclus-note">Le logiciel continue de fonctionner sans la maintenance&#8239;;
+            elle apporte les mises à jour et le support.</p>
           <a class="bouton bouton--bleu js-offre" href="#contact"
              data-evt="offre_perpetuelle" data-offre="perpetuelle">
             La licence me conviendrait
@@ -297,8 +301,7 @@
               <p class="comparatif-prix">990&#8239;€</p>
             </div>
             <p class="comparatif-glose">Achat unique, dictionnaire juridique en supplément.
-              Son éditeur a réorienté son activité vers la santé, et les revendeurs proposent
-              désormais l’offre en ligne ci-dessous à la place.</p>
+              Son éditeur est parti vers la santé.</p>
           </li>
           <li class="comparatif-ligne">
             <p class="comparatif-nom">L’offre en ligne proposée à la place par les revendeurs</p>
@@ -306,8 +309,7 @@
               <div class="comparatif-piste" aria-hidden="true"><span style="--part: 47.8%"></span></div>
               <p class="comparatif-prix">473&#8239;€</p>
             </div>
-            <p class="comparatif-glose">Par an et par utilisateur. La dictée est traitée sur un
-              serveur, hors de votre poste.</p>
+            <p class="comparatif-glose">Par an et par utilisateur, traitée sur un serveur.</p>
           </li>
           <li class="comparatif-ligne comparatif-ligne--nous">
             <p class="comparatif-nom">Dictadroit</p>
@@ -315,8 +317,8 @@
               <div class="comparatif-piste" aria-hidden="true"><span style="--part: 39.4%"></span></div>
               <p class="comparatif-prix">390&#8239;€</p>
             </div>
-            <p class="comparatif-glose">Par an et par poste, ou 690&#8239;€ HT une seule fois.
-              Tout se passe sur votre machine.</p>
+            <p class="comparatif-glose">Par an et par poste, ou 690&#8239;€ HT une fois. Sur
+              votre machine.</p>
           </li>
         </ul>
       </figure>
@@ -361,12 +363,6 @@
           <p class="aveu-suite">La première version pose la ponctuation que vous
             dictez&#8239;; la numérotation des moyens et les formules d’usage viennent
             après.</p>
-        </li>
-        <li class="aveu">
-          <p class="aveu-fait">Il ne tourne pas encore sur Mac.</p>
-          <p class="aveu-suite">Windows d’abord, parce que c’est là que sont les cabinets. Le
-            Mac viendra&#8239;; si c’est le vôtre, dites-le-moi dans le formulaire en bas de
-            page, c’est ce qui décidera de l’ordre.</p>
         </li>
       </ul>
     </div>
@@ -482,8 +478,7 @@
               vous dictez ou quand vous tapez&#8239;?</label>
             <p class="aide" id="aide-frustration">Facultatif. Écrivez autant que vous
               voulez&#8239;: c’est ce qui m’est le plus utile, et ce que vous écrivez là fixe
-              l’ordre de ce que je construis. Et si vous êtes sur Mac, dites-le ici&#8239;:
-              c’est ce qui décidera.</p>
+              l’ordre de ce que je construis.</p>
             <textarea id="frustration" name="frustration" rows="4" aria-describedby="aide-frustration"
                       placeholder="Par exemple&#8239;: le temps passé à reprendre la mise en forme après la dictée, les noms propres jamais reconnus, la secrétaire qui n’est plus là le vendredi…"></textarea>
           </div>
@@ -535,6 +530,6 @@
   </div>
 </footer>
 
-<script src="mesure.js?v=80d138a0"></script>
+<script src="mesure.js?v=05ac52f3"></script>
 </body>
 </html>

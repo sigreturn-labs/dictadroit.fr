@@ -285,6 +285,9 @@ a { color: rgb(var(--accent)); }
 }
 .paraphe { display: block; overflow: visible; }
 .paraphe--mini { width: 1.55rem; height: 1.35rem; color: rgb(var(--accent)); }
+/* Elle prend l'espace disponible : le selecteur de theme et la navigation se
+   retrouvent donc groupes a droite, au lieu de flotter au milieu. */
+.marque-note { flex: 1 1 auto; }
 .marque-note {
   margin: 0; color: rgb(var(--sourdine)); font-size: 0.86rem;
   border-left: 1px solid rgb(var(--filet)); padding-left: 1rem;
@@ -681,6 +684,12 @@ a { color: rgb(var(--accent)); }
   margin: 0 0 1.2rem; font-size: 0.95rem; color: rgb(var(--texte));
   font-variant-numeric: tabular-nums lining-nums;
 }
+/* Trois puces par carte devenaient six lignes a lire avant un prix deja lu.
+   Une phrase porte la meme chose, et la carte respire. */
+.inclus-note {
+  margin: 0 0 1.6rem; font-size: 0.95rem; line-height: 1.55;
+  color: rgb(var(--texte));
+}
 .inclus { list-style: none; margin: 0 0 1.6rem; padding: 0; }
 .inclus li {
   position: relative; padding-left: 1.15rem; margin-bottom: 0.5rem;
@@ -1060,4 +1069,42 @@ input:user-invalid, textarea:user-invalid {
   .portrait { margin-inline: auto; }
   .actions { display: grid; gap: 0.75rem; }
   .actions .bouton { width: 100%; }
+}
+
+/* ── selecteur de theme : clair · automatique · sombre ──────────────────
+   Trois icones DESSINEES, meme trait que le paraphe de la marque. Le groupe
+   est un radiogroup : une seule halte de tabulation, on circule aux fleches.
+   Aucun aplat colore : c'est un reglage, pas une action, et le bleu de
+   signature reste reserve a ce qui agit. */
+.theme-choix {
+  display: flex; gap: 0;
+  border: 1px solid rgb(var(--filet-controle));
+  border-radius: var(--rayon);
+  overflow: hidden;
+  flex: 0 0 auto;
+}
+.theme-bouton {
+  display: grid; place-items: center;
+  width: 2.15rem; height: 1.9rem;
+  padding: 0; border: 0; background: transparent;
+  color: rgb(var(--sourdine));
+  cursor: pointer;
+  transition: background-color .16s ease, color .16s ease;
+}
+.theme-bouton + .theme-bouton { border-left: 1px solid rgb(var(--filet)); }
+.theme-bouton svg { width: 1.05rem; height: 1.05rem; display: block; }
+.theme-bouton:hover { color: rgb(var(--encre)); background: rgb(var(--encre) / .04); }
+/* L'etat actif se marque a l'ENCRE, pas au bleu : le bleu de signature ne
+   porte que ce qui agit, et choisir un thema est un reglage. */
+.theme-bouton[aria-checked="true"] {
+  color: rgb(var(--papier));
+  background: rgb(var(--encre));
+}
+@media (prefers-reduced-motion: reduce) { .theme-bouton { transition: none; } }
+
+/* Sur telephone l'en-tete ne garde que l'appel a l'action : le selecteur y
+   tient encore, mais il passe apres la marque et avant le lien. */
+@media (max-width: 47rem) {
+  .theme-choix { order: 2; }
+  .entete-nav { order: 3; }
 }

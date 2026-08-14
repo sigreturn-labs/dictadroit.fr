@@ -205,4 +205,102 @@
       if (caseDemo) { caseDemo.checked = true; }
     });
   }
+
+  /* ══════════════════════════════════════════════════════════════════════
+     SELECTEUR DE THEME : clair · sombre · automatique (defaut)
+     ══════════════════════════════════════════════════════════════════════
+     Construit ICI, et non ecrit dans le HTML : sans JavaScript, trois
+     boutons inertes seraient pires que pas de boutons du tout, et le mode
+     automatique — qui suit deja le reglage du systeme par prefers-color-scheme
+     — est exactement ce qu'il faut servir dans ce cas.
+
+     Le <head> pose l'attribut avant le premier rendu ; ici on ne fait que
+     construire le controle et le tenir a jour. Le choix est garde dans
+     localStorage : c'est une preference d'affichage demandee par le visiteur,
+     exemptee de consentement par l'article 82 de la loi Informatique et
+     Libertes, et elle est nommee dans les mentions legales.        */
+
+  var CLE_THEME = 'dictadroit-theme';
+
+  var ICONES = {
+    clair:
+      '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4' +
+      'M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>',
+    sombre:
+      '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
+    auto:
+      '<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17z" ' +
+      'fill="currentColor" stroke="none"/>'
+  };
+  var LIBELLES = { clair: 'Thème clair', sombre: 'Thème sombre', auto: 'Thème automatique' };
+
+  function themeActif() {
+    try {
+      var t = localStorage.getItem(CLE_THEME);
+      return (t === 'clair' || t === 'sombre') ? t : 'auto';
+    } catch (e) { return 'auto'; }
+  }
+
+  function appliquer(choix) {
+    if (choix === 'auto') {
+      delete document.documentElement.dataset.theme;
+      try { localStorage.removeItem(CLE_THEME); } catch (e) {}
+    } else {
+      document.documentElement.dataset.theme = choix;
+      try { localStorage.setItem(CLE_THEME, choix); } catch (e) {}
+    }
+  }
+
+  function construireSelecteur() {
+    var hote = document.querySelector('.entete-rang');
+    if (!hote) { return; }
+
+    var groupe = document.createElement('div');
+    groupe.className = 'theme-choix';
+    groupe.setAttribute('role', 'radiogroup');
+    groupe.setAttribute('aria-label', 'Thème de la page');
+
+    var boutons = {};
+    ['clair', 'auto', 'sombre'].forEach(function (choix) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'theme-bouton';
+      b.setAttribute('role', 'radio');
+      b.setAttribute('aria-label', LIBELLES[choix]);
+      b.setAttribute('title', LIBELLES[choix]);
+      b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" ' +
+        'fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" ' +
+        'stroke-linejoin="round">' + ICONES[choix] + '</svg>';
+      b.addEventListener('click', function () { appliquer(choix); marquer(choix); });
+      boutons[choix] = b;
+      groupe.appendChild(b);
+    });
+
+    function marquer(actif) {
+      Object.keys(boutons).forEach(function (c) {
+        var sel = (c === actif);
+        boutons[c].setAttribute('aria-checked', sel ? 'true' : 'false');
+        boutons[c].tabIndex = sel ? 0 : -1;   /* une seule halte de tabulation pour le groupe */
+      });
+    }
+    marquer(themeActif());
+
+    /* Fleches : un groupe de boutons radio se parcourt aux fleches, pas au Tab. */
+    groupe.addEventListener('keydown', function (e) {
+      var ordre = ['clair', 'auto', 'sombre'];
+      var i = ordre.indexOf(themeActif());
+      var d = (e.key === 'ArrowRight' || e.key === 'ArrowDown') ? 1
+            : (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   ? -1 : 0;
+      if (!d) { return; }
+      e.preventDefault();
+      var suivant = ordre[(i + d + ordre.length) % ordre.length];
+      appliquer(suivant); marquer(suivant); boutons[suivant].focus();
+    });
+
+    var nav = hote.querySelector('.entete-nav');
+    if (nav) { hote.insertBefore(groupe, nav); } else { hote.appendChild(groupe); }
+  }
+
+  construireSelecteur();
+
 }());
