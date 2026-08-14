@@ -987,7 +987,15 @@ input:user-invalid, textarea:user-invalid {
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.6rem, 0.9rem + 3vw, 3.5rem);
-  max-width: var(--mesure); margin-inline: auto;
+  /* LE SEUL BLOC PLUS LARGE QUE LE GABARIT, et il a une raison : ces pages
+     sont des DOCUMENTS, seuls dans leur fenêtre, pas des blocs dans le rythme
+     d'une page d'atterrissage. Rien au-dessus ni au-dessous ne leur donne
+     d'échelle, alors 46 rem au milieu d'un cadre de 1 180 px se lit comme une
+     colonne perdue. À 56 rem la page perd 440 px de hauteur (5 436 → 4 996) et
+     un texte de référence se parcourt au lieu de se dérouler.
+     La carte de contact, elle, RESTE au gabarit : elle vit au milieu des
+     autres blocs de la page et doit partager leur bord. */
+  max-width: calc(var(--mesure) + 10rem); margin-inline: auto;
 }
 .feuillet-cadre h1 { margin-bottom: 1.2rem; }
 .feuillet-cadre .actions { margin-top: 2rem; }
