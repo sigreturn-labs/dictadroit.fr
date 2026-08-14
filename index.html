@@ -72,7 +72,7 @@
 <link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="dictadroit.css?v=fc6c3718">
+<link rel="stylesheet" href="dictadroit.css?v=fbadbf2e">
 
 <!-- Le theme choisi doit etre pose AVANT le premier rendu, sinon la page
      s'affiche dans le mauvais thema puis bascule sous les yeux du visiteur.
@@ -230,8 +230,19 @@
           chaque fois.</p>
       </div>
 
-      <p class="legende-demo">Vos conclusions, vos actes, vos courriers. Et vos notes
-        d’audience, dictées à chaud en sortant de la salle.</p>
+      <!-- LA LIMITE EST ÉNONCÉE ICI, et non dans une section à elle.
+           Elle a eu la sienne — « Ce que Dictadroit ne fait pas » — tant qu'il y
+           avait cinq aveux, puis trois, puis un ; un titre, une note et une
+           phrase, c'est du décorum pour une seule idée. Elle arrive maintenant à
+           l'endroit où le doute naît vraiment : juste après avoir vu la parole
+           devenir un acte, le lecteur se demande ce que la machine a décidé
+           toute seule. La réponse : rien. -->
+      <div class="legende-demo">
+        <p>Vos conclusions, vos actes, vos courriers. Et vos notes d’audience, dictées à
+          chaud en sortant de la salle.</p>
+        <p>Il écrit ce que vous dictez, rien de plus&#8239;: il ne cherche pas la
+          jurisprudence et ne rédige pas à votre place. La réflexion reste la vôtre.</p>
+      </div>
       </div>
     </div>
   </section>
@@ -339,59 +350,38 @@
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════ ce que ça ne fait pas ═══ -->
-  <!-- IL N'EN RESTE QU'UN, DONC CE N'EST PLUS UNE LISTE. Une liste d'un seul
-       élément se lit comme une liste tronquée : filets orphelins, colonnes qui
-       ne se remplissent pas, et l'œil qui cherche le deuxième. La même phrase,
-       posée seule dans la colonne, se lit comme une déclaration — et c'est bien
-       une déclaration, c'est la ligne qui sépare ce logiciel d'une IA qui
-       rédige. Le « (encore) » du titre garde la porte ouverte au reste.
-       Si un second aveu revient un jour, il redeviendra une liste. -->
-  <section class="section limites" id="limites">
-    <div class="page">
-      <div class="colonne">
-        <div class="tete-section">
-          <h2>Ce que Dictadroit ne fait pas (encore).</h2>
-          <p class="tete-note">Écrit noir sur blanc, avant que vous ne laissiez votre
-            adresse.</p>
-        </div>
-        <p class="aveu-fait" lang="fr">Il ne cherche pas la jurisprudence et ne rédige pas à
-          votre place.</p>
-        <p class="aveu-suite">Il écrit ce que vous dictez. La réflexion reste la vôtre.</p>
-      </div>
-    </div>
-  </section>
-
   <!-- ══════════════════════════════════════════════════════════ auteur ═══ -->
   <section class="section auteur" id="auteur">
     <div class="page">
       <div class="colonne">
-        <!-- Le portrait a cessé d’être une colonne pour devenir une vignette de
-             signature, sur la ligne du titre. En deux colonnes il coinçait le
-             texte dans une gouttière, et sur téléphone il s’empilait tout en
-             haut, où il pesait plus lourd que ce qu’il a à dire.
-             Servi depuis ce domaine comme tout le reste : aucune requête vers un
-             tiers, aucune image de banque. C’est un détourage à canal alpha ; le
-             médaillon lui donne son fond, et ce fond suit le thème de la page. -->
-        <div class="auteur-tete">
-          <div class="portrait">
-            <!-- différée : le portrait pèse 77 Ko et il est à 5 000 px du premier
-                 écran. Les dimensions sont écrites pour que la place soit
-                 réservée d’avance : aucun décalage. -->
-            <img src="images/adam.webp" width="500" height="500"
-                 loading="lazy" decoding="async"
-                 alt="Portrait d’Adam Taguirov, l’auteur du logiciel.">
+        <h2 class="auteur-titre">Qui écrit ce logiciel</h2>
+        <div class="auteur-rang">
+          <!-- CE N’EST PAS UNE PHOTO, C’EST UN DESSIN À L’ENCRE EN PIED, AVEC LES
+               MAINS. D’où trois conséquences qui ont mis trois essais à se voir :
+               ① aucun médaillon, aucun cadre. Une gravure n’a pas besoin d’une
+                  boîte, et le disque rognait la moitié du sujet ;
+               ② aucun fond posé sous elle : le dessin porte ses propres blancs
+                  (26 % de ses pixels), donc il tient sur le papier comme sur la
+                  nuit, sans un seul jeton de couleur pour l’aider. Vérifié dans
+                  les deux thèmes ;
+               ③ il lui faut de la taille. À 80 px le trait tournait en tache
+                  grise et l’ensemble prenait l’air d’une pastille de profil.
+               Servi depuis ce domaine comme tout le reste : aucune requête vers
+               un tiers, aucune image de banque.
+               Différé : 77 Ko à 5 000 px du premier écran. Les dimensions sont
+               écrites pour que la place soit réservée d’avance, aucun décalage. -->
+          <img class="portrait" src="images/adam.webp" width="500" height="500"
+               loading="lazy" decoding="async"
+               alt="Portrait dessiné à l’encre d’Adam Taguirov, l’auteur du logiciel.">
+          <div class="auteur-dire">
+            <p>Je m’appelle Adam&#160;Taguirov, ingénieur. J’ai travaillé dans les forces de
+              l’ordre&#8239;: les procès-verbaux, les auditions, les heures passées à taper ce
+              qu’on venait d’entendre, je connais.</p>
+            <p>Dictadroit est développé en France, par moi seul. Pas d’investisseur à
+              rembourser, donc aucune raison de faire remonter vos textes vers un serveur pour
+              les monétiser un jour. Quand vous écrirez, vous aurez la personne qui écrit le
+              code&#8239;: <a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>.</p>
           </div>
-          <h2>Qui écrit ce logiciel</h2>
-        </div>
-        <div class="auteur-dire">
-          <p>Je m’appelle Adam&#160;Taguirov, ingénieur. J’ai travaillé dans les forces de
-            l’ordre&#8239;: les procès-verbaux, les auditions, les heures passées à taper ce
-            qu’on venait d’entendre, je connais.</p>
-          <p>Dictadroit est développé en France, par moi seul. Pas d’investisseur à
-            rembourser, donc aucune raison de faire remonter vos textes vers un serveur pour
-            les monétiser un jour. Quand vous écrirez, vous aurez la personne qui écrit le
-            code&#8239;: <a class="lien" href="mailto:contact@sigreturn.com">contact@sigreturn.com</a>.</p>
         </div>
       </div>
     </div>

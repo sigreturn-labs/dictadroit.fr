@@ -608,9 +608,17 @@ a { color: rgb(var(--accent)); }
 }
 .ecrit sup { font-size: 0.62em; vertical-align: 0.5em; }
 
+/* La clôture de la section, en Garamond : ce qu'on peut lui dicter, puis la
+   limite de ce qu'il fera. Les deux tenaient dans deux endroits distincts de
+   la page — le second dans une section entière (titre, note, une phrase) pour
+   une seule idée. Un seul filet, une seule voix, deux paragraphes. */
 .legende-demo {
   margin-top: 1.9rem; padding-top: 1.5rem;
   border-top: 1px solid rgb(var(--filet));
+  display: grid; gap: 0.7rem;
+}
+.legende-demo p {
+  margin: 0;
   max-width: 46ch;
   font-family: var(--acte);
   font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
@@ -743,85 +751,69 @@ a { color: rgb(var(--accent)); }
 
 /* ────────────────────────────────────── 11. ce que ça ne fait pas ─── */
 
-/* Cette section a été une liste de six aveux, puis de trois, puis de deux.
-   Il n'en reste qu'UN, et une liste d'un élément n'est pas une petite liste :
-   c'est une liste tronquée. Les filets de tête n'ont plus rien à séparer, les
-   colonnes de journal n'ont plus rien à répartir, et l'œil cherche le suivant.
-   Tout ce gréement est donc parti. Reste une déclaration, à la mesure de la
-   colonne du reste de la page — plus grande qu'avant, puisqu'elle est seule à
-   porter la section, et c'est de toute façon la phrase qui sépare ce logiciel
-   d'une IA qui rédige à votre place.
-   🔴 SI UN SECOND AVEU REVIENT : reprendre la liste (ul.aveux + li.aveu), avec
-   UN filet de tête par aveu et `column-count: 2` au-delà de 64 rem — jamais une
-   grille, qui étirait chaque rangée à la hauteur du plus grand et donnait des
-   écarts tous différents. L'historique complet est dans DESIGN.md. */
-.aveu-fait {
-  margin: 0 0 0.7rem;
-  font-family: var(--acte);
-  font-size: clamp(1.34rem, 1.08rem + 1vw, 1.85rem);
-  line-height: 1.24;
-  color: rgb(var(--encre));
-  max-width: 30ch;
-  text-wrap: balance;
-}
-.aveu-suite {
-  margin: 0;
-  font-size: 0.95rem; line-height: 1.55;
-  color: rgb(var(--sourdine));
-  max-width: 46ch;
-}
+/* LA SECTION « CE QUE DICTADROIT NE FAIT PAS » N'EXISTE PLUS.
+   Six aveux, puis trois, puis deux, puis un — et un titre, une note et une
+   phrase pour une seule idée, c'est du décorum. La phrase survivante a rejoint
+   la clôture de la section de démonstration (`.legende-demo`), là où le doute
+   naît vraiment : juste après avoir vu la parole devenir un acte.
+   🔴 SI PLUSIEURS AVEUX REVIENNENT UN JOUR : reprendre une liste (ul.aveux +
+   li.aveu), avec UN filet de tête par aveu et `column-count: 2` au-delà de
+   64 rem — jamais une grille, qui étire chaque rangée à la hauteur du plus
+   grand et donne des écarts tous différents. Voir DESIGN.md, « la règle de la
+   liste d'un seul ». */
 
 /* ─────────────────────────────────────────────────────── 12. auteur ─── */
 
-/* LE PORTRAIT N'EST PLUS UNE COLONNE, C'EST UNE VIGNETTE DE SIGNATURE.
-   En grille `13rem | 1fr` il coinçait le texte dans une gouttière, et sous
-   40 rem il tombait en premier, tout en haut, gros disque centré au-dessus
-   d'un titre : il pesait alors plus lourd que ce qu'il a à dire. Posé sur la
-   ligne du titre, il fait ce qu'il doit faire — mettre un visage sur un nom —
-   et le texte récupère toute la mesure de la colonne.
-   Le titre garde son `text-wrap: balance` : sur téléphone il tient sur deux
-   lignes courtes à côté du médaillon, centré verticalement contre lui. */
-.auteur-tete {
-  display: flex; align-items: center;
-  gap: clamp(0.85rem, 0.6rem + 0.9vw, 1.25rem);
-  margin-bottom: clamp(1.4rem, 0.9rem + 1.5vw, 2rem);
-}
-.auteur-tete h2 { margin: 0; }
-/* Le portrait : un médaillon, comme sur le site de l'éditeur.
-   LE POINT QUI COMPTE : la surface et son filet SUIVENT le thème. Ce sont
-   --panneau et --filet, que le système inverse déjà : aucun jeton emprunté,
-   aucun jeton neuf. Une platine qui reste claire sur une page de nuit est un
-   carré blanc collé au milieu du noir, et c'était le défaut.
-   Le fichier est un détourage à canal alpha : c'est le disque qui lui donne
-   son fond. Le cercle ne coupe que 5,3 % du sujet, le bord des avant-bras,
-   et le dessin porte ses propres blancs (26 % de ses pixels), donc il tient
-   sur les deux fonds ; son bord est un gris moyen, aucun halo. Mesuré.
+/* ── LE PORTRAIT EST UNE GRAVURE, PAS UN AVATAR ────────────────────────────
+   Trois traitements ont échoué avant celui-ci, et tous pour la même raison :
+   ils traitaient un DESSIN À L'ENCRE EN PIED comme une photo d'identité.
+     · demi-colonne (13 rem et plus) : il écrasait le texte ;
+     · médaillon rond de 5 rem sur la ligne du titre : le disque rognait le
+       sujet, le trait tournait en tache grise, et l'ensemble prenait l'air
+       d'une pastille de profil — la signature visuelle même du gabarit.
+   Ce qu'un détourage à l'encre demande, c'est l'inverse d'un cadre : de la
+   place et rien autour. Aucun disque, aucun filet, aucun fond. Il est posé sur
+   le papier comme une gravure dans un livre, et ses propres blancs (26 % de
+   ses pixels, mesuré) le portent AUSSI sur le thème sombre — vérifié dans les
+   deux : pas un jeton de couleur ne lui vient en aide.
    PAS de filtre de désaturation : le fichier est DÉJÀ monochrome (0,04 % de
    pixels chromatiques), la règle n'aurait strictement aucun effet.
    PAS d'effet de survol : ce portrait n'est pas un contrôle et ne mène nulle
-   part : l'agrandir au survol y inventerait une affordance qui n'existe pas.
-   PAS de repères d'angle : le disque et son filet sont déjà l'encadrement,
-   et quatre équerres autour d'un cercle en feraient un second. */
+   part ; l'agrandir au survol y inventerait une affordance qui n'existe pas. */
+.auteur-titre { margin-bottom: clamp(1.2rem, 0.85rem + 1.1vw, 1.7rem); }
+
+/* Sous 40 rem, le dessin FLOTTE et le texte l'habille. Empilé, il redevenait
+   un bloc posé tout en haut avec du vide à sa droite — les deux défauts qu'on
+   vient de corriger ailleurs dans la page. `clear` sur le conteneur, pour que
+   la section suivante ne remonte jamais le long du dessin. */
+.auteur-rang::after { content: ""; display: block; clear: both; }
 .portrait {
-  position: relative;
-  flex: 0 0 auto;
-  width: clamp(3.4rem, 2.5rem + 2.9vw, 5rem);
-  aspect-ratio: 1 / 1;
-  border-radius: 50%;
-  overflow: hidden;
-  background: rgb(var(--panneau));
-  border: 1px solid rgb(var(--filet));
+  /* `display: block` explicite : le flottement le rend déjà bloc, mais dès
+     qu'on le dé-flotte (sous 24 rem) une image redevient EN LIGNE, et
+     `margin-inline: auto` ne centre alors plus rien. */
+  display: block; float: left;
+  width: clamp(6rem, 24vw, 8.5rem);
+  height: auto;
+  margin: 0.1rem 1.15rem 0.5rem 0;
 }
-.portrait img {
-  position: absolute; inset: 0;
-  width: 100%; height: 100%;
-  object-fit: cover;
+@media (min-width: 40rem) {
+  .auteur-rang {
+    display: grid; grid-template-columns: 12rem minmax(0, 1fr);
+    gap: 2.2rem; align-items: start;
+  }
+  /* le débourrage devient un ITEM DE GRILLE s'il reste affiché, donc une
+     troisième cellule vide qui allonge la section pour rien. */
+  .auteur-rang::after { display: none; }
+  .portrait { float: none; width: 100%; margin: 0; }
 }
 /* Le texte de l'auteur était le plus long bloc de prose de la page : deux
    paragraphes de 110 mots pour dire trois choses. Il en dit toujours trois,
-   en 68 mots. */
-.auteur-dire { display: grid; gap: 1.1rem; }
+   en 68 mots.
+   ⚠️ PAS de `display: grid` ici : une grille ouvre son propre contexte de
+   formatage, le texte cesserait d'habiller le dessin flottant sous 40 rem et
+   se contenterait d'être poussé à côté. Marges entre paragraphes, donc. */
 .auteur-dire p { margin: 0; max-width: 62ch; }
+.auteur-dire p + p { margin-top: 1.1rem; }
 
 /* ─────────────────────────────────────────────────── 13. formulaire ─── */
 
@@ -1062,6 +1054,12 @@ input:user-invalid, textarea:user-invalid {
    lien est porte par aria-label, pose dans le HTML. */
 @media (max-width: 24rem) {
   .marque span { display: none; }
+  /* Le dessin cesse de flotter : sous 384 px la colonne fait 280 px, et QUELLE
+     QUE SOIT la taille du dessin le texte tombe à quatre lignes de 13 à 19
+     signes à côté de lui. Mesuré aux cinq largeurs. Il se pose donc au-dessus,
+     centré — la forme que la règle d'alignement autorise. Aucun seuil nouveau :
+     c'est celui du logotype qui se réduit à sa marque. */
+  .portrait { float: none; width: min(100%, 11rem); margin: 0 auto 1.2rem; }
 }
 
 /* La note de marque part AVANT les liens de navigation : entre 752 et 832 px,
