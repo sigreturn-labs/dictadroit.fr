@@ -5,6 +5,12 @@
  * moteur régresse, la page le montre au lieu de le cacher. C'est la seule façon qu'une
  * démonstration reste vraie plus de trois semaines.
  *
+ * Trois temps, et le premier est le cœur de l'argument :
+ *   1. la parole et l'acte s'écrivent EN MÊME TEMPS, au rythme de la voix — « vous
+ *      dictez, l'acte s'écrit » ;
+ *   2. à la fin, les corrections s'allument, UNE COULEUR PAR PASSE, et restent ;
+ *   3. la légende dit ce que chaque couleur a corrigé, puis le bilan chiffré.
+ *
  * Amélioration progressive : le bouton est `hidden` en HTML et n'est révélé que d'ici.
  * Sans JavaScript, la page garde son illustration statique et ne propose aucune commande
  * morte.
@@ -23,156 +29,196 @@
   var feuille = figure.querySelector(".feuille");
   if (!parole || !acte || !feuille) return;
 
-  var LIBELLE = { repos: "Voir le logiciel écrire", joue: "Interrompre",
+  var LIBELLE = { repos: "Écouter une dictée", joue: "Interrompre",
                   rejoue: "Revoir la démonstration" };
-  var DELAI_PASSE = 2300;        // ms entre deux passes de correction
   /* Sans son, l'affichage n'a plus à suivre une voix : il suit une horloge, et rien
-   * n'oblige à garder le tempo de la parole. Une minute de texte qui s'écrit en silence
-   * est longue ; à 2,4× elle dure vingt-deux secondes, ce qui se regarde jusqu'au bout. */
-  var VITESSE_MUETTE = 2.4;
-  var doux = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+   * n'oblige à garder le tempo de la parole. */
+  var VITESSE_MUETTE = 2.2;
+  var PASSES = {
+    ponctuation: "la ponctuation dictée",
+    vocabulaire: "le vocabulaire juridique",
+    references: "les nombres et les visas",
+  };
 
-  var donnees = null, audio = null, trame = 0, minuteries = [], enCours = false, fini = false;
+  var donnees = null, audio = null, trame = 0, minuteries = [];
+  var enCours = false, fini = false;
   var libelle = bouton.querySelector(".demo-libelle");
-  var passe = document.createElement("p");
-  passe.className = "demo-passe";
+  var legende = document.createElement("p");
+  legende.className = "demo-legende";
+  legende.hidden = true;
   var bilan = document.createElement("p");
   bilan.className = "demo-bilan";
   bilan.hidden = true;
-  feuille.insertAdjacentElement("afterend", passe);
-  passe.insertAdjacentElement("afterend", bilan);
+  feuille.insertAdjacentElement("afterend", legende);
+  legende.insertAdjacentElement("afterend", bilan);
 
   barre.hidden = false;
 
   /* ⚠️ `innerHTML` est utilisé plus bas, et c'est délibéré : il faut poser des <mark> au
    * milieu d'un texte, à des positions données en caractères. La règle tenue partout dans
    * ce fichier : **tout ce qui vient de poc.json passe par `echapper`**, ou est un nombre
-   * passé par `toFixed`. Le seul balisage non échappé est celui écrit ici en clair. Les
-   * intitulés d'étape, eux, passent par `textContent`. */
+   * passé par `toFixed`. Le seul balisage non échappé est celui écrit ici en clair. */
   function echapper(s) {
     return s.replace(/[&<>]/g, function (c) {
       return c === "&" ? "&amp;" : c === "<" ? "&lt;" : "&gt;";
     });
   }
 
-  /* Le texte d'une étape, avec ses corrections entourées de <mark>.
-   * Les bornes viennent de la chaîne et sont exprimées en caractères DE CETTE étape —
-   * elles sont donc posées telles quelles, sans recherche ni devinette. */
-  function baliser_ligne(ligne, editions, decalage) {
-    var bouts = [], curseur = 0;
-    editions.forEach(function (e) {
-      var a = e.debut - decalage, b = e.fin - decalage;
-      if (a < curseur || b > ligne.length) return;             // chevauchement : on saute
-      bouts.push(echapper(ligne.slice(curseur, a)));
-      bouts.push("<mark>" + echapper(ligne.slice(a, b)) + "</mark>");
-      curseur = b;
-    });
-    bouts.push(echapper(ligne.slice(curseur)));
-    return bouts.join("");
-  }
-
-  /* Le texte d'une étape rendu en ALINÉAS, et pas en bloc continu.
-   * L'acte de la page est composé en alinéas justifiés et indentés : une démonstration
-   * qui rendrait le même texte d'un seul tenant montrerait un autre objet que celui que
-   * la page promet. Les bornes des corrections sont exprimées sur le texte entier, elles
-   * sont donc reportées dans l'alinéa qui les contient, décalage compris. */
-  function baliser(texte, editions) {
-    var tri = (editions || []).slice().sort(function (a, b) { return a.debut - b.debut; });
-    var lignes = texte.split("\n");
-    var decalage = 0, html = [];
-    lignes.forEach(function (ligne) {
-      var debut = decalage, fin = decalage + ligne.length;
-      if (ligne.trim()) {
-        var miennes = tri.filter(function (e) { return e.debut >= debut && e.fin <= fin; });
-        html.push('<p class="acte-alinea">' +
-                  baliser_ligne(ligne, miennes, debut) + "</p>");
-      }
-      decalage = fin + 1;                                      // +1 pour le « \n » retiré
-    });
-    return html.join("");
-  }
-
-  function annoncer(message) { if (etat) etat.textContent = message; }
-
+  function annoncer(m) { if (etat) etat.textContent = m; }
+  function plus_tard(fn, d) { minuteries.push(setTimeout(fn, d)); }
   function nettoyer() {
-    minuteries.forEach(clearTimeout);
-    minuteries = [];
+    minuteries.forEach(clearTimeout); minuteries = [];
     if (trame) { cancelAnimationFrame(trame); trame = 0; }
   }
 
-  function plus_tard(fn, delai) { minuteries.push(setTimeout(fn, delai)); }
+  /* ── construction des deux panneaux ───────────────────────────────────────────────
+   *
+   * Chaque mot est enveloppé dans un <span class="mot"> : c'est lui qui décide QUAND le
+   * mot s'encre. Les corrections, elles, couvrent des empans qui contiennent parfois
+   * plusieurs mots (« in limine litis ») — les <mark> sont donc à l'extérieur des mots,
+   * jamais l'inverse.
+   */
+  var rangMot = 0;
 
-  /* ── phase 1 : les mots arrivent au rythme de la voix ──────────────────────────── */
+  function mots_en_spans(fragment) {
+    // Les espaces restent tels quels : seuls les mots reçoivent un span.
+    return fragment.replace(/[^\s]+/g, function (mot) {
+      rangMot++;
+      return '<span class="mot">' + echapper(mot) + "</span>";
+    });
+  }
 
-  function preparer_parole() {
-    var html = [];
+  function paragraphe(ligne, corrections, decalage) {
+    var html = [], curseur = 0;
+    corrections.forEach(function (c) {
+      var a = c.debut - decalage, b = c.fin - decalage;
+      if (a < curseur || b > ligne.length) return;      // chevauchement : on saute
+      html.push(mots_en_spans(ligne.slice(curseur, a)));
+      html.push('<mark class="corr-' + c.raison + '">',
+                mots_en_spans(ligne.slice(a, b)), "</mark>");
+      curseur = b;
+    });
+    html.push(mots_en_spans(ligne.slice(curseur)));
+    return '<p class="acte-alinea">' + html.join("") + "</p>";
+  }
+
+  function construire_acte() {
+    // Toutes les corrections, toutes passes confondues, exprimées dans le texte FINAL.
+    // Ce sont les coordonnées que la chaîne garantit (voir dictadroit/chaine.py).
+    var etapes = donnees.etapes;
+    var final = etapes[etapes.length - 1].texte;
+    var corrections = [];
+    etapes.forEach(function (e) {
+      e.editions.forEach(function (ed) {
+        corrections.push({ debut: ed.debut, fin: ed.fin, raison: e.cle });
+      });
+    });
+    corrections.sort(function (a, b) { return a.debut - b.debut; });
+
+    rangMot = 0;
+    var decalage = 0, html = [];
+    final.split("\n").forEach(function (ligne) {
+      var d = decalage, f = decalage + ligne.length;
+      if (ligne.trim()) {
+        html.push(paragraphe(ligne, corrections.filter(function (c) {
+          return c.debut >= d && c.fin <= f;
+        }), d));
+      }
+      decalage = f + 1;                                  // +1 pour le « \n » retiré
+    });
+    acte.innerHTML = html.join("");
+    acte.classList.remove("corrige");
+    return rangMot;
+  }
+
+  function construire_parole() {
+    var html = [], temps = [];
     donnees.enonces.forEach(function (en, rang) {
       if (rang) html.push(" ");
       en.mots.forEach(function (m, i) {
         if (i) html.push(" ");
-        html.push('<span class="mot' + (doux ? " vu" : "") +
-                  '" data-t="' + m.t + '">' + echapper(m.m) + "</span>");
+        html.push('<span class="mot" data-t="' + m.t + '">' + echapper(m.m) + "</span>");
+        temps.push(m.t);
       });
     });
     parole.innerHTML = html.join("");
+    return temps;
   }
 
-  /* Révélation sans son : les mêmes instants, joués par une horloge au lieu d'une voix. */
-  function reveler_minute() {
-    var mots = parole.querySelectorAll(".mot");
-    var dernier = 0;
-    Array.prototype.forEach.call(mots, function (m) {
-      var quand = parseFloat(m.dataset.t) * 1000 / VITESSE_MUETTE;
-      dernier = Math.max(dernier, quand);
-      plus_tard(function () { m.classList.add("vu"); }, quand);
+  /* ── l'horloge ────────────────────────────────────────────────────────────────────
+   *
+   * ⚠️ L'acte n'a PAS le même nombre de mots que la parole : les commandes de ponctuation
+   * disparaissent, les nombres se contractent. On ne peut donc pas apparier mot à mot.
+   * Les mots de l'acte sont répartis PROPORTIONNELLEMENT sur les mêmes instants — les deux
+   * panneaux avancent ensemble, sans prétendre à une synchronisation qu'on n'a pas.
+   */
+  var tempsParole = [], motsParole = null, motsActe = null;
+
+  function preparer() {
+    tempsParole = construire_parole();
+    var nActe = construire_acte();
+    motsParole = parole.querySelectorAll(".mot");
+    motsActe = acte.querySelectorAll(".mot");
+    for (var i = 0; i < motsActe.length; i++) {
+      var j = Math.min(tempsParole.length - 1,
+                       Math.floor(i * tempsParole.length / Math.max(nActe, 1)));
+      motsActe[i].dataset.t = tempsParole[j] || 0;
+    }
+  }
+
+  function encrer(jusqua) {
+    [motsParole, motsActe].forEach(function (liste) {
+      for (var i = 0; i < liste.length; i++) {
+        if (liste[i].classList.contains("vu")) continue;
+        if (parseFloat(liste[i].dataset.t) <= jusqua) liste[i].classList.add("vu");
+        else break;
+      }
     });
-    plus_tard(function () {
-      enCours = false;
-      bouton.removeAttribute("data-joue");
-      libelle.textContent = LIBELLE.rejoue;
-      corriger();
-    }, dernier + 600);
   }
 
   function suivre() {
     if (!audio || audio.paused) return;
-    var t = audio.currentTime;
-    var mots = parole.querySelectorAll(".mot:not(.vu)");
-    for (var i = 0; i < mots.length; i++) {
-      if (parseFloat(mots[i].dataset.t) <= t) mots[i].classList.add("vu");
-      else break;
-    }
+    encrer(audio.currentTime);
     trame = requestAnimationFrame(suivre);
   }
 
-  /* ── phase 2 : les couches de correction ───────────────────────────────────────── */
+  function reveler_sans_son() {
+    var fin = tempsParole[tempsParole.length - 1] || 1;
+    var depart = Date.now();
+    (function pas() {
+      var t = (Date.now() - depart) / 1000 * VITESSE_MUETTE;
+      encrer(t);
+      if (t < fin + 0.4) trame = requestAnimationFrame(pas);
+      else terminer();
+    })();
+  }
 
-  function corriger() {
-    var etapes = donnees.etapes;
-    // L'acte part de ce que la machine a entendu : c'est le même texte que le panneau du
-    // dessus, et c'est ce qui rend les corrections lisibles — on voit d'où elles partent.
-    acte.innerHTML = baliser(etapes[0].texte, []);
-    passe.textContent = "";
-    passe.classList.remove("vu");
+  /* ── la fin : les couleurs s'allument, et restent ─────────────────────────────── */
 
-    etapes.slice(1).forEach(function (etape, rang) {
-      plus_tard(function () {
-        acte.innerHTML = baliser(etape.texte, etape.editions);
-        passe.textContent = etape.titre + (etape.editions.length
-          ? "  ·  " + etape.editions.length +
-            (etape.editions.length > 1 ? " corrections" : " correction")
-          : "");
-        passe.classList.add("vu");
-        annoncer(etape.titre);
-      }, DELAI_PASSE * rang + 500);
+  function terminer() {
+    nettoyer();
+    [motsParole, motsActe].forEach(function (liste) {
+      Array.prototype.forEach.call(liste, function (m) { m.classList.add("vu"); });
     });
 
     plus_tard(function () {
+      acte.classList.add("corrige");
+      var compte = {};
+      donnees.etapes.forEach(function (e) {
+        if (e.editions.length) compte[e.cle] = e.editions.length;
+      });
+      legende.innerHTML = Object.keys(PASSES).filter(function (cle) {
+        return compte[cle];
+      }).map(function (cle) {
+        return '<span><i style="--teinte: var(--corr-' + cle + ')"></i>' +
+               "<b>" + compte[cle] + "</b>&#8239;· " + PASSES[cle] + "</span>";
+      }).join("");
+      legende.hidden = false;
+      annoncer("Corrections affichées.");
+    }, 450);
+
+    plus_tard(function () {
       var m = donnees.mesure;
-      acte.innerHTML = baliser(etapes[etapes.length - 1].texte, []);
-      passe.classList.remove("vu");
-      // Décimales à la française : la virgule. Un « 4.5 % » sur une page destinée à des
-      // juristes français signale une page traduite, ou pas relue.
       var fr = function (x, n) { return x.toFixed(n).replace(".", ","); };
       bilan.innerHTML =
         "Taux d’erreur sur les mots&#8239;: <b>" + fr(m.wer_avant, 1) +
@@ -183,17 +229,11 @@
         "&#8239;s</b> après chaque phrase, sur processeur seul, avec le dictionnaire " +
         "livré et aucun mot ajouté par un cabinet.";
       bilan.hidden = false;
-      terminer();
-    }, DELAI_PASSE * (etapes.length - 1) + 900);
-  }
+    }, 1100);
 
-  /* ── conduite ─────────────────────────────────────────────────────────────────── */
-
-  function terminer() {
     enCours = false; fini = true;
     bouton.removeAttribute("data-joue");
     libelle.textContent = LIBELLE.rejoue;
-    annoncer("Démonstration terminée.");
   }
 
   function arreter() {
@@ -211,58 +251,41 @@
     figure.setAttribute("data-demo", "");
     parole.hidden = false;
     acte.hidden = false;
+    legende.hidden = true;
     bilan.hidden = true;
-    passe.textContent = "";
-    passe.classList.remove("vu");
-    acte.innerHTML = "";
-    preparer_parole();
+    preparer();
 
-    if (!donnees.audio) {
-      enCours = true;
-      bouton.setAttribute("data-joue", "");
-      libelle.textContent = LIBELLE.joue;
-      annoncer("Démonstration en cours.");
-      reveler_minute();
-      return;
-    }
+    enCours = true;
+    bouton.setAttribute("data-joue", "");
+    libelle.textContent = LIBELLE.joue;
+    annoncer("Démonstration en cours.");
+
+    if (!donnees.audio) { reveler_sans_son(); return; }
 
     if (!audio) {
-      // Posé DANS le document, et pas construit à la volée : le navigateur rattache alors
-      // la lecture au cycle de vie de la page (arrêt à la navigation, gestion média du
-      // système), et l'élément reste inspectable.
+      // Posé DANS le document : le navigateur rattache alors la lecture au cycle de vie
+      // de la page, et l'élément reste inspectable.
       audio = document.createElement("audio");
       audio.src = donnees.audio;
       audio.hidden = true;
       audio.preload = "auto";
       barre.appendChild(audio);
-      audio.addEventListener("ended", function () {
-        enCours = false;
-        bouton.removeAttribute("data-joue");
-        libelle.textContent = LIBELLE.rejoue;
-        corriger();
-      });
+      audio.addEventListener("ended", terminer);
       audio.addEventListener("error", function () {
-        // Le son ne vient pas : on montre quand même le travail, en texte.
         annoncer("Le son n’a pas pu être chargé. La démonstration s’affiche sans lui.");
-        parole.querySelectorAll(".mot").forEach(function (m) { m.classList.add("vu"); });
-        corriger();
+        reveler_sans_son();
       });
     }
     audio.currentTime = 0;
-
     var promesse = audio.play();
     if (promesse && promesse.catch) {
       promesse.catch(function () {
-        annoncer("La lecture automatique a été refusée. La démonstration s’affiche sans son.");
-        parole.querySelectorAll(".mot").forEach(function (m) { m.classList.add("vu"); });
-        corriger();
+        annoncer("La lecture a été refusée par le navigateur. La démonstration continue " +
+                 "sans le son.");
+        reveler_sans_son();
       });
     }
-    enCours = true;
-    bouton.setAttribute("data-joue", "");
-    libelle.textContent = LIBELLE.joue;
-    annoncer("Lecture de la dictée.");
-    if (!doux) trame = requestAnimationFrame(suivre);
+    trame = requestAnimationFrame(suivre);
   }
 
   bouton.addEventListener("click", function () {
@@ -271,16 +294,9 @@
 
     libelle.textContent = "Chargement…";
     bouton.disabled = true;
-    fetch("poc.json?v=5ff905a0")
-      .then(function (r) {
-        if (!r.ok) throw new Error(r.status);
-        return r.json();
-      })
-      .then(function (d) {
-        donnees = d;
-        bouton.disabled = false;
-        demarrer();
-      })
+    fetch("poc.json?v=23493865")
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) { donnees = d; bouton.disabled = false; demarrer(); })
       .catch(function () {
         bouton.disabled = false;
         libelle.textContent = LIBELLE.repos;

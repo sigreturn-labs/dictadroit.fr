@@ -72,7 +72,7 @@
 <link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="dictadroit.css?v=5e634850">
+<link rel="stylesheet" href="dictadroit.css?v=57b4972e">
 
 <!-- Le theme choisi doit etre pose AVANT le premier rendu, sinon la page
      s'affiche dans le mauvais thema puis bascule sous les yeux du visiteur.
@@ -110,9 +110,9 @@
 
   <!-- ══════════════════════════════════════════════════════════ hero ═══
        LA DÉMONSTRATION EST ICI, ET C’EST UNE VRAIE (14/08/2026). L’objet
-       ci-dessous, parole en haut et acte en bas, se JOUE : le bouton affiche
-       mot à mot ce que la reconnaissance rend, puis allume les corrections
-       passe par passe. Elle est muette — voir plus bas.
+       ci-dessous, parole en haut et acte en bas, se JOUE : la parole et l’acte
+       s’écrivent EN MÊME TEMPS, puis les corrections s’allument et RESTENT,
+       une couleur par passe.
 
        🔴 RIEN N’Y EST ÉCRIT À L’AVANCE. Le contenu vient de `poc.json`, que
        la chaîne produit elle-même (labo/exporter_demo.py). Si le moteur
@@ -205,15 +205,11 @@
                 <rect x="8.9" y="3.4" width="2.5" height="9.2" rx="0.6"/>
               </g>
             </svg>
-            <span class="demo-libelle">Voir le logiciel écrire</span>
+            <span class="demo-libelle">Écouter une dictée</span>
           </button>
-          <!-- ⚠️ La démonstration est MUETTE, et c’est une décision arrêtée : ne pas
-               ajouter de son ici, et ne jamais promettre d’« écouter » quoi que ce soit
-               dans le libellé du bouton. Le motif est consigné dans DESIGN.md, section
-               « la démonstration qui se joue ». -->
-          <p class="demo-note" id="js-demo-note">Une dictée réelle de 53&#8239;secondes,
-            transcrite puis mise en forme par le logiciel. Ce qui défile est sa sortie,
-            pas une reconstitution.</p>
+          <p class="demo-note" id="js-demo-note">Une minute de dictée. Le texte se forme
+            à mesure&#8239;; à la fin, les corrections restent en couleur, une par
+            passe.</p>
         </div>
         <p class="hors-ecran" id="js-demo-etat" role="status" aria-live="polite"></p>
       </div>
@@ -566,6 +562,6 @@
 </footer>
 
 <script src="mesure.js?v=124753b2"></script>
-<script src="poc.js?v=a2dc349e" defer></script>
+<script src="poc.js?v=396e9ffb" defer></script>
 </body>
 </html>
