@@ -102,6 +102,14 @@
   --machine: "Courier Prime", "Courier New", ui-monospace, monospace;
 
   --rayon: 3px;
+  /* LA MESURE : la largeur d'une colonne de texte, et il n'y en a qu'une dans
+     toute la page. Mesuré sur la vraie police : 71 signes par ligne en
+     moyenne, 76 au plus. Tout bloc de prose la vaut ; le bloc de l'auteur la
+     vaut PLUS son dessin, jamais moins, ce qui garantit que les deux sections
+     lisent à la même mesure. Ne pas rentrer un paragraphe à l'intérieur d'une
+     colonne plus large : ça fabrique le vide à droite (voir la règle
+     d'alignement). C'est la colonne qu'on rétrécit. */
+  --mesure: 32rem;
   --ombre-feuille: 0 1px 2px rgb(var(--encre) / .05),
                    0 12px 28px -14px rgb(var(--encre) / .22);
   color-scheme: light;
@@ -249,12 +257,17 @@ a { color: rgb(var(--accent)); }
 /* 🔴 LA REGLE D'ALIGNEMENT. Un bloc occupe TOUT le cadre, ou il est CENTRE.
    Jamais aligne a gauche avec du vide a droite : le vide se lit comme un
    oubli, pas comme une intention. `.colonne` est la forme centree ; ce qu'elle
-   contient reste ferre a gauche, c'est le BLOC qui se centre, pas le texte. */
-.colonne { max-width: 46rem; margin-inline: auto; }
-/* Seule la TETE s'elargit a la colonne : `.dire-suite` et `.legende-demo`
-   gardent leur mesure. La liste precedente les annulait par specificite
-   (0,2,0 contre 0,1,0) et les lignes montaient a 96 signes. */
-.colonne > .tete-section { max-width: none; }
+   contient reste ferre a gauche, c'est le BLOC qui se centre, pas le texte.
+
+   🔴 ET LE COROLLAIRE, QUI AVAIT ETE MANQUE : tout ce qui est DANS la colonne
+   va jusqu'a son bord. La tete allait a 46 rem, la prose s'arretait a 54ch et
+   le filet de cloture repartait a 46 rem : trois bords droits pour un seul
+   bloc, et 220 px de vide a droite du texte. On ne rentre pas le texte pour le
+   confort de lecture, ON RETRECIT LA COLONNE — la mesure devient la colonne.
+   C'est `--mesure`, et c'est la SEULE mesure de texte de la page : la colonne
+   de prose la vaut, et la colonne de l'auteur la vaut plus son dessin. */
+.colonne { max-width: var(--mesure); margin-inline: auto; }
+.colonne > * { max-width: none; }
 @media (min-width: 60rem) { .page { width: min(100% - 5rem, 1180px); } }
 
 .section { padding-block: clamp(3.25rem, 1.6rem + 5.4vw, 6.5rem); }
@@ -521,18 +534,25 @@ a { color: rgb(var(--accent)); }
 }
 .local h2 { color: rgb(var(--inv-texte)); }
 .local-rang { display: grid; gap: clamp(2.25rem, 1rem + 4vw, 4rem); align-items: start; }
+/* Chaque colonne vaut LA MESURE, et l'espace qui reste passe dans la
+   gouttière. En `1fr 1fr` les colonnes faisaient 554 px, donc 77 signes par
+   ligne : trop long. Les textes portaient alors chacun leur propre `max-width`
+   pour se rattraper — 34ch, 30rem, 44ch, 42ch — et le bloc finissait avec
+   quatre bords droits différents. Une seule mesure, aucun rattrapage. */
 @media (min-width: 64rem) {
-  .local-rang { grid-template-columns: 1fr 1fr; gap: 4.5rem; }
+  .local-rang {
+    grid-template-columns: repeat(2, minmax(0, var(--mesure)));
+    justify-content: space-between; gap: 4.5rem;
+  }
 }
 .local-chapeau {
-  margin-top: 1.3rem; max-width: 34ch;
+  margin-top: 1.3rem;
   color: rgb(var(--inv-texte) / .78);
 }
 /* Les trente secondes, montrées au lieu d'être promises. Et la colonne de
    gauche cesse d'être vide sur 296 px. */
 .verif {
   list-style: none; margin: 1.9rem 0 0; padding: 0;
-  max-width: 30rem;
   counter-reset: verif;
 }
 .verif li {
@@ -553,7 +573,6 @@ a { color: rgb(var(--accent)); }
 }
 .grille-intro {
   color: rgb(var(--inv-sourdine)); font-size: 0.95rem; margin-bottom: 1.4rem;
-  max-width: 44ch;
 }
 /* Ce que demande la grille, puis ce qu'on y répond. C'était un tableau de
    quatre lignes, intitulé à gauche en Archivo, réponse à droite en Garamond :
@@ -566,7 +585,6 @@ a { color: rgb(var(--accent)); }
   font-size: clamp(1.12rem, 1.02rem + 0.4vw, 1.32rem);
   line-height: 1.45;
   color: rgb(var(--inv-texte));
-  max-width: 42ch;
 }
 .local :focus-visible { outline-color: rgb(var(--inv-accent)); }
 
@@ -580,10 +598,10 @@ a { color: rgb(var(--accent)); }
    moitié gauche de la page et laissait l'autre vide. Deux voix côte à côte,
    comme dans le bloc inversé, sans qu'aucune ne devienne une colonne
    d'étiquettes. */
-.dire-suite {
-  display: grid; gap: 1.15rem;
-  max-width: 54ch;
-}
+/* PAS de `max-width` ici : la colonne EST la mesure. Une mesure posée sur le
+   paragraphe alors que la tête et le filet vont plus loin, c'est le vide à
+   droite qu'on cherche à éviter. */
+.dire-suite { display: grid; gap: 1.15rem; }
 .dire-suite p { margin: 0; }
 
 /* Les deux voix ne s'affrontent plus en colonnes : elles se suivent DANS la
@@ -619,7 +637,6 @@ a { color: rgb(var(--accent)); }
 }
 .legende-demo p {
   margin: 0;
-  max-width: 46ch;
   font-family: var(--acte);
   font-size: clamp(1.05rem, 0.98rem + 0.35vw, 1.25rem);
   line-height: 1.4;
@@ -796,10 +813,14 @@ a { color: rgb(var(--accent)); }
   height: auto;
   margin: 0.1rem 1.15rem 0.5rem 0;
 }
+/* La colonne de l'auteur vaut LA MESURE, plus le dessin et sa gouttière : son
+   texte lit donc exactement à la même mesure que la prose de la section
+   précédente, et ce n'est pas une coïncidence à entretenir à la main. */
 @media (min-width: 40rem) {
+  .auteur .colonne { max-width: calc(var(--mesure) + 12rem + 2rem); }
   .auteur-rang {
     display: grid; grid-template-columns: 12rem minmax(0, 1fr);
-    gap: 2.2rem; align-items: start;
+    gap: 2rem; align-items: start;
   }
   /* le débourrage devient un ITEM DE GRILLE s'il reste affiché, donc une
      troisième cellule vide qui allonge la section pour rien. */
@@ -812,7 +833,7 @@ a { color: rgb(var(--accent)); }
    ⚠️ PAS de `display: grid` ici : une grille ouvre son propre contexte de
    formatage, le texte cesserait d'habiller le dessin flottant sous 40 rem et
    se contenterait d'être poussé à côté. Marges entre paragraphes, donc. */
-.auteur-dire p { margin: 0; max-width: 62ch; }
+.auteur-dire p { margin: 0; }
 .auteur-dire p + p { margin-top: 1.1rem; }
 
 /* ─────────────────────────────────────────────────── 13. formulaire ─── */
@@ -822,7 +843,10 @@ a { color: rgb(var(--accent)); }
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.5rem, 0.8rem + 3vw, 3.5rem);
-  max-width: 46rem; margin-inline: auto;
+  /* la carte vaut LA MESURE plus ses marges intérieures : son texte lit donc
+     à la même mesure que le reste de la page, et la note de bas de carte n'a
+     plus besoin d'une largeur à elle pour rattraper le coup. */
+  max-width: calc(var(--mesure) + 7rem); margin-inline: auto;
 }
 .formulaire { margin-top: 0.5rem; }
 .champ { margin-bottom: 1.5rem; }
@@ -909,10 +933,12 @@ input:user-invalid, textarea:user-invalid {
 .formule-prix { color: rgb(var(--sourdine)); }
 
 .mention-rgpd {
-  max-width: 52ch;   /* 101 signes par ligne sans elle, dans le plus petit corps */
   margin-top: 1.5rem; padding-top: 1.25rem;
   border-top: 1px solid rgb(var(--filet));
-  font-size: 0.9rem; color: rgb(var(--sourdine));
+  /* d'un cran au-dessus de la note : elle tient maintenant toute la largeur de
+     la carte, et à 0,86 rem la ligne montait à 89 signes. Palier existant du
+     système (texte secondaire), pas une valeur de plus. */
+  font-size: 0.95rem; color: rgb(var(--sourdine));
 }
 
 /* ───────────────────────────────────────────────────────── 14. pied ─── */
@@ -947,7 +973,7 @@ input:user-invalid, textarea:user-invalid {
   border: 1px solid rgb(var(--filet-net));
   border-radius: var(--rayon);
   padding: clamp(1.6rem, 0.9rem + 3vw, 3.5rem);
-  max-width: 46rem; margin-inline: auto;
+  max-width: calc(var(--mesure) + 7rem); margin-inline: auto;
 }
 .feuillet-cadre h1 { margin-bottom: 1.2rem; }
 .feuillet-cadre .actions { margin-top: 2rem; }
@@ -987,7 +1013,11 @@ input:user-invalid, textarea:user-invalid {
 
 /* Sommaire des pages annexes : 4 700 px au bureau et 6 000 sur telephone sans
    un seul point de repere, c'est une page qu'on subit au lieu de la consulter. */
-.sommaire { margin: 0 0 2.5rem; padding-bottom: 1.5rem; border-bottom: 1px solid rgb(var(--filet)); }
+/* PAS de filet sous le sommaire : le premier `h2` porte déjà le sien, et les
+   deux se retrouvaient à 44 px l'un de l'autre en haut de la page — un double
+   séparateur pour une seule frontière. La règle est désormais uniforme : UN
+   filet par section, porté par son titre, y compris le premier. */
+.sommaire { margin: 0 0 2.5rem; }
 .sommaire ul {
   list-style: none; margin: 0; padding: 0;
   display: grid; gap: 0.45rem 2rem; font-size: 0.95rem;
