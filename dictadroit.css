@@ -1125,3 +1125,104 @@ input:user-invalid, textarea:user-invalid {
    la regle ne s'applique pas, et la navigation garde sa poussee : les deux
    chemins finissent colles au bord droit. */
 .theme-bouton + .entete-nav { margin-left: 0; }
+
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LA DÉMONSTRATION QUI SE JOUE — le bloc de transformation prend vie
+   ══════════════════════════════════════════════════════════════════════════
+   Le bloc « Ce que vous dites / Ce qui s'écrit » existe déjà en statique : il
+   porte la thèse. Ici il ne se DOUBLE pas d'une seconde démonstration, il se
+   met à jouer la vraie. Les deux panneaux gardent leurs rôles et leurs polices
+   — Courier Prime pour la parole, Garamond pour l'acte —, seul le contenu
+   change. Une démonstration posée à côté aurait dit deux fois la même chose,
+   dont une fois en moins bien.
+
+   Tout ce qui suit ne s'active qu'avec JavaScript : `hidden` en HTML, révélé
+   par poc.js. Sans lui, la page reste exactement ce qu'elle était. */
+
+.demo-barre {
+  margin-top: 1.1rem;
+  display: flex; flex-wrap: wrap; align-items: center;
+  gap: 0.7rem 1rem;
+}
+/* 🔴 SANS CETTE LIGNE, LE BOUTON APPARAÎT AUX VISITEURS SANS JAVASCRIPT — donc une
+   commande morte, exactement ce que `hidden` devait empêcher. `display: flex` posé sur
+   la classe l'emporte sur le `display: none` que le navigateur attache à [hidden] :
+   l'attribut est ignoré en silence, et rien ne le signale. Vérifié javascript désactivé. */
+.demo-barre[hidden] { display: none; }
+.demo-jouer { display: inline-flex; align-items: center; gap: 0.55rem; }
+.demo-icone { width: 0.95em; height: 0.95em; flex: none; }
+.demo-barres { display: none; }
+[data-joue] .demo-triangle { display: none; }
+[data-joue] .demo-barres { display: inline; }
+
+.demo-note {
+  margin: 0; flex: 1 1 14rem; min-width: 0;
+  font-size: 0.83rem; line-height: 1.45;
+  color: rgb(var(--sourdine));
+}
+
+/* ── le panneau de parole : les mots arrivent au rythme de la voix ────────
+   `opacity` et pas `display` : un mot qui apparaît en poussant ses voisins
+   fait sauter tout le paragraphe à chaque mot. Ici la place est réservée dès
+   le départ, et seul l'encrage change. */
+.parole-live { margin: 0; font-family: var(--machine); }
+.parole-live .mot { opacity: 0.13; transition: opacity 0.18s ease-out; }
+.parole-live .mot.vu { opacity: 1; }
+
+/* ── l'acte en construction ──────────────────────────────────────────────── */
+.acte-live .acte-alinea:last-child { margin-bottom: 0; }
+
+/* Le surlignage des corrections. Bleu de signature, posé en fond très léger :
+   ce qu'on veut montrer est QUE ça a changé, pas crier lequel. L'animation
+   monte vite et redescend lentement — l'œil attrape le mouvement, puis lit le
+   mot une fois calme. */
+.acte-live mark {
+  background: transparent; color: inherit;
+  border-radius: var(--rayon);
+  animation: corriger 1.9s ease-out both;
+}
+@keyframes corriger {
+  0%   { background: rgb(var(--accent) / 0); color: inherit; }
+  12%  { background: rgb(var(--accent) / .22); color: rgb(var(--accent-vif)); }
+  55%  { background: rgb(var(--accent) / .16); color: rgb(var(--accent-vif)); }
+  100% { background: rgb(var(--accent) / 0); color: inherit; }
+}
+
+/* La passe en cours, nommée. Elle vit sous le panneau et ne pousse rien :
+   sa hauteur est réservée, sinon l'acte remonte et redescend à chaque passe. */
+.demo-passe {
+  margin: 0.75rem 0 0; min-height: 1.35em;
+  font-size: 0.83rem; font-weight: 600;
+  color: rgb(var(--accent));
+  opacity: 0; transition: opacity 0.25s ease-out;
+}
+.demo-passe.vu { opacity: 1; }
+
+/* Le bilan chiffré, à la fin. Il n'apparaît qu'une fois la démonstration
+   terminée : annoncé plus tôt, il ferait lire au lieu de regarder. */
+.demo-bilan {
+  margin: 0.9rem 0 0; padding-top: 0.8rem;
+  border-top: 1px solid rgb(var(--filet));
+  font-size: 0.83rem; line-height: 1.55;
+  color: rgb(var(--sourdine));
+}
+.demo-bilan b { color: rgb(var(--encre)); font-weight: 600; }
+.demo-bilan[hidden] { display: none; }
+
+/* ── ce qui bascule quand la démonstration tourne ────────────────────────── */
+.transformation[data-demo] .parole > p:not(.parole-live),
+.transformation[data-demo] .acte:not(.acte-live) { display: none; }
+.transformation[data-demo] .parole-live,
+.transformation[data-demo] .acte-live { display: block; }
+
+/* ⚠️ Mouvement réduit : la démonstration reste ENTIÈREMENT disponible, mais
+   sans le clignotement des corrections ni l'apparition mot à mot. On ne retire
+   pas la fonction, on retire l'animation — c'est la distinction que demande la
+   requête média, et supprimer le bouton priverait justement les personnes qui
+   l'ont réglée. */
+@media (prefers-reduced-motion: reduce) {
+  .parole-live .mot { opacity: 1; transition: none; }
+  .acte-live mark { animation: none; background: rgb(var(--accent) / .16); }
+  .demo-passe { transition: none; }
+}

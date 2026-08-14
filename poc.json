@@ -1,0 +1,595 @@
+{
+ "audio": "medias/dictee-vitrine.mp3?v=13c39809",
+ "duree_s": 52.81,
+ "enonces": [
+  {
+   "debut_s": 0.0,
+   "mots": [
+    {
+     "t": 0.0,
+     "m": "Plaise"
+    },
+    {
+     "t": 0.46,
+     "m": "au"
+    },
+    {
+     "t": 0.91,
+     "m": "tribunal"
+    },
+    {
+     "t": 1.37,
+     "m": "judiciaire"
+    },
+    {
+     "t": 1.82,
+     "m": "de"
+    },
+    {
+     "t": 2.28,
+     "m": "Nanterre,"
+    },
+    {
+     "t": 2.73,
+     "m": "statuant"
+    },
+    {
+     "t": 3.19,
+     "m": "en"
+    },
+    {
+     "t": 3.65,
+     "m": "chambre"
+    },
+    {
+     "t": 4.1,
+     "m": "de"
+    },
+    {
+     "t": 4.56,
+     "m": "conseil."
+    },
+    {
+     "t": 5.01,
+     "m": "à"
+    },
+    {
+     "t": 5.47,
+     "m": "la"
+    },
+    {
+     "t": 5.92,
+     "m": "ligne."
+    }
+   ]
+  },
+  {
+   "debut_s": 6.38,
+   "mots": [
+    {
+     "t": 6.38,
+     "m": "La"
+    },
+    {
+     "t": 6.81,
+     "m": "demande"
+    },
+    {
+     "t": 7.24,
+     "m": "reste"
+    },
+    {
+     "t": 7.68,
+     "m": "soulève"
+    },
+    {
+     "t": 8.11,
+     "m": "inliminé"
+    },
+    {
+     "t": 8.54,
+     "m": "létis"
+    },
+    {
+     "t": 8.97,
+     "m": "l'incompétence"
+    },
+    {
+     "t": 9.41,
+     "m": "rationnelle"
+    },
+    {
+     "t": 9.84,
+     "m": "et"
+    },
+    {
+     "t": 10.27,
+     "m": "matérielle"
+    },
+    {
+     "t": 10.7,
+     "m": "de"
+    },
+    {
+     "t": 11.13,
+     "m": "la"
+    },
+    {
+     "t": 11.57,
+     "m": "juridiction"
+    },
+    {
+     "t": 12.0,
+     "m": "saisie."
+    },
+    {
+     "t": 12.43,
+     "m": "Point"
+    },
+    {
+     "t": 12.86,
+     "m": "à"
+    },
+    {
+     "t": 13.3,
+     "m": "la"
+    },
+    {
+     "t": 13.73,
+     "m": "ligne."
+    }
+   ]
+  },
+  {
+   "debut_s": 14.16,
+   "mots": [
+    {
+     "t": 14.16,
+     "m": "L'action"
+    },
+    {
+     "t": 14.75,
+     "m": "a"
+    },
+    {
+     "t": 15.34,
+     "m": "été"
+    },
+    {
+     "t": 15.93,
+     "m": "introduite"
+    },
+    {
+     "t": 16.52,
+     "m": "le"
+    },
+    {
+     "t": 17.11,
+     "m": "12"
+    },
+    {
+     "t": 17.7,
+     "m": "mars"
+    },
+    {
+     "t": 18.29,
+     "m": "2025,"
+    },
+    {
+     "t": 18.87,
+     "m": "soit"
+    },
+    {
+     "t": 19.46,
+     "m": "avant"
+    },
+    {
+     "t": 20.05,
+     "m": "l'expiration"
+    },
+    {
+     "t": 20.64,
+     "m": "du"
+    },
+    {
+     "t": 21.23,
+     "m": "délai"
+    },
+    {
+     "t": 21.82,
+     "m": "de"
+    },
+    {
+     "t": 22.41,
+     "m": "prescription."
+    }
+   ]
+  },
+  {
+   "debut_s": 23.0,
+   "mots": [
+    {
+     "t": 23.0,
+     "m": "Point"
+    },
+    {
+     "t": 23.4,
+     "m": "à"
+    },
+    {
+     "t": 23.79,
+     "m": "la"
+    },
+    {
+     "t": 24.19,
+     "m": "ligne."
+    },
+    {
+     "t": 24.59,
+     "m": "Il"
+    },
+    {
+     "t": 24.98,
+     "m": "est"
+    },
+    {
+     "t": 25.38,
+     "m": "réclamé"
+    },
+    {
+     "t": 25.78,
+     "m": "la"
+    },
+    {
+     "t": 26.17,
+     "m": "somme"
+    },
+    {
+     "t": 26.57,
+     "m": "de"
+    },
+    {
+     "t": 26.97,
+     "m": "quarante-sept"
+    },
+    {
+     "t": 27.36,
+     "m": "mille."
+    }
+   ]
+  },
+  {
+   "debut_s": 27.76,
+   "mots": [
+    {
+     "t": 27.76,
+     "m": "huit"
+    },
+    {
+     "t": 28.15,
+     "m": "cent"
+    },
+    {
+     "t": 28.54,
+     "m": "cinquante"
+    },
+    {
+     "t": 28.93,
+     "m": "euros"
+    },
+    {
+     "t": 29.32,
+     "m": "et"
+    },
+    {
+     "t": 29.71,
+     "m": "trente-deux"
+    },
+    {
+     "t": 30.1,
+     "m": "centimes,"
+    },
+    {
+     "t": 30.49,
+     "m": "outre"
+    },
+    {
+     "t": 30.88,
+     "m": "six"
+    },
+    {
+     "t": 31.27,
+     "m": "mille"
+    },
+    {
+     "t": 31.66,
+     "m": "deux"
+    },
+    {
+     "t": 32.05,
+     "m": "cents"
+    },
+    {
+     "t": 32.44,
+     "m": "euros"
+    },
+    {
+     "t": 32.83,
+     "m": "au"
+    },
+    {
+     "t": 33.22,
+     "m": "titre"
+    },
+    {
+     "t": 33.61,
+     "m": "de"
+    },
+    {
+     "t": 34.0,
+     "m": "l'article"
+    },
+    {
+     "t": 34.39,
+     "m": "sept"
+    },
+    {
+     "t": 34.78,
+     "m": "cent"
+    },
+    {
+     "t": 35.17,
+     "m": "du"
+    },
+    {
+     "t": 35.56,
+     "m": "Code"
+    },
+    {
+     "t": 35.95,
+     "m": "de"
+    },
+    {
+     "t": 36.34,
+     "m": "procédure"
+    },
+    {
+     "t": 36.73,
+     "m": "civile."
+    }
+   ]
+  },
+  {
+   "debut_s": 37.12,
+   "mots": [
+    {
+     "t": 37.12,
+     "m": "Le"
+    },
+    {
+     "t": 37.98,
+     "m": "tout"
+    },
+    {
+     "t": 38.84,
+     "m": "par"
+    },
+    {
+     "t": 39.7,
+     "m": "application"
+    },
+    {
+     "t": 40.56,
+     "m": "des"
+    },
+    {
+     "t": 41.42,
+     "m": "articles"
+    },
+    {
+     "t": 42.28,
+     "m": "1103"
+    },
+    {
+     "t": 43.14,
+     "m": "et"
+    },
+    {
+     "t": 44.0,
+     "m": "1231."
+    }
+   ]
+  },
+  {
+   "debut_s": 44.86,
+   "mots": [
+    {
+     "t": 44.86,
+     "m": "du"
+    },
+    {
+     "t": 45.39,
+     "m": "Code"
+    },
+    {
+     "t": 45.92,
+     "m": "civil."
+    },
+    {
+     "t": 46.45,
+     "m": "à"
+    },
+    {
+     "t": 46.98,
+     "m": "la"
+    },
+    {
+     "t": 47.51,
+     "m": "ligne."
+    },
+    {
+     "t": 48.04,
+     "m": "Par"
+    },
+    {
+     "t": 48.57,
+     "m": "ces"
+    },
+    {
+     "t": 49.1,
+     "m": "motifs,"
+    },
+    {
+     "t": 49.63,
+     "m": "virgule,"
+    },
+    {
+     "t": 50.16,
+     "m": "condamner"
+    },
+    {
+     "t": 50.69,
+     "m": "la"
+    },
+    {
+     "t": 51.22,
+     "m": "défendresse"
+    },
+    {
+     "t": 51.75,
+     "m": "aux"
+    },
+    {
+     "t": 52.28,
+     "m": "anti-dépens."
+    }
+   ]
+  }
+ ],
+ "etapes": [
+  {
+   "cle": "brut",
+   "titre": "Ce que la machine entend",
+   "texte": "Plaise au tribunal judiciaire de Nanterre, statuant en chambre de conseil. à la ligne. La demande reste soulève inliminé létis l'incompétence rationnelle et matérielle de la juridiction saisie. Point à la ligne. L'action a été introduite le 12 mars 2025, soit avant l'expiration du délai de prescription. Point à la ligne. Il est réclamé la somme de quarante-sept mille. huit cent cinquante euros et trente-deux centimes, outre six mille deux cents euros au titre de l'article sept cent du Code de procédure civile. Le tout par application des articles 1103 et 1231. du Code civil. à la ligne. Par ces motifs, virgule, condamner la défendresse aux anti-dépens.",
+   "editions": []
+  },
+  {
+   "cle": "ponctuation",
+   "titre": "La ponctuation dictée devient de la ponctuation",
+   "texte": "Plaise au tribunal judiciaire de Nanterre, statuant en chambre de conseil.\nLa demande reste soulève inliminé létis l'incompétence rationnelle et matérielle de la juridiction saisie.\nL'action a été introduite le 12 mars 2025, soit avant l'expiration du délai de prescription.\nIl est réclamé la somme de quarante-sept mille. huit cent cinquante euros et trente-deux centimes, outre six mille deux cents euros au titre de l'article sept cent du Code de procédure civile. Le tout par application des articles 1103 et 1231 du Code civil.\nPar ces motifs, condamner la défendresse aux anti-dépens.",
+   "editions": [
+    {
+     "debut": 66,
+     "fin": 74,
+     "avant": "à la ligne",
+     "apres": "¶"
+    },
+    {
+     "debut": 174,
+     "fin": 181,
+     "avant": "Point",
+     "apres": "."
+    },
+    {
+     "debut": 261,
+     "fin": 274,
+     "avant": "Point",
+     "apres": "."
+    },
+    {
+     "debut": 513,
+     "fin": 517,
+     "avant": "1231. du",
+     "apres": "1231 du"
+    },
+    {
+     "debut": 527,
+     "fin": 533,
+     "avant": "à la ligne",
+     "apres": "¶"
+    },
+    {
+     "debut": 542,
+     "fin": 549,
+     "avant": "virgule",
+     "apres": ","
+    }
+   ]
+  },
+  {
+   "cle": "vocabulaire",
+   "titre": "Le vocabulaire juridique se rétablit",
+   "texte": "Plaise au tribunal judiciaire de Nanterre, statuant en chambre de conseil.\nLa demanderesse soulève in limine litis l'incompétence rationnelle et matérielle de la juridiction saisie.\nL'action a été introduite le 12 mars 2025, soit avant l'expiration du délai de prescription.\nIl est réclamé la somme de quarante-sept mille. huit cent cinquante euros et trente-deux centimes, outre six mille deux cents euros au titre de l'article sept cent du Code de procédure civile. Le tout par application des articles 1103 et 1231 du Code civil.\nPar ces motifs, condamner la défenderesse aux entiers dépens.",
+   "editions": [
+    {
+     "debut": 78,
+     "fin": 90,
+     "avant": "demande reste",
+     "apres": "demanderesse"
+    },
+    {
+     "debut": 99,
+     "fin": 114,
+     "avant": "inliminé létis",
+     "apres": "in limine litis"
+    },
+    {
+     "debut": 562,
+     "fin": 574,
+     "avant": "défendresse",
+     "apres": "défenderesse"
+    },
+    {
+     "debut": 579,
+     "fin": 593,
+     "avant": "anti dépens",
+     "apres": "entiers dépens"
+    }
+   ]
+  },
+  {
+   "cle": "references",
+   "titre": "Les nombres et les visas prennent leur forme",
+   "texte": "Plaise au tribunal judiciaire de Nanterre, statuant en chambre de conseil.\nLa demanderesse soulève in limine litis l'incompétence rationnelle et matérielle de la juridiction saisie.\nL'action a été introduite le 12 mars 2025, soit avant l'expiration du délai de prescription.\nIl est réclamé la somme de 47 850 euros et 32 centimes, outre 6 200 euros au titre de l'article 700 du Code de procédure civile. Le tout par application des articles 1103 et 1231 du Code civil.\nPar ces motifs, condamner la défenderesse aux entiers dépens.",
+   "editions": [
+    {
+     "debut": 302,
+     "fin": 308,
+     "avant": "quarante sept mille huit cent cinquante",
+     "apres": "47 850"
+    },
+    {
+     "debut": 318,
+     "fin": 320,
+     "avant": "trente deux",
+     "apres": "32"
+    },
+    {
+     "debut": 337,
+     "fin": 342,
+     "avant": "six mille deux cents",
+     "apres": "6 200"
+    },
+    {
+     "debut": 371,
+     "fin": 374,
+     "avant": "sept cent",
+     "apres": "700"
+    }
+   ]
+  }
+ ],
+ "mesure": {
+  "wer_avant": 29.55,
+  "wer_apres": 4.55,
+  "tej_avant": 55.56,
+  "tej_apres": 11.11,
+  "mots": 88,
+  "enonces": 7,
+  "latence_s": 0.468,
+  "facteur_temps_reel": 0.061,
+  "lexique": 229,
+  "moteur": "istupakov/canary-1b-v2-onnx",
+  "fils": 4
+ }
+}

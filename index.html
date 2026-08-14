@@ -72,7 +72,7 @@
 <link rel="preload" href="polices/archivo-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/garamond-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="polices/courier-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="dictadroit.css?v=9c7c83d9">
+<link rel="stylesheet" href="dictadroit.css?v=5e634850">
 
 <!-- Le theme choisi doit etre pose AVANT le premier rendu, sinon la page
      s'affiche dans le mauvais thema puis bascule sous les yeux du visiteur.
@@ -109,10 +109,19 @@
 <main id="contenu" tabindex="-1">
 
   <!-- ══════════════════════════════════════════════════════════ hero ═══
-       EMPLACEMENT DE LA VIDÉO DE DÉMONSTRATION (Tâche 6 du sprint) :
-       elle s’insérera dans la section « demonstration » plus bas, au-dessus
-       de la légende. Tant qu’elle n’existe pas, c’est l’objet ci-dessous,
-       parole à gauche et acte à droite, qui tient ce rôle.               -->
+       LA DÉMONSTRATION EST ICI, ET C’EST UNE VRAIE (14/08/2026). L’objet
+       ci-dessous, parole en haut et acte en bas, se JOUE : le bouton lit un
+       enregistrement réel, affiche ce que la reconnaissance rend mot à mot,
+       puis allume les corrections passe par passe.
+
+       🔴 RIEN N’Y EST ÉCRIT À L’AVANCE. Le contenu vient de `poc.json`, que
+       la chaîne produit elle-même (labo/exporter_demo.py). Si le moteur
+       régresse, la page le montre. Ne jamais remplacer ce fichier par un
+       texte saisi à la main : ce serait le dessin de ce qu’on espère, et il
+       resterait juste le jour où le produit cesserait de l’être.
+
+       L’illustration statique conservée ci-dessous reste la démonstration
+       des visiteurs sans JavaScript.                                     -->
   <section class="hero">
     <div class="page hero-rang">
 
@@ -145,6 +154,11 @@
             serait tardive <b class="cmd">fermez les guillemets</b>
             <b class="cmd">point-virgule</b> elle n’en rapporte pas la preuve
             <b class="cmd">point</b></p>
+
+            <!-- Ce que la reconnaissance rend RÉELLEMENT, mot à mot, au rythme de la
+                 voix. Les commandes y sont encore des mots — c'est tout l'intérêt :
+                 le visiteur voit ce que la machine entend avant toute mise en forme. -->
+            <p class="parole-live" hidden></p>
           </div>
 
           <!-- Les deux legendes portent la MEME classe : c'est ce qui garantit
@@ -163,6 +177,13 @@
                 «&#8239;que l’action serait tardive&#8239;»&#8239;; elle n’en rapporte pas la
                 preuve.</p>
             </div>
+
+            <!-- L'acte que la démonstration construit vraiment. Vide tant que le
+                 visiteur n'a rien lancé ; rempli depuis poc.json, qui est produit par
+                 la chaîne elle-même (labo/exporter_demo.py). Rien ici n'est écrit à
+                 l'avance : si le moteur régresse, cette zone le montre. -->
+            <div class="acte acte-live" hidden></div>
+
             <div class="acte-signature" aria-hidden="true">
               <svg class="paraphe" viewBox="0 0 120 40" role="presentation" focusable="false">
                 <path class="paraphe-trait" d="M4 30C14 8 24 2 29 8C34 14 22 33 16 28C10 23 20 9 42 12C60 14.5 66 27 84 19C93 15 101 11 116 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -170,6 +191,26 @@
             </div>
           </div>
         </figure>
+
+        <!-- Commande de la démonstration. `hidden` au départ et révélée par poc.js :
+             sans JavaScript, aucun bouton mort n'est proposé, et l'illustration
+             statique au-dessus reste la démonstration. -->
+        <div class="demo-barre" id="js-demo-barre" hidden>
+          <button type="button" class="bouton bouton--fil demo-jouer" id="js-demo-jouer"
+                  aria-describedby="js-demo-note">
+            <svg class="demo-icone" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path class="demo-triangle" d="M4.5 3.2 12.6 8l-8.1 4.8Z" fill="currentColor"/>
+              <g class="demo-barres" fill="currentColor">
+                <rect x="4.6" y="3.4" width="2.5" height="9.2" rx="0.6"/>
+                <rect x="8.9" y="3.4" width="2.5" height="9.2" rx="0.6"/>
+              </g>
+            </svg>
+            <span class="demo-libelle">Écouter une dictée réelle</span>
+          </button>
+          <p class="demo-note" id="js-demo-note">53 secondes, une seule prise, au téléphone.
+            Le texte qui s’écrit est produit par le logiciel pendant la lecture.</p>
+        </div>
+        <p class="hors-ecran" id="js-demo-etat" role="status" aria-live="polite"></p>
       </div>
 
     </div>
@@ -520,5 +561,6 @@
 </footer>
 
 <script src="mesure.js?v=124753b2"></script>
+<script src="poc.js?v=3e21aa8a" defer></script>
 </body>
 </html>
