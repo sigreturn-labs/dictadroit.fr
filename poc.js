@@ -8,8 +8,9 @@
  * Trois temps, et le premier est le cœur de l'argument :
  *   1. la parole et l'acte s'écrivent EN MÊME TEMPS, au rythme de la voix — « vous
  *      dictez, l'acte s'écrit » ;
- *   2. à la fin, les corrections s'allument, UNE COULEUR PAR PASSE, et restent ;
- *   3. la légende dit ce que chaque couleur a corrigé, puis le bilan chiffré.
+ *   2. à la fin, les mots corrigés se soulignent d'un trait d'encre, et le trait reste ;
+ *   3. une phrase dit ce que ça donne. Pas un tableau de bord, pas de légende : la page
+ *      parle comme elle parle partout ailleurs.
  *
  * Amélioration progressive : le bouton est `hidden` en HTML et n'est révélé que d'ici.
  * Sans JavaScript, la page garde son illustration statique et ne propose aucune commande
@@ -34,23 +35,14 @@
   /* Sans son, l'affichage n'a plus à suivre une voix : il suit une horloge, et rien
    * n'oblige à garder le tempo de la parole. */
   var VITESSE_MUETTE = 2.2;
-  var PASSES = {
-    ponctuation: "la ponctuation dictée",
-    vocabulaire: "le vocabulaire juridique",
-    references: "les nombres et les visas",
-  };
 
   var donnees = null, audio = null, trame = 0, minuteries = [];
   var enCours = false, fini = false;
   var libelle = bouton.querySelector(".demo-libelle");
-  var legende = document.createElement("p");
-  legende.className = "demo-legende";
-  legende.hidden = true;
   var bilan = document.createElement("p");
   bilan.className = "demo-bilan";
   bilan.hidden = true;
-  feuille.insertAdjacentElement("afterend", legende);
-  legende.insertAdjacentElement("afterend", bilan);
+  feuille.insertAdjacentElement("afterend", bilan);
 
   barre.hidden = false;
 
@@ -80,37 +72,59 @@
    */
   var rangMot = 0;
 
-  function mots_en_spans(fragment) {
-    // Les espaces restent tels quels : seuls les mots reçoivent un span.
-    return fragment.replace(/[^\s]+/g, function (mot) {
-      rangMot++;
-      return '<span class="mot">' + echapper(mot) + "</span>";
+  /* 🔴 LE BALISAGE SE FAIT À L'INTÉRIEUR DES MOTS, PAS AUTOUR. Une correction de
+   * ponctuation ne couvre qu'un signe — le point de « conseil. » —, donc elle tombe au
+   * MILIEU d'un mot au sens typographique. Une première version découpait la ligne aux
+   * frontières des corrections puis emballait les morceaux : le point se retrouvait dans
+   * son propre span, s'encrait à son propre instant, et se détachait de son mot.
+   *
+   * On enveloppe donc d'abord les mots, et on pose les marques dedans. */
+  function baliser_mot(ligne, a, b, corrections, decalage) {
+    var out = [], curseur = a;
+    corrections.forEach(function (c) {
+      var ca = Math.max(c.debut - decalage, a), cb = Math.min(c.fin - decalage, b);
+      if (cb <= ca || ca < curseur) return;
+      out.push(echapper(ligne.slice(curseur, ca)));
+      out.push('<mark class="' + c.classe + '">' + echapper(ligne.slice(ca, cb)) + "</mark>");
+      curseur = cb;
     });
+    out.push(echapper(ligne.slice(curseur, b)));
+    return out.join("");
   }
 
+  /* ⚠️ Une espace INSÉCABLE ne coupe pas un mot — c'est sa définition. « 47 850 » est
+   * groupé par une fine insécable (U+202F) : traité comme deux mots, son soulignage se
+   * cassait au milieu du nombre, et les deux moitiés s'encraient à deux instants. */
+  var COUPE = /[^\S\u00a0\u202f]/;
+
   function paragraphe(ligne, corrections, decalage) {
-    var html = [], curseur = 0;
-    corrections.forEach(function (c) {
-      var a = c.debut - decalage, b = c.fin - decalage;
-      if (a < curseur || b > ligne.length) return;      // chevauchement : on saute
-      html.push(mots_en_spans(ligne.slice(curseur, a)));
-      html.push('<mark class="corr-' + c.raison + '">',
-                mots_en_spans(ligne.slice(a, b)), "</mark>");
-      curseur = b;
-    });
-    html.push(mots_en_spans(ligne.slice(curseur)));
+    var html = [], i = 0;
+    while (i < ligne.length) {
+      if (COUPE.test(ligne[i])) { html.push(ligne[i]); i++; continue; }
+      var j = i;
+      while (j < ligne.length && !COUPE.test(ligne[j])) j++;
+      rangMot++;
+      html.push('<span class="mot">' +
+                baliser_mot(ligne, i, j, corrections, decalage) + "</span>");
+      i = j;
+    }
     return '<p class="acte-alinea">' + html.join("") + "</p>";
   }
 
   function construire_acte() {
-    // Toutes les corrections, toutes passes confondues, exprimées dans le texte FINAL.
-    // Ce sont les coordonnées que la chaîne garantit (voir dictadroit/chaine.py).
+    /* Les corrections à SOULIGNER, exprimées dans le texte final (coordonnées garanties
+     * par dictadroit/chaine.py).
+     *
+     * La ponctuation est marquée elle aussi, mais SUR SON SIGNE et non sur le mot voisin
+     * (cf. dictadroit/chaine.py) : c'est le point qui est apparu, pas le mot qui a changé. */
     var etapes = donnees.etapes;
     var final = etapes[etapes.length - 1].texte;
     var corrections = [];
     etapes.forEach(function (e) {
+      // Deux marques, deux poids : un mot rétabli se souligne, un signe dicté se teinte.
+      var classe = e.cle === "ponctuation" ? "signe" : "";
       e.editions.forEach(function (ed) {
-        corrections.push({ debut: ed.debut, fin: ed.fin, raison: e.cle });
+        corrections.push({ debut: ed.debut, fin: ed.fin, classe: classe });
       });
     });
     corrections.sort(function (a, b) { return a.debut - b.debut; });
@@ -208,35 +222,25 @@
       Array.prototype.forEach.call(liste, function (m) { m.classList.add("vu"); });
     });
 
-    plus_tard(function () {
-      acte.classList.add("corrige");
-      var compte = {};
-      donnees.etapes.forEach(function (e) {
-        if (e.editions.length) compte[e.cle] = e.editions.length;
-      });
-      legende.innerHTML = Object.keys(PASSES).filter(function (cle) {
-        return compte[cle];
-      }).map(function (cle) {
-        return '<span><i style="--teinte: var(--corr-' + cle + ')"></i>' +
-               "<b>" + compte[cle] + "</b>&#8239;· " + PASSES[cle] + "</span>";
-      }).join("");
-      legende.hidden = false;
-      annoncer("Corrections affichées.");
-    }, 450);
+    plus_tard(function () { acte.classList.add("corrige"); }, 450);
 
     plus_tard(function () {
+      /* Une PHRASE, pas un tableau de bord. La version précédente alignait trois
+       * pourcentages en gras sous une légende à pastilles : c'est le réflexe qui fabrique
+       * des pages qui se ressemblent toutes. Ici la page parle comme elle parle partout
+       * ailleurs, et ne retient que ce qu'un juriste veut savoir — le vocabulaire est-il
+       * juste, et est-ce que ça suit quand je dicte. */
       var m = donnees.mesure;
-      var fr = function (x, n) { return x.toFixed(n).replace(".", ","); };
-      bilan.innerHTML =
-        "Taux d’erreur sur les mots&#8239;: <b>" + fr(m.wer_avant, 1) +
-        "&#8239;%</b> à la sortie du moteur, <b>" + fr(m.wer_apres, 1) +
-        "&#8239;%</b> après les trois passes. Sur le vocabulaire juridique, <b>" +
-        fr(m.tej_avant, 0) + "&#8239;%</b> puis <b>" + fr(m.tej_apres, 0) +
-        "&#8239;%</b>. Le texte se fige <b>" + fr(m.latence_s, 2) +
-        "&#8239;s</b> après chaque phrase, sur processeur seul, avec le dictionnaire " +
-        "livré et aucun mot ajouté par un cabinet.";
+      var restants = m.termes_rates_apres;
+      bilan.textContent =
+        "Sur les " + m.termes_total + " termes de droit de ce passage, la reconnaissance " +
+        "en manquait " + m.termes_rates_avant + ". " +
+        (restants ? "Il en reste " + restants + ", " : "Il n’en manque plus aucun, ") +
+        "et le texte se fige moins d’une demi-seconde après chaque phrase, sur " +
+        "processeur seul.";
       bilan.hidden = false;
-    }, 1100);
+      annoncer("Démonstration terminée.");
+    }, 950);
 
     enCours = false; fini = true;
     bouton.removeAttribute("data-joue");
@@ -258,7 +262,6 @@
     figure.setAttribute("data-demo", "");
     parole.hidden = false;
     acte.hidden = false;
-    legende.hidden = true;
     bilan.hidden = true;
     preparer();
 
@@ -301,7 +304,7 @@
 
     libelle.textContent = "Chargement…";
     bouton.disabled = true;
-    fetch("poc.json?v=e41840a0")
+    fetch("poc.json?v=e0d1f01a")
       .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
       .then(function (d) { donnees = d; bouton.disabled = false; demarrer(); })
       .catch(function () {

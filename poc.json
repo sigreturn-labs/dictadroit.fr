@@ -527,43 +527,43 @@
    "texte": "plaise au tribunal judiciaire de Nanterre, statuante en chambre du conseil.\nLa demandresse soulève in limine litis l'incompétence ration materia de la juridiction saisie.\nL'action a été introduite le 12 mars 2025, soit avant l'expiration du délai de prescription.\nIl est réclamé la somme de quarante sept mille huit cent cinquante euros et trente deux centimes, outre 6 200 euros au titre de l'article 700 du Code de procédure civile.\nLe tout par application des articles mille cent trois et mille deux cent trente et un tiré un du Code civil.\nPar ces motifs, condamner la défendresse aux antiers dépens.",
    "editions": [
     {
-     "debut": 67,
+     "debut": 74,
      "fin": 75,
      "avant": "à la ligne",
      "apres": "¶"
     },
     {
-     "debut": 166,
+     "debut": 172,
      "fin": 173,
      "avant": "à la ligne",
      "apres": "¶"
     },
     {
-     "debut": 253,
+     "debut": 265,
      "fin": 266,
      "avant": "à la ligne",
      "apres": "¶"
     },
     {
-     "debut": 313,
+     "debut": 321,
      "fin": 322,
      "avant": "virgule",
      "apres": ","
     },
     {
-     "debut": 388,
+     "debut": 394,
      "fin": 395,
      "avant": "Point",
      "apres": "."
     },
     {
-     "debut": 456,
+     "debut": 461,
      "fin": 462,
      "avant": "À la ligne",
      "apres": "¶"
     },
     {
-     "debut": 471,
+     "debut": 477,
      "fin": 478,
      "avant": "virgule",
      "apres": ","
@@ -638,9 +638,12 @@
   "wer_apres": 1.11,
   "tej_avant": 44.44,
   "tej_apres": 0.0,
+  "termes_rates_avant": 4,
+  "termes_rates_apres": 0,
+  "termes_total": 9,
   "mots": 90,
   "enonces": 7,
-  "latence_s": 0.528,
+  "latence_s": 0.523,
   "facteur_temps_reel": 0.057,
   "lexique": 229,
   "moteur": "istupakov/canary-1b-v2-onnx",

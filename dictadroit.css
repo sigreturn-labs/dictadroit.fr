@@ -82,17 +82,6 @@
   --accent-vif: 22  48 118;
   --sur-accent:255 255 255;   /* ce qui s'écrit SUR le bleu */
 
-  /* Les trois couleurs de la démonstration — UNE PAR PASSE DE CORRECTION.
-     Elles ne servent QUE là, et c'est ce qui les autorise : hors de la
-     démonstration, la page n'a toujours qu'une seule couleur, le bleu.
-     Triade froide, choisie pour rester dans le registre du document
-     administratif ; un ambre ou un rouge y auraient sonné l'alarme, or
-     ces marques signalent un TRAVAIL FAIT, pas une erreur à corriger.
-     Le vocabulaire garde le bleu de signature : c'est la passe qui porte
-     l'argument de vente, elle hérite donc de la couleur de la marque. */
-  --corr-ponctuation:  106  78 158;
-  --corr-vocabulaire:   27  58 138;
-  --corr-references:    15 107  79;
 
   /* le bloc inversé : un seul dans toute la page */
   --inv-fond:      16  18  22;
@@ -191,11 +180,6 @@
   --inv-accent:   138 169 240;
   --inv-filet:     62  69  80;
 
-  /* Les mêmes trois, remontées en clarté : sur fond sombre, les versions
-     du thème clair tomberaient sous le seuil de lisibilité. */
-  --corr-ponctuation: 186 162 234;
-  --corr-vocabulaire: 138 169 240;
-  --corr-references:  110 196 160;
 
   --ombre-feuille: 0 0 0 1px rgb(255 255 255 / .07),
                    0 18px 40px -20px rgb(0 0 0 / .9);
@@ -1183,9 +1167,14 @@ input:user-invalid, textarea:user-invalid {
 /* ── le panneau de parole : les mots arrivent au rythme de la voix ────────
    `opacity` et pas `display` : un mot qui apparaît en poussant ses voisins
    fait sauter tout le paragraphe à chaque mot. Ici la place est réservée dès
-   le départ, et seul l'encrage change. */
+   le départ — `opacity: 0` la conserve — et seul l'encrage change.
+
+   ⚠️ ZÉRO, ET PAS UN FANTÔME À 13 %. Le texte entier se devinait alors dès le
+   premier instant, en gris pâle : c'est un squelette de chargement, et ça
+   annonce la fin avant le début. La page cesse aussi de ressembler à celles
+   qui en mettent partout. */
 .parole-live { margin: 0; font-family: var(--machine); }
-.parole-live .mot { opacity: 0.13; transition: opacity 0.18s ease-out; }
+.parole-live .mot { opacity: 0; transition: opacity 0.18s ease-out; }
 .parole-live .mot.vu { opacity: 1; }
 
 /* ── l'acte en construction ────────────────────────────────────────────────
@@ -1194,56 +1183,40 @@ input:user-invalid, textarea:user-invalid {
    d'abord parler puis écrire montrerait deux temps là où le produit n'en a
    qu'un. */
 .acte-live .acte-alinea:last-child { margin-bottom: 0; }
-.acte-live .mot { opacity: 0.1; transition: opacity 0.2s ease-out; }
+.acte-live .mot { opacity: 0; transition: opacity 0.2s ease-out; }
 .acte-live .mot.vu { opacity: 1; }
 
-/* Les corrections vivent dans le texte dès le départ, mais INCOLORES : pendant
-   l'écriture on regarde l'acte se former, pas un code couleur. Elles s'allument
-   à la fin, toutes ensemble, et RESTENT — c'est le bilan visuel de ce que les
-   trois passes ont fait, et la raison d'être des trois teintes. */
+/* Les corrections vivent dans le texte dès le départ, mais SANS MARQUE : pendant
+   l'écriture on regarde l'acte se former. Elles s'accusent à la fin, et restent.
+
+   🔴 UN SEUL TRAIT, ET C'EST LA MÊME MARQUE QUE PARTOUT AILLEURS SUR LA PAGE. Une
+   première version colorait chaque passe d'une teinte différente, avec une légende
+   à pastilles. C'était une légende de graphique posée sur un acte : trois couleurs
+   que la page n'a pas, et une grille pastille|intitulé que « la règle des voix qui
+   se suivent » interdit précisément. Ici, une correction se souligne comme un
+   correcteur souligne — d'un trait d'encre, dans le bleu de la marque, et rien de
+   plus. Ce qui compte est QU'un mot a été corrigé, pas de quelle passe il vient ;
+   ça, la phrase de bilan le dit en français. */
 .acte-live mark {
-  background: transparent; color: inherit;
-  border-radius: var(--rayon);
-  padding: 0 0.08em;
-  box-decoration-break: clone; -webkit-box-decoration-break: clone;
-  transition: background-color .5s ease-out, box-shadow .5s ease-out;
+  background: none; color: inherit;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  transition: text-decoration-color .55s ease-out;
 }
-.acte-live.corrige mark {
-  background: rgb(var(--teinte) / .14);
-  box-shadow: inset 0 -2px 0 rgb(var(--teinte) / .55);
-}
-.acte-live mark.corr-ponctuation { --teinte: var(--corr-ponctuation); }
-.acte-live mark.corr-vocabulaire { --teinte: var(--corr-vocabulaire); }
-.acte-live mark.corr-references  { --teinte: var(--corr-references); }
+.acte-live.corrige mark { text-decoration-color: rgb(var(--accent) / .5); }
 
-/* La légende. Sans elle, trois couleurs ne sont qu'une décoration : elle dit ce
-   que chacune a corrigé. Elle apparaît avec les couleurs, jamais avant. */
-.demo-legende {
-  margin: 0.9rem 0 0;
-  display: flex; flex-wrap: wrap; gap: 0.35rem 1.1rem;
-  font-size: 0.83rem; line-height: 1.5;
-  color: rgb(var(--sourdine));
+/* La ponctuation dictée, marquée PLUS LÉGÈREMENT que les mots rétablis, parce
+   qu'elle vaut moins : elle a été dite, pas devinée. Le signe se teinte, il ne
+   se souligne pas — un trait d'un caractère de large ne se verrait pas, et un
+   trait sous le mot d'à côté désignerait la mauvaise chose. */
+.acte-live mark.signe {
+  text-decoration: none;
+  color: inherit;
+  transition: color .55s ease-out;
 }
-.demo-legende[hidden] { display: none; }
-.demo-legende span { display: inline-flex; align-items: center; gap: 0.4rem; }
-.demo-legende i {
-  width: 0.75rem; height: 0.75rem; flex: none;
-  border-radius: var(--rayon);
-  background: rgb(var(--teinte) / .18);
-  box-shadow: inset 0 -2px 0 rgb(var(--teinte) / .6);
-}
-.demo-legende b { color: rgb(var(--encre)); font-weight: 600; }
-
-/* Le bilan chiffré, à la fin. Il n'apparaît qu'une fois la démonstration
-   terminée : annoncé plus tôt, il ferait lire au lieu de regarder. */
-.demo-bilan {
-  margin: 0.9rem 0 0; padding-top: 0.8rem;
-  border-top: 1px solid rgb(var(--filet));
-  font-size: 0.83rem; line-height: 1.55;
-  color: rgb(var(--sourdine));
-}
-.demo-bilan b { color: rgb(var(--encre)); font-weight: 600; }
-.demo-bilan[hidden] { display: none; }
+.acte-live.corrige mark.signe { color: rgb(var(--accent) / .75); }
 
 /* ── ce qui bascule quand la démonstration tourne ────────────────────────── */
 .transformation[data-demo] .parole > p:not(.parole-live),
